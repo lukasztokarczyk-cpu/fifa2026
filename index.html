@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strzałka ⚽ Euro 2026</title>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ── TOKENS ── */
+:root {
+  --green:    #16a34a;
+  --green-bg: #dcfce7;
+  --amber:    #d97706;
+  --amber-bg: #fef3c7;
+  --red:      #dc2626;
+  --red-bg:   #fee2e2;
+  --blue:     #2563eb;
+  --blue-bg:  #dbeafe;
+  --gray:     #6b7280;
+  --gray-bg:  #f3f4f6;
+  --border:   #e5e7eb;
+  --text:     #111827;
+  --text-2:   #6b7280;
+  --bg:       #f9fafb;
+  --card:     #ffffff;
+  --radius:   10px;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+a { color: var(--blue); text-decoration: none; }
+
+/* ── HEADER ── */
+header {
+  background: #15803d;
+  color: #fff;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+header .logo { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+header .sub  { font-size: 13px; opacity: .75; margin-left: auto; }
+
+/* ── TABS ── */
+.tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--card); overflow-x: auto; }
+.tab-btn {
+  padding: 12px 18px;
+  font-size: 14px;
+  font-family: var(--sans);
+  font-weight: 500;
+  color: var(--text-2);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: #15803d; border-bottom-color: #15803d; }
+
+/* ── MAIN ── */
+main { max-width: 720px; margin: 0 auto; padding: 1.25rem; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.card-title { font-size: 15px; font-weight: 600; margin-bottom: 1rem; }
+
+/* ── TABLE ── */
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; padding: 8px 10px; color: var(--text-2); font-weight: 500; font-size: 13px; border-bottom: 1px solid var(--border); }
+td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.mono { font-family: var(--mono); font-size: 13px; }
+
+/* ── BADGES ── */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.b-green  { background: var(--green-bg);  color: var(--green); }
+.b-amber  { background: var(--amber-bg);  color: var(--amber); }
+.b-red    { background: var(--red-bg);    color: var(--red); }
+.b-blue   { background: var(--blue-bg);   color: var(--blue); }
+.b-gray   { background: var(--gray-bg);   color: var(--gray); }
+
+/* ── RANKING ── */
+.rank-row td:first-child { font-size: 18px; width: 36px; }
+.pts { font-family: var(--mono); font-weight: 600; font-size: 16px; text-align: center; }
+.pts.p3 { color: var(--green); }
+.pts.p1 { color: var(--amber); }
+.pts.p0 { color: var(--text-2); }
+
+/* ── MATCH ROWS ── */
+.match-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.match-row:last-child { border-bottom: none; }
+.match-teams { flex: 1; font-weight: 500; }
+.match-score { font-family: var(--mono); min-width: 52px; text-align: center; font-size: 14px; color: var(--text-2); }
+
+/* ── FORMS ── */
+label.field-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-2); margin-bottom: 4px; }
+input[type=text], input[type=number], select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: var(--sans);
+  background: var(--card);
+  color: var(--text);
+  transition: border-color .15s;
+}
+input:focus, select:focus { outline: none; border-color: #15803d; box-shadow: 0 0 0 3px rgba(21,128,61,.1); }
+input[type=number] { -moz-appearance: textfield; }
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+button.btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  font-family: var(--sans);
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--card);
+  color: var(--text);
+  transition: background .15s;
+}
+button.btn:hover { background: var(--gray-bg); }
+button.btn.primary { background: #15803d; color: #fff; border-color: #15803d; }
+button.btn.primary:hover { background: #166534; }
+button.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.row { display: flex; gap: 8px; align-items: flex-end; }
+.row > * { flex: 1; }
+.row > button { flex: 0 0 auto; }
+
+/* ── INFO BOX ── */
+.info { background: var(--blue-bg); color: var(--blue); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; }
+.warn { background: var(--amber-bg); color: var(--amber); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; }
+.success-msg { color: var(--green); font-size: 13px; margin-top: 6px; }
+.error-msg   { color: var(--red);   font-size: 13px; margin-top: 6px; }
+.loading { color: var(--text-2); font-size: 14px; padding: .75rem 0; }
+
+/* ── TYP GRID ── */
+.typ-match { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.typ-match:last-child { border-bottom: none; }
+.typ-match .teams { flex: 1; font-size: 14px; font-weight: 500; }
+.typ-inputs { display: flex; align-items: center; gap: 6px; }
+.typ-inputs input { width: 52px; text-align: center; }
+
+/* ── CONFIG OVERLAY ── */
+#config-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; padding: 1rem;
+}
+#config-box {
+  background: var(--card); border-radius: var(--radius); padding: 1.5rem;
+  max-width: 480px; width: 100%;
+}
+#config-box h2 { font-size: 18px; font-weight: 600; margin-bottom: .5rem; }
+#config-box p  { font-size: 13px; color: var(--text-2); margin-bottom: 1rem; }
+#config-box code { display: block; background: var(--gray-bg); border-radius: 6px; padding: 8px 12px; font-family: var(--mono); font-size: 12px; margin-bottom: 1rem; overflow-x: auto; white-space: pre; }
+#config-box .field { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<!-- FIREBASE CONFIG OVERLAY (shown when not configured) -->
+<div id="config-overlay">
+  <div id="config-box">
+    <h2>⚙️ Konfiguracja Firebase</h2>
+    <p>Wklej dane swojego projektu Firebase Firestore. Znajdziesz je w konsoli Firebase → Ustawienia projektu → Twoje aplikacje → SDK.</p>
+    <code id="config-example">apiKey: "AIzaSy..."
+authDomain: "projekt.firebaseapp.com"
+projectId: "projekt-12345"</code>
+    <div class="field">
+      <label class="field-label">apiKey</label>
+      <input type="text" id="cfg-apiKey" placeholder="AIzaSy..." />
+    </div>
+    <div class="field">
+      <label class="field-label">authDomain</label>
+      <input type="text" id="cfg-authDomain" placeholder="projekt.firebaseapp.com" />
+    </div>
+    <div class="field">
+      <label class="field-label">projectId</label>
+      <input type="text" id="cfg-projectId" placeholder="projekt-12345" />
+    </div>
+    <div class="field">
+      <label class="field-label">Hasło administratora (do odświeżania wyników i dodawania meczów)</label>
+      <input type="text" id="cfg-adminPass" placeholder="np. waldek123" />
+    </div>
+    <div style="display:flex;gap:8px;margin-top:1rem">
+      <button class="btn primary" onclick="saveConfig()">Zapisz i uruchom</button>
+    </div>
+    <p id="cfg-msg" class="error-msg"></p>
+    <p style="font-size:12px;color:var(--text-2);margin-top:1rem">Dane konfiguracyjne zapisywane są w localStorage tej przeglądarki (tylko u administratora).</p>
+  </div>
+</div>
+
+<header>
+  <span>⚽</span>
+  <span class="logo">Strzałka Euro 2026</span>
+  <span class="sub" id="header-sub"></span>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('ranking')">🏆 Tabela</button>
+  <button class="tab-btn" onclick="showTab('mecze')">⚽ Mecze</button>
+  <button class="tab-btn" onclick="showTab('typy')">📋 Wpisz typy</button>
+  <button class="tab-btn" onclick="showTab('admin')">🔧 Admin</button>
+</div>
+
+<main>
+
+<!-- RANKING -->
+<div id="tab-ranking" class="section active">
+  <div class="card">
+    <div class="card-title">Ranking uczestników</div>
+    <div id="ranking-body"><div class="loading">Ładowanie...</div></div>
+  </div>
+</div>
+
+<!-- MECZE -->
+<div id="tab-mecze" class="section">
+  <div class="info">Wyniki aktualizuje administrator. Nie można ręcznie zmieniać wyników meczów.</div>
+  <div class="card">
+    <div id="mecze-body"><div class="loading">Ładowanie...</div></div>
+  </div>
+</div>
+
+<!-- TYPY -->
+<div id="tab-typy" class="section">
+  <div class="card">
+    <div class="card-title">Wpisz swoje typy</div>
+    <div style="margin-bottom:12px">
+      <label class="field-label">Twoje imię / nick</label>
+      <div class="row">
+        <input type="text" id="typ-nick" placeholder="np. Waldek" maxlength="30" />
+        <button class="btn" onclick="zaladujTypy()">Załaduj</button>
+      </div>
+    </div>
+    <div id="typy-status"></div>
+  </div>
+  <div id="typy-form-card" class="card" style="display:none">
+    <div class="card-title" id="typy-form-title">Typy</div>
+    <div id="typy-lista"></div>
+    <button class="btn primary" id="btn-zapisz-typy" onclick="zapiszTypy()" style="margin-top:1rem">Zapisz typy 🔒</button>
+    <p id="typy-msg"></p>
+  </div>
+  <div id="typy-podglad-card" class="card" style="display:none">
+    <div class="card-title">Twoje zapisane typy</div>
+    <div id="typy-podglad"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="tab-admin" class="section">
+  <div class="card">
+    <div class="card-title">Panel administratora</div>
+    <div style="margin-bottom:12px">
+      <label class="field-label">Hasło administratora</label>
+      <div class="row">
+        <input type="text" id="admin-pass" placeholder="hasło..." />
+        <button class="btn primary" onclick="verifyAdmin()">Zaloguj</button>
+      </div>
+      <p id="admin-login-msg" class="error-msg"></p>
+    </div>
+  </div>
+
+  <div id="admin-panel" style="display:none">
+
+    <div class="card">
+      <div class="card-title">Dodaj uczestnika</div>
+      <div class="row" style="margin-bottom:4px">
+        <input type="text" id="nowy-ucz" placeholder="Imię / nick" maxlength="30" />
+        <button class="btn primary" onclick="dodajUczestnika()">Dodaj</button>
+      </div>
+      <p id="ucz-msg"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Dodaj mecz</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <label class="field-label">Gospodarz</label>
+          <input type="text" id="m-home" placeholder="np. Polska" />
+        </div>
+        <div>
+          <label class="field-label">Gość</label>
+          <input type="text" id="m-away" placeholder="np. Niemcy" />
+        </div>
+      </div>
+      <div style="margin-bottom:8px">
+        <label class="field-label">Data i czas (opcjonalnie)</label>
+        <input type="text" id="m-date" placeholder="np. 2026-06-15 21:00" />
+      </div>
+      <button class="btn primary" onclick="dodajMecz()">Dodaj mecz</button>
+      <p id="mecz-msg"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Wpisz / zaktualizuj wynik meczu</div>
+      <div style="margin-bottom:8px">
+        <label class="field-label">Mecz</label>
+        <select id="wynik-mecz"></select>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="flex:1">
+          <label class="field-label">Gole gosp.</label>
+          <input type="number" id="wynik-home" min="0" max="30" placeholder="0" />
+        </div>
+        <span style="padding-top:20px;color:var(--text-2)">:</span>
+        <div style="flex:1">
+          <label class="field-label">Gole gościa</label>
+          <input type="number" id="wynik-away" min="0" max="30" placeholder="0" />
+        </div>
+      </div>
+      <button class="btn primary" onclick="zapiszWynik()">Zapisz wynik</button>
+      <p id="wynik-msg"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pobierz wyniki przez AI</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:10px">Wysyła zapytanie do Claude API i próbuje pobrać aktualne wyniki Euro 2026. Wymaga klucza API Anthropic.</p>
+      <div style="margin-bottom:8px">
+        <label class="field-label">Klucz API Anthropic</label>
+        <input type="text" id="anthropic-key" placeholder="sk-ant-..." />
+      </div>
+      <button class="btn primary" onclick="pobierzAI()">Pobierz wyniki AI</button>
+      <p id="ai-msg"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Uczestnicy</div>
+      <div id="admin-uczestnicy"><div class="loading">Ładowanie...</div></div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+let db = null;
+let adminVerified = false;
+let cfg = null;
+let allMecze = [];
+let allUczestnicy = [];
+let allWyniki = {};
+let allTypy = {};
+
+function loadConfig() {
+  try {
+    const raw = localStorage.getItem('strzalka_cfg');
+    if (raw) cfg = JSON.parse(raw);
+  } catch(e) {}
+}
+
+function saveConfig() {
+  const apiKey     = document.getElementById('cfg-apiKey').value.trim();
+  const authDomain = document.getElementById('cfg-authDomain').value.trim();
+  const projectId  = document.getElementById('cfg-projectId').value.trim();
+  const adminPass  = document.getElementById('cfg-adminPass').value.trim();
+  if (!apiKey || !authDomain || !projectId || !adminPass) {
+    document.getElementById('cfg-msg').textContent = 'Wypełnij wszystkie pola.';
+    return;
+  }
+  cfg = { apiKey, authDomain, projectId, adminPass };
+  localStorage.setItem('strzalka_cfg', JSON.stringify(cfg));
+  document.getElementById('config-overlay').style.display = 'none';
+  initFirebase();
+}
+
+function initFirebase() {
+  if (!cfg) return;
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
+        apiKey:     cfg.apiKey,
+        authDomain: cfg.authDomain,
+        projectId:  cfg.projectId,
+      });
+    }
+    db = firebase.firestore();
+    listenAll();
+  } catch(e) {
+    alert('Błąd Firebase: ' + e.message);
+  }
+}
+
+// ─── REALTIME LISTENERS ───────────────────────────────────────────────────────
+function listenAll() {
+  db.collection('mecze').orderBy('createdAt').onSnapshot(snap => {
+    allMecze = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderMecze();
+    renderWynikSelect();
+    renderTypyLista();
+    renderRanking();
+  });
+  db.collection('uczestnicy').orderBy('createdAt').onSnapshot(snap => {
+    allUczestnicy = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    document.getElementById('header-sub').textContent = allUczestnicy.length + ' graczy';
+    renderAdminUczestnicy();
+    renderRanking();
+  });
+  db.collection('wyniki').onSnapshot(snap => {
+    allWyniki = {};
+    snap.docs.forEach(d => { allWyniki[d.id] = d.data(); });
+    renderMecze();
+    renderRanking();
+  });
+  db.collection('typy').onSnapshot(snap => {
+    allTypy = {};
+    snap.docs.forEach(d => { allTypy[d.id] = d.data(); });
+    renderRanking();
+  });
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn')[['ranking','mecze','typy','admin'].indexOf(name)].classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ─── RANKING ──────────────────────────────────────────────────────────────────
+function obliczPkt(nick) {
+  const typy = allTypy[nick] || {};
+  let pkt = 0, traf3 = 0, traf1 = 0;
+  for (const [mid, w] of Object.entries(allWyniki)) {
+    const t = typy[mid];
+    if (!t || t.home === undefined) continue;
+    if (t.home === w.home && t.away === w.away) { pkt += 3; traf3++; continue; }
+    const tw = t.home > t.away ? 1 : t.home < t.away ? -1 : 0;
+    const ww = w.home > w.away ? 1 : w.home < w.away ? -1 : 0;
+    if (tw === ww) { pkt += 1; traf1++; }
+  }
+  return { pkt, traf3, traf1 };
+}
+
+function renderRanking() {
+  const c = document.getElementById('ranking-body');
+  if (!allUczestnicy.length) { c.innerHTML = '<div class="loading">Brak uczestników.</div>'; return; }
+  const rows = allUczestnicy
+    .map(u => ({ name: u.name, ...obliczPkt(u.name) }))
+    .sort((a,b) => b.pkt - a.pkt);
+  const medals = ['🥇','🥈','🥉'];
+  let html = '<table><thead><tr><th>#</th><th>Uczestnik</th><th style="text-align:center">Pkt</th><th style="text-align:center">Trafienia</th></tr></thead><tbody>';
+  rows.forEach((r, i) => {
+    const ptsClass = r.pkt > 0 ? (r.traf3 > 0 ? 'p3' : 'p1') : 'p0';
+    html += `<tr class="rank-row">
+      <td>${medals[i] || (i+1)+'.'}</td>
+      <td style="font-weight:500">${esc(r.name)}</td>
+      <td class="pts ${ptsClass}">${r.pkt}</td>
+      <td style="text-align:center;font-size:12px;color:var(--text-2)">
+        <span style="color:var(--green)">✓×${r.traf3}</span>
+        <span style="color:var(--amber);margin-left:4px">~×${r.traf1}</span>
+      </td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  c.innerHTML = html;
+}
+
+// ─── MECZE ────────────────────────────────────────────────────────────────────
+function renderMecze() {
+  const c = document.getElementById('mecze-body');
+  if (!allMecze.length) { c.innerHTML = '<div class="loading">Brak meczów. Administrator musi dodać mecze.</div>'; return; }
+  let html = '';
+  for (const m of allMecze) {
+    const w = allWyniki[m.id];
+    const score = w ? `<span style="color:var(--text)">${w.home}:${w.away}</span>` : '<span style="color:var(--text-2)">—:—</span>';
+    const badge = w
+      ? '<span class="badge b-green">Koniec</span>'
+      : '<span class="badge b-gray">Nadchodzi</span>';
+    const date = m.date ? `<span style="font-size:12px;color:var(--text-2);margin-left:auto">${m.date}</span>` : '';
+    html += `<div class="match-row">
+      <div class="match-teams">${esc(m.home)} – ${esc(m.away)}</div>
+      <div class="match-score mono">${score}</div>
+      ${badge}
+      ${date}
+    </div>`;
+  }
+  c.innerHTML = html;
+}
+
+// ─── TYPY ─────────────────────────────────────────────────────────────────────
+let typNick = '';
+let typZablokowane = false;
+
+function zaladujTypy() {
+  typNick = document.getElementById('typ-nick').value.trim();
+  if (!typNick) { document.getElementById('typy-status').innerHTML = '<p class="error-msg">Wpisz nick.</p>'; return; }
+  const istnieje = allUczestnicy.some(u => u.name === typNick);
+  if (!istnieje) {
+    document.getElementById('typy-status').innerHTML = '<p class="error-msg">Nie znaleziono uczestnika "' + esc(typNick) + '". Poproś administratora o dodanie Cię do gry.</p>';
+    document.getElementById('typy-form-card').style.display = 'none';
+    document.getElementById('typy-podglad-card').style.display = 'none';
+    return;
+  }
+  const saved = allTypy[typNick] || {};
+  typZablokowane = Object.keys(saved).length > 0;
+  document.getElementById('typy-status').innerHTML = '';
+
+  if (typZablokowane) {
+    document.getElementById('typy-form-card').style.display = 'none';
+    document.getElementById('typy-podglad-card').style.display = 'block';
+    renderTypyPodglad(saved);
+  } else {
+    document.getElementById('typy-podglad-card').style.display = 'none';
+    document.getElementById('typy-form-card').style.display = 'block';
+    document.getElementById('typy-form-title').textContent = 'Typy dla: ' + typNick;
+    renderTypyLista();
+  }
+}
+
+function renderTypyLista() {
+  if (!typNick || typZablokowane) return;
+  const lista = document.getElementById('typy-lista');
+  if (!allMecze.length) { lista.innerHTML = '<div class="loading">Brak meczów do typowania.</div>'; return; }
+  lista.innerHTML = allMecze.map(m => `
+    <div class="typ-match">
+      <div class="teams">${esc(m.home)} – ${esc(m.away)}${m.date ? '<br><span style="font-size:11px;color:var(--text-2)">'+m.date+'</span>' : ''}</div>
+      <div class="typ-inputs">
+        <input type="number" id="t-${m.id}-h" min="0" max="20" placeholder="0" />
+        <span style="color:var(--text-2)">:</span>
+        <input type="number" id="t-${m.id}-a" min="0" max="20" placeholder="0" />
+      </div>
+    </div>`).join('');
+}
+
+async function zapiszTypy() {
+  if (!typNick || typZablokowane) return;
+  const typy = {};
+  let empty = true;
+  for (const m of allMecze) {
+    const h = document.getElementById('t-' + m.id + '-h').value;
+    const a = document.getElementById('t-' + m.id + '-a').value;
+    if (h !== '' && a !== '') {
+      typy[m.id] = { home: parseInt(h), away: parseInt(a) };
+      empty = false;
+    }
+  }
+  if (empty) { document.getElementById('typy-msg').className = 'error-msg'; document.getElementById('typy-msg').textContent = 'Wpisz przynajmniej jeden typ.'; return; }
+  try {
+    await db.collection('typy').doc(typNick).set(typy);
+    typZablokowane = true;
+    document.getElementById('typy-msg').className = 'success-msg';
+    document.getElementById('typy-msg').textContent = 'Zapisano! Typy są teraz zablokowane. 🔒';
+    setTimeout(() => zaladujTypy(), 1000);
+  } catch(e) {
+    document.getElementById('typy-msg').className = 'error-msg';
+    document.getElementById('typy-msg').textContent = 'Błąd zapisu: ' + e.message;
+  }
+}
+
+function renderTypyPodglad(typy) {
+  const c = document.getElementById('typy-podglad');
+  if (!allMecze.length) { c.innerHTML = '<div class="loading">Brak meczów.</div>'; return; }
+  let html = '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+  for (const m of allMecze) {
+    const t = typy[m.id];
+    const w = allWyniki[m.id];
+    let pts = '—', ptsClass = '', ptsColor = '';
+    if (t && w) {
+      if (t.home === w.home && t.away === w.away) { pts = '+3'; ptsColor = 'color:var(--green)'; }
+      else {
+        const tw = t.home > t.away ? 1 : t.home < t.away ? -1 : 0;
+        const ww = w.home > w.away ? 1 : w.home < w.away ? -1 : 0;
+        if (tw === ww) { pts = '+1'; ptsColor = 'color:var(--amber)'; }
+        else { pts = '0'; ptsColor = 'color:var(--text-2)'; }
+      }
+    }
+    html += `<tr>
+      <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}</td>
+      <td class="mono" style="text-align:center">${t ? t.home+':'+t.away : '—'}</td>
+      <td class="mono" style="text-align:center">${w ? w.home+':'+w.away : '—'}</td>
+      <td class="mono" style="text-align:center;font-weight:600;${ptsColor}">${pts}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  c.innerHTML = html;
+}
+
+// ─── ADMIN ────────────────────────────────────────────────────────────────────
+function verifyAdmin() {
+  const pass = document.getElementById('admin-pass').value;
+  if (!cfg) { document.getElementById('admin-login-msg').textContent = 'Brak konfiguracji.'; return; }
+  if (pass === cfg.adminPass) {
+    adminVerified = true;
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('admin-login-msg').textContent = '';
+    renderAdminUczestnicy();
+    renderWynikSelect();
+  } else {
+    document.getElementById('admin-login-msg').textContent = 'Błędne hasło.';
+  }
+}
+
+async function dodajUczestnika() {
+  const name = document.getElementById('nowy-ucz').value.trim();
+  const msg = document.getElementById('ucz-msg');
+  if (!name) { msg.className='error-msg'; msg.textContent='Wpisz imię.'; return; }
+  if (allUczestnicy.some(u => u.name === name)) { msg.className='error-msg'; msg.textContent='Uczestnik już istnieje.'; return; }
+  try {
+    await db.collection('uczestnicy').add({ name, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    document.getElementById('nowy-ucz').value = '';
+    msg.className='success-msg'; msg.textContent='Dodano: ' + name;
+  } catch(e) { msg.className='error-msg'; msg.textContent='Błąd: '+e.message; }
+}
+
+async function dodajMecz() {
+  const home = document.getElementById('m-home').value.trim();
+  const away = document.getElementById('m-away').value.trim();
+  const date = document.getElementById('m-date').value.trim();
+  const msg  = document.getElementById('mecz-msg');
+  if (!home || !away) { msg.className='error-msg'; msg.textContent='Wypełnij obie drużyny.'; return; }
+  try {
+    await db.collection('mecze').add({ home, away, date: date||'', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    document.getElementById('m-home').value = '';
+    document.getElementById('m-away').value = '';
+    document.getElementById('m-date').value = '';
+    msg.className='success-msg'; msg.textContent='Dodano mecz: '+home+' – '+away;
+  } catch(e) { msg.className='error-msg'; msg.textContent='Błąd: '+e.message; }
+}
+
+function renderWynikSelect() {
+  const sel = document.getElementById('wynik-mecz');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = allMecze.map(m => `<option value="${m.id}">${esc(m.home)} – ${esc(m.away)}</option>`).join('');
+  if (cur) sel.value = cur;
+}
+
+async function zapiszWynik() {
+  const mid  = document.getElementById('wynik-mecz').value;
+  const home = parseInt(document.getElementById('wynik-home').value);
+  const away = parseInt(document.getElementById('wynik-away').value);
+  const msg  = document.getElementById('wynik-msg');
+  if (!mid) { msg.className='error-msg'; msg.textContent='Wybierz mecz.'; return; }
+  if (isNaN(home) || isNaN(away)) { msg.className='error-msg'; msg.textContent='Wpisz wynik.'; return; }
+  try {
+    await db.collection('wyniki').doc(mid).set({ home, away, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    msg.className='success-msg'; msg.textContent='Wynik zapisany: '+home+':'+away;
+  } catch(e) { msg.className='error-msg'; msg.textContent='Błąd: '+e.message; }
+}
+
+async function pobierzAI() {
+  const key = document.getElementById('anthropic-key').value.trim();
+  const msg = document.getElementById('ai-msg');
+  if (!key) { msg.className='error-msg'; msg.textContent='Wpisz klucz API.'; return; }
+  msg.className=''; msg.textContent='Pobieram...';
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-6', max_tokens:1500,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:'Pobierz aktualne wyniki meczów UEFA Euro 2026 faza grupowa które się już odbyły. Zwróć TYLKO JSON bez żadnego tekstu, bez markdownu: [{"home":"Polska","away":"Niemcy","score_home":1,"score_away":2},...]'}]
+      })
+    });
+    const data = await resp.json();
+    let text = data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    text = text.replace(/```json|```/g,'').trim();
+    const arr = JSON.parse(text);
+    if (!Array.isArray(arr)) throw new Error('Niepoprawny format');
+    let matched = 0;
+    for (const r of arr) {
+      const m = allMecze.find(m => m.home.toLowerCase()===r.home.toLowerCase() && m.away.toLowerCase()===r.away.toLowerCase());
+      if (m && r.score_home !== null && r.score_away !== null) {
+        await db.collection('wyniki').doc(m.id).set({ home:r.score_home, away:r.score_away, updatedAt:firebase.firestore.FieldValue.serverTimestamp() });
+        matched++;
+      }
+    }
+    msg.className='success-msg'; msg.textContent=`Zaktualizowano ${matched} wyników.`;
+  } catch(e) { msg.className='error-msg'; msg.textContent='Błąd: '+e.message; }
+}
+
+function renderAdminUczestnicy() {
+  const c = document.getElementById('admin-uczestnicy');
+  if (!c) return;
+  if (!allUczestnicy.length) { c.innerHTML='<div class="loading">Brak uczestników.</div>'; return; }
+  c.innerHTML = allUczestnicy.map(u => {
+    const maTypy = allTypy[u.name] && Object.keys(allTypy[u.name]).length > 0;
+    const { pkt } = obliczPkt(u.name);
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="flex:1;font-weight:500">${esc(u.name)}</span>
+      <span class="badge ${maTypy?'b-green':'b-gray'}">${maTypy?'typy zapisane':'brak typów'}</span>
+      <span class="mono" style="color:var(--green);font-weight:600">${pkt} pkt</span>
+    </div>`;
+  }).join('');
+}
+
+// ─── UTIL ─────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadConfig();
+if (cfg) {
+  document.getElementById('config-overlay').style.display = 'none';
+  initFirebase();
+}
+</script>
+</body>
+</html>
