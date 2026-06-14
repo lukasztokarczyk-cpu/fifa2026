@@ -261,12 +261,19 @@ projectId: "projekt-12345"</code>
     </div>
     <div id="typy-status"></div>
   </div>
+
   <div id="typy-form-card" class="card" style="display:none">
-    <div class="card-title" id="typy-form-title">Typy</div>
-    <div id="typy-lista"></div>
-    <button class="btn primary" id="btn-zapisz-typy" onclick="zapiszTypy()" style="margin-top:1rem">Zapisz typy 🔒</button>
-    <p id="typy-msg"></p>
+    <div class="card-title" id="typy-form-title">Wklej typy</div>
+    <p style="font-size:13px;color:var(--text-2);margin-bottom:10px">Wklej listę typów w formacie <code style="background:var(--gray-bg);padding:1px 5px;border-radius:4px;font-family:var(--mono)">KOD-KOD wynik:wynik</code>, każdy mecz w nowej linii. Kolejność nie ma znaczenia.</p>
+    <textarea id="typy-paste" rows="12" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;background:var(--card);color:var(--text)" placeholder="MEK-RPA 2:0&#10;KOR-CZE 1:1&#10;CAN-BOŚ 2:1&#10;..."></textarea>
+    <div id="typy-preview" style="margin-top:12px"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+      <button class="btn" onclick="parsujTypy()">Sprawdź typy</button>
+      <button class="btn primary" id="btn-zapisz-typy" onclick="zapiszTypy()" style="display:none">Zapisz i zablokuj 🔒</button>
+    </div>
+    <p id="typy-msg" style="margin-top:8px"></p>
   </div>
+
   <div id="typy-podglad-card" class="card" style="display:none">
     <div class="card-title">Twoje zapisane typy</div>
     <div id="typy-podglad"></div>
@@ -415,7 +422,6 @@ function listenAll() {
     allMecze = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderMecze();
     renderWynikSelect();
-    renderTypyLista();
     renderRanking();
   });
   db.collection('uczestnicy').orderBy('createdAt').onSnapshot(snap => {
@@ -509,6 +515,7 @@ function renderMecze() {
 // ─── TYPY ─────────────────────────────────────────────────────────────────────
 let typNick = '';
 let typZablokowane = false;
+let parsedTypy = {};
 
 function zaladujTypy() {
   typNick = document.getElementById('typ-nick').value.trim();
@@ -532,40 +539,97 @@ function zaladujTypy() {
     document.getElementById('typy-podglad-card').style.display = 'none';
     document.getElementById('typy-form-card').style.display = 'block';
     document.getElementById('typy-form-title').textContent = 'Typy dla: ' + typNick;
-    renderTypyLista();
+    parsedTypy = {};
+    document.getElementById('typy-preview').innerHTML = '';
+    document.getElementById('btn-zapisz-typy').style.display = 'none';
+    document.getElementById('typy-msg').textContent = '';
   }
 }
 
-function renderTypyLista() {
-  if (!typNick || typZablokowane) return;
-  const lista = document.getElementById('typy-lista');
-  if (!allMecze.length) { lista.innerHTML = '<div class="loading">Brak meczów do typowania.</div>'; return; }
-  lista.innerHTML = allMecze.map(m => `
-    <div class="typ-match">
-      <div class="teams">${esc(m.home)} – ${esc(m.away)}${m.date ? '<br><span style="font-size:11px;color:var(--text-2)">'+m.date+'</span>' : ''}</div>
-      <div class="typ-inputs">
-        <input type="number" id="t-${m.id}-h" min="0" max="20" placeholder="0" />
-        <span style="color:var(--text-2)">:</span>
-        <input type="number" id="t-${m.id}-a" min="0" max="20" placeholder="0" />
-      </div>
-    </div>`).join('');
+function normKod(s) {
+  return s.trim().toUpperCase()
+    .replace(/Ś/g,'S').replace(/Ź/g,'Z').replace(/Ż/g,'Z')
+    .replace(/Ń/g,'N').replace(/Ó/g,'O').replace(/Ą/g,'A')
+    .replace(/Ę/g,'E').replace(/Ć/g,'C').replace(/Ł/g,'L');
+}
+
+function kodMeczu(m) {
+  // generuje wszystkie możliwe kody dla meczu na podstawie nazwy drużyny
+  function skrot(name) {
+    const n = normKod(name);
+    return [
+      n.substring(0,3),
+      n.substring(0,4),
+      n.split(/[\s-]/)[0].substring(0,3),
+      n.replace(/\s/g,'').substring(0,3),
+      n.replace(/\s/g,'').substring(0,4),
+    ];
+  }
+  return { home: skrot(m.home), away: skrot(m.away) };
+}
+
+function parsujTypy() {
+  const text = document.getElementById('typy-paste').value;
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  const preview = document.getElementById('typy-preview');
+  const btn = document.getElementById('btn-zapisz-typy');
+  parsedTypy = {};
+
+  if (!lines.length) { preview.innerHTML = ''; btn.style.display='none'; return; }
+
+  const matched = [], unmatched = [];
+
+  for (const line of lines) {
+    // format: KOD-KOD wynik:wynik  (lub KOD-KOD wynik-wynik)
+    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,5})[^A-ZĄĆĘŁŃÓŚŹŻ\d]+([A-ZĄĆĘŁŃÓŚŹŻ]{2,5})\s+(\d+)[:\-](\d+)$/i;
+    const m = line.match(re);
+    if (!m) { unmatched.push({ line, reason: 'niepoprawny format' }); continue; }
+
+    const kH = normKod(m[1]), kA = normKod(m[2]);
+    const gh = parseInt(m[3]), ga = parseInt(m[4]);
+
+    // szukaj meczu w bazie
+    let found = null;
+    for (const mecz of allMecze) {
+      const kody = kodMeczu(mecz);
+      if (kody.home.includes(kH) && kody.away.includes(kA)) { found = mecz; break; }
+    }
+
+    if (found) {
+      parsedTypy[found.id] = { home: gh, away: ga };
+      matched.push({ line, mecz: found.home + ' – ' + found.away, gh, ga });
+    } else {
+      unmatched.push({ line, reason: 'nie znaleziono meczu' });
+    }
+  }
+
+  let html = '';
+  if (matched.length) {
+    html += `<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:var(--green);margin-bottom:6px">✓ Dopasowano ${matched.length} meczów</div>`;
+    html += '<table style="font-size:13px"><thead><tr><th>Wpisano</th><th>Mecz</th><th style="text-align:center">Typ</th></tr></thead><tbody>';
+    for (const r of matched) {
+      html += `<tr><td class="mono" style="color:var(--text-2)">${esc(r.line)}</td><td>${esc(r.mecz)}</td><td class="mono" style="text-align:center;font-weight:600">${r.gh}:${r.ga}</td></tr>`;
+    }
+    html += '</tbody></table></div>';
+  }
+  if (unmatched.length) {
+    html += `<div style="margin-top:8px"><div style="font-size:13px;font-weight:500;color:var(--amber);margin-bottom:6px">⚠ Nie dopasowano ${unmatched.length} linii</div>`;
+    html += '<table style="font-size:13px"><thead><tr><th>Linia</th><th>Powód</th></tr></thead><tbody>';
+    for (const r of unmatched) {
+      html += `<tr><td class="mono">${esc(r.line)}</td><td style="color:var(--text-2)">${r.reason}</td></tr>`;
+    }
+    html += '</tbody></table></div>';
+  }
+
+  preview.innerHTML = html;
+  btn.style.display = matched.length ? 'inline-block' : 'none';
+  document.getElementById('typy-msg').textContent = '';
 }
 
 async function zapiszTypy() {
-  if (!typNick || typZablokowane) return;
-  const typy = {};
-  let empty = true;
-  for (const m of allMecze) {
-    const h = document.getElementById('t-' + m.id + '-h').value;
-    const a = document.getElementById('t-' + m.id + '-a').value;
-    if (h !== '' && a !== '') {
-      typy[m.id] = { home: parseInt(h), away: parseInt(a) };
-      empty = false;
-    }
-  }
-  if (empty) { document.getElementById('typy-msg').className = 'error-msg'; document.getElementById('typy-msg').textContent = 'Wpisz przynajmniej jeden typ.'; return; }
+  if (!typNick || typZablokowane || !Object.keys(parsedTypy).length) return;
   try {
-    await db.collection('typy').doc(typNick).set(typy);
+    await db.collection('typy').doc(typNick).set(parsedTypy);
     typZablokowane = true;
     document.getElementById('typy-msg').className = 'success-msg';
     document.getElementById('typy-msg').textContent = 'Zapisano! Typy są teraz zablokowane. 🔒';
