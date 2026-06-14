@@ -411,6 +411,7 @@ function initFirebase() {
     }
     db = firebase.firestore();
     listenAll();
+    inicjalizujMecze();
   } catch(e) {
     alert('Błąd Firebase: ' + e.message);
   }
@@ -781,6 +782,104 @@ function renderAdminUczestnicy() {
 // ─── UTIL ─────────────────────────────────────────────────────────────────────
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── MECZE FAZY GRUPOWEJ FIFA 2026 ────────────────────────────────────────────
+const MECZE_FIFA2026 = [
+  // KOLEJKA 1
+  {home:'Meksyk',       away:'Afryka Płd.',  date:'11.06 21:00', grupa:'A', kod:'MEK-RPA'},
+  {home:'Korea Płd.',   away:'Czechy',        date:'11.06 22:00', grupa:'A', kod:'KOR-CZE'},
+  {home:'Kanada',       away:'Bośnia',        date:'12.06 20:00', grupa:'B', kod:'CAN-BOŚ'},
+  {home:'USA',          away:'Paragwaj',      date:'12.06 23:00', grupa:'D', kod:'USA-PAR'},
+  {home:'Katar',        away:'Szwajcaria',    date:'13.06 21:00', grupa:'B', kod:'KAT-SUI'},
+  {home:'Brazylia',     away:'Maroko',        date:'13.06 23:00', grupa:'C', kod:'BRA-MAR'},
+  {home:'Haiti',        away:'Szkocja',       date:'13.06 02:00', grupa:'C', kod:'HAI-SZK'},
+  {home:'Australia',    away:'Turcja',        date:'13.06 08:00', grupa:'D', kod:'AUS-TUR'},
+  {home:'Niemcy',       away:'Curaçao',       date:'14.06 19:00', grupa:'E', kod:'NIE-CUR'},
+  {home:'Holandia',     away:'Japonia',       date:'14.06 22:00', grupa:'F', kod:'HOL-JAP'},
+  {home:'WKS',          away:'Ekwador',       date:'14.06 00:00', grupa:'E', kod:'WKS-EKW'},
+  {home:'Szwecja',      away:'Tunezja',       date:'14.06 04:00', grupa:'F', kod:'SZW-TUN'},
+  {home:'Hiszpania',    away:'Rżep Ziel.',    date:'15.06 17:00', grupa:'H', kod:'HIS-RZP'},
+  {home:'Belgia',       away:'Egipt',         date:'15.06 23:00', grupa:'G', kod:'BEL-EGP'},
+  {home:'Arabia Saud.', away:'Urugwaj',       date:'15.06 23:00', grupa:'H', kod:'ARB-URG'},
+  {home:'Iran',         away:'Nowa Zelandia', date:'15.06 05:00', grupa:'G', kod:'IRN-NEWZ'},
+  {home:'Francja',      away:'Senegal',       date:'16.06 20:00', grupa:'I', kod:'FRA-SEN'},
+  {home:'Irak',         away:'Norwegia',      date:'16.06 23:00', grupa:'I', kod:'IRK-NOR'},
+  {home:'Argentyna',    away:'Algieria',      date:'16.06 03:00', grupa:'J', kod:'ARG-ALG'},
+  {home:'Austria',      away:'Jordania',      date:'16.06 08:00', grupa:'J', kod:'AUT-JOR'},
+  {home:'Portugalia',   away:'DRK',           date:'17.06 19:00', grupa:'K', kod:'POR-DRK'},
+  {home:'Anglia',       away:'Chorwacja',     date:'17.06 22:00', grupa:'L', kod:'ANG-CHR'},
+  {home:'Ghana',        away:'Panama',        date:'17.06 00:00', grupa:'L', kod:'GHN-PAN'},
+  {home:'Uzbekistan',   away:'Kolumbia',      date:'17.06 04:00', grupa:'K', kod:'UZB-KOL'},
+  // KOLEJKA 2
+  {home:'Afryka Płd.',  away:'Korea Płd.',   date:'18.06 17:00', grupa:'A', kod:'RPA-KOR'},
+  {home:'Szwajcaria',   away:'Bośnia',        date:'18.06 23:00', grupa:'B', kod:'SUI-BOŚ'},
+  {home:'Kanada',       away:'Katar',         date:'18.06 02:00', grupa:'B', kod:'CAN-KAT'},
+  {home:'Meksyk',       away:'Korea Płd.',   date:'18.06 03:00', grupa:'A', kod:'MEK-KOR'},
+  {home:'Szkocja',      away:'Maroko',        date:'19.06 23:00', grupa:'C', kod:'SZK-MAR'},
+  {home:'USA',          away:'Australia',     date:'19.06 23:00', grupa:'D', kod:'USA-AUS'},
+  {home:'Brazylia',     away:'Haiti',         date:'19.06 02:00', grupa:'C', kod:'BRA-HAI'},
+  {home:'Turcja',       away:'Paragwaj',      date:'19.06 08:00', grupa:'D', kod:'TUR-PAR'},
+  {home:'Holandia',     away:'Szwecja',       date:'20.06 19:00', grupa:'F', kod:'HOL-SZW'},
+  {home:'Niemcy',       away:'WKS',           date:'20.06 21:00', grupa:'E', kod:'NIE-WKS'},
+  {home:'Ekwador',      away:'Curaçao',       date:'20.06 04:00', grupa:'E', kod:'EKW-CUR'},
+  {home:'Tunezja',      away:'Japonia',       date:'20.06 06:00', grupa:'F', kod:'TUN-JAP'},
+  {home:'Hiszpania',    away:'Arabia Saud.',  date:'21.06 17:00', grupa:'H', kod:'HIS-ARB'},
+  {home:'Belgia',       away:'Iran',          date:'21.06 23:00', grupa:'G', kod:'BEL-IRN'},
+  {home:'Urugwaj',      away:'Rżep Ziel.',    date:'21.06 23:00', grupa:'H', kod:'URG-RZP'},
+  {home:'Nowa Zelandia',away:'Egipt',         date:'21.06 05:00', grupa:'G', kod:'NEWZ-EGP'},
+  {home:'Argentyna',    away:'Austria',       date:'22.06 19:00', grupa:'J', kod:'ARG-AUT'},
+  {home:'Norwegia',     away:'Senegal',       date:'22.06 01:00', grupa:'I', kod:'NOR-SEN'},
+  {home:'Jordania',     away:'Algieria',      date:'22.06 07:00', grupa:'J', kod:'JOR-ALG'},
+  {home:'Portugalia',   away:'Uzbekistan',    date:'23.06 19:00', grupa:'K', kod:'POR-UZB'},
+  {home:'Anglia',       away:'Ghana',         date:'23.06 21:00', grupa:'L', kod:'ANG-GHN'},
+  {home:'Panama',       away:'Chorwacja',     date:'23.06 00:00', grupa:'L', kod:'PAN-CHR'},
+  {home:'Kolumbia',     away:'DRK',           date:'23.06 04:00', grupa:'K', kod:'KOL-DRK'},
+  // KOLEJKA 3
+  {home:'Szwajcaria',   away:'Kanada',        date:'24.06 23:00', grupa:'B', kod:'SUI-CAN'},
+  {home:'Bośnia',       away:'Katar',         date:'24.06 23:00', grupa:'B', kod:'BOŚ-KAT'},
+  {home:'Szkocja',      away:'Brazylia',      date:'24.06 23:00', grupa:'C', kod:'SZK-BRA'},
+  {home:'Maroko',       away:'Haiti',         date:'24.06 23:00', grupa:'C', kod:'MAR-HAI'},
+  {home:'Korea Płd.',   away:'Meksyk',        date:'24.06 03:00', grupa:'A', kod:'KOR-MEK'},
+  {home:'Afryka Płd.',  away:'Meksyk',        date:'24.06 03:00', grupa:'A', kod:'RPA-MEK'},
+  {home:'Ekwador',      away:'Niemcy',        date:'25.06 21:00', grupa:'E', kod:'EKW-NIE'},
+  {home:'Curaçao',      away:'WKS',           date:'25.06 21:00', grupa:'E', kod:'CUR-WKS'},
+  {home:'Japonia',      away:'Szwecja',       date:'25.06 01:00', grupa:'F', kod:'JAP-SZW'},
+  {home:'Tunezja',      away:'Holandia',      date:'25.06 01:00', grupa:'F', kod:'TUN-HOL'},
+  {home:'Turcja',       away:'USA',           date:'25.06 06:00', grupa:'D', kod:'TUR-USA'},
+  {home:'Paragwaj',     away:'Australia',     date:'25.06 06:00', grupa:'D', kod:'PAR-AUS'},
+  {home:'Norwegia',     away:'Francja',       date:'26.06 20:00', grupa:'I', kod:'NOR-FRA'},
+  {home:'Senegal',      away:'Irak',          date:'26.06 20:00', grupa:'I', kod:'SEN-IRK'},
+  {home:'Rżep Ziel.',   away:'Arabia Saud.',  date:'26.06 02:00', grupa:'H', kod:'RZP-ARB'},
+  {home:'Urugwaj',      away:'Hiszpania',     date:'26.06 02:00', grupa:'H', kod:'URG-HIS'},
+  {home:'Egipt',        away:'Iran',          date:'26.06 07:00', grupa:'G', kod:'EGP-IRN'},
+  {home:'Nowa Zelandia',away:'Belgia',        date:'26.06 07:00', grupa:'G', kod:'NEWZ-BEL'},
+  {home:'Panama',       away:'Anglia',        date:'27.06 22:00', grupa:'L', kod:'PAN-ANG'},
+  {home:'Chorwacja',    away:'Ghana',         date:'27.06 22:00', grupa:'L', kod:'CHR-GHN'},
+  {home:'Kolumbia',     away:'Portugalia',    date:'27.06 02:30', grupa:'K', kod:'KOL-POR'},
+  {home:'DRK',          away:'Uzbekistan',    date:'27.06 02:30', grupa:'K', kod:'DRK-UZB'},
+  {home:'Algieria',     away:'Austria',       date:'27.06 04:00', grupa:'J', kod:'ALG-AUT'},
+  {home:'Jordania',     away:'Argentyna',     date:'27.06 04:00', grupa:'J', kod:'JOR-ARG'},
+];
+
+async function inicjalizujMecze() {
+  if (!db) return;
+  const snap = await db.collection('mecze').limit(1).get();
+  if (!snap.empty) return; // już są mecze w bazie
+  const batch = db.batch();
+  MECZE_FIFA2026.forEach((m, i) => {
+    const ref = db.collection('mecze').doc('m' + String(i+1).padStart(2,'0'));
+    batch.set(ref, {
+      home: m.home,
+      away: m.away,
+      date: m.date,
+      grupa: m.grupa,
+      kod: m.kod,
+      createdAt: firebase.firestore.Timestamp.fromMillis(Date.now() + i)
+    });
+  });
+  await batch.commit();
+  console.log('Mecze FIFA 2026 zainicjalizowane.');
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
