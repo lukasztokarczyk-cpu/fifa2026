@@ -106,10 +106,21 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 
 <main>
 
+<!-- MODAL TYPY -->
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;padding:1rem;overflow-y:auto" onclick="if(event.target===this)closeModal()">
+  <div style="background:var(--card);border-radius:var(--radius);max-width:600px;margin:2rem auto;padding:1.25rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div class="card-title" id="modal-title" style="margin-bottom:0">Typy</div>
+      <button class="btn" style="padding:4px 12px" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
 <!-- RANKING -->
 <div id="tab-ranking" class="section active">
   <div class="card">
-    <div class="card-title">Ranking uczestników</div>
+    <div class="card-title">Ranking uczestników <span style="font-size:13px;font-weight:400;color:var(--text2)">(kliknij uczestnika, aby zobaczyć typy)</span></div>
     <div id="ranking-body"><div class="loading"><span class="spinner"></span>Ładowanie...</div></div>
   </div>
 </div>
@@ -310,9 +321,10 @@ function renderRanking() {
   let html = '<table><thead><tr><th>#</th><th>Uczestnik</th><th style="text-align:center">Pkt</th><th style="text-align:center">Trafienia</th></tr></thead><tbody>';
   rows.forEach((r,i) => {
     const pc = r.pkt>0?(r.t3>0?'p3':'p1'):'p0';
-    html += `<tr>
+    const maTypy = allTypy[r.name] && Object.keys(allTypy[r.name]).length > 0;
+    html += `<tr style="cursor:${maTypy?'pointer':'default'}" onclick="${maTypy?`pokazTypyModal('${r.name.replace(/'/g,"\'")}')`:''}" ${maTypy?'title="Kliknij, aby zobaczyć typy"':''}>
       <td style="font-size:18px;width:36px">${medals[i]||(i+1)+'.'}</td>
-      <td style="font-weight:500">${esc(r.name)}</td>
+      <td style="font-weight:500">${esc(r.name)}${maTypy?'<span style="font-size:11px;color:var(--blue);margin-left:6px">📋</span>':''}</td>
       <td class="pts ${pc}">${r.pkt}</td>
       <td style="text-align:center;font-size:12px;color:var(--text2)">
         <span style="color:var(--green)">✓×${r.t3}</span>
@@ -322,6 +334,42 @@ function renderRanking() {
   });
   html += '</tbody></table>';
   c.innerHTML = html;
+}
+
+function pokazTypyModal(nick) {
+  const typy = allTypy[nick] || {};
+  document.getElementById('modal-title').textContent = '📋 Typy: ' + nick;
+  let totalPkt = 0;
+  let html = '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+  allMecze.forEach(m => {
+    const t = typy[m.id], w = allWyniki[m.id];
+    let pts = '—', col = '';
+    if (t && w) {
+      if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; totalPkt+=3; }
+      else {
+        const tw=t.home>t.away?1:t.home<t.away?-1:0;
+        const ww=w.home>w.away?1:w.home<w.away?-1:0;
+        if (tw===ww) { pts='+1'; col='color:var(--amber)'; totalPkt+=1; }
+        else { pts='0'; col='color:var(--text2)'; }
+      }
+    }
+    if (!t) return; // pomiń mecze bez typów
+    html += `<tr>
+      <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}</td>
+      <td class="mono" style="text-align:center">${t.home}:${t.away}</td>
+      <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
+      <td class="mono" style="text-align:center;font-weight:600;${col}">${pts}</td>
+    </tr>`;
+  });
+  html += `</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600;font-size:15px">Razem: <span style="color:var(--green)">${totalPkt} pkt</span></div>`;
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+  document.body.style.overflow = '';
 }
 
 // ─── MECZE ────────────────────────────────────────────────────────────────────
