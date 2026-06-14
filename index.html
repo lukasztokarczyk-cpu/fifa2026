@@ -550,18 +550,57 @@ function renderAdminUczestnicy() {
   if (!c) return;
   if (!allUczestnicy.length) { c.innerHTML='<div class="loading">Brak uczestników.</div>'; return; }
   const rows=allUczestnicy.map(u=>({name:u.name,...obliczPkt(u.name)})).sort((a,b)=>b.pkt-a.pkt);
-  let html='<table><thead><tr><th>#</th><th>Uczestnik</th><th style="text-align:center">Pkt</th><th style="text-align:center">Typy</th></tr></thead><tbody>';
+  let html='<div id="admin-ucz-msg" style="margin-bottom:8px"></div>';
+  html+='<table><thead><tr><th>#</th><th>Uczestnik</th><th style="text-align:center">Pkt</th><th style="text-align:center">Typy</th><th style="text-align:center">Akcje</th></tr></thead><tbody>';
   rows.forEach((r,i)=>{
     const maTypy=allTypy[r.name]&&Object.keys(allTypy[r.name]).length>0;
-    html+=`<tr>
+    html+=`<tr id="ucz-row-${i}">
       <td style="font-size:16px">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</td>
-      <td style="font-weight:500">${esc(r.name)}</td>
+      <td style="font-weight:500"><span id="ucz-name-${i}">${esc(r.name)}</span></td>
       <td class="pts ${r.pkt>0?(r.t3>0?'p3':'p1'):'p0'}">${r.pkt}</td>
       <td style="text-align:center"><span class="badge ${maTypy?'b-green':'b-gray'}">${maTypy?'zapisane':'brak'}</span></td>
+      <td style="text-align:center;white-space:nowrap">
+        <button class="btn" style="padding:4px 10px;font-size:12px;margin-right:4px" onclick="edytujUczestnika(${i},'${esc(r.name)}')">✏️</button>
+        <button class="btn" style="padding:4px 10px;font-size:12px;background:var(--red-bg);color:var(--red);border-color:var(--red)" onclick="usunUczestnika('${esc(r.name)}')">🗑️</button>
+      </td>
     </tr>`;
   });
   html+='</tbody></table>';
   c.innerHTML=html;
+}
+
+function edytujUczestnika(i, oldName) {
+  const span = document.getElementById('ucz-name-'+i);
+  const row  = document.getElementById('ucz-row-'+i);
+  // zamień na input
+  span.innerHTML = `<input type="text" id="edit-name-${i}" value="${esc(oldName)}" style="width:120px;padding:4px 8px;font-size:13px" />
+    <button class="btn primary" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="zapiszNazwe(${i},'${esc(oldName)}')">Zapisz</button>
+    <button class="btn" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="renderAdminUczestnicy()">Anuluj</button>`;
+}
+
+async function zapiszNazwe(i, oldName) {
+  const newName = document.getElementById('edit-name-'+i).value.trim();
+  const msg = document.getElementById('admin-ucz-msg');
+  if (!newName) { msg.className='err'; msg.textContent='Wpisz nową nazwę.'; return; }
+  if (newName===oldName) { renderAdminUczestnicy(); return; }
+  if (allUczestnicy.some(u=>u.name===newName)) { msg.className='err'; msg.textContent='Taka nazwa już istnieje.'; return; }
+  msg.className=''; msg.textContent='Zapisywanie...';
+  try {
+    await apiPost({action:'renameUczestnik', oldName, newName});
+    msg.className='ok'; msg.textContent='Zmieniono nazwę.';
+    await loadAll(); renderAll();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+async function usunUczestnika(name) {
+  if (!confirm(`Usunąć uczestnika "${name}" wraz ze wszystkimi typami?`)) return;
+  const msg = document.getElementById('admin-ucz-msg');
+  msg.className=''; msg.textContent='Usuwanie...';
+  try {
+    await apiPost({action:'deleteUczestnik', name});
+    msg.className='ok'; msg.textContent='Usunięto: '+name;
+    await loadAll(); renderAll();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
 }
 
 // ─── UTIL ─────────────────────────────────────────────────────────────────────
