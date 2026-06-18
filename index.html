@@ -527,6 +527,42 @@ function normKod(s) {
     .replace(/Ę/g,'E').replace(/Ć/g,'C').replace(/Ł/g,'L');
 }
 
+// Aliasy: angielskie/alternatywne skróty → polskie kody z bazy
+const ALIASY = {
+  // Grupa A
+  'MEX':'MEK', 'RSA':'RPA', 'KOR':'KOR', 'CZE':'CZE',
+  // Grupa B
+  'CAN':'CAN', 'BIH':'BOS', 'BOS':'BOS', 'QAT':'KAT', 'SUI':'SUI', 'SWI':'SUI',
+  // Grupa C
+  'BRA':'BRA', 'MAR':'MAR', 'HAI':'HAI', 'SCO':'SZK', 'SZO':'SZK',
+  // Grupa D
+  'USA':'USA', 'PAR':'PAR', 'AUS':'AUS', 'TUR':'TUR',
+  // Grupa E
+  'GER':'NIE', 'NED':'HOL', 'HOL':'HOL', 'EKW':'EKW', 'ECU':'EKW',
+  'CUW':'CUR', 'CUR':'CUR', 'CIV':'WKS', 'WKS':'WKS',
+  // Grupa F
+  'NED':'HOL', 'JPN':'JAP', 'JAP':'JAP', 'SWE':'SZW', 'TUN':'TUN',
+  // Grupa G
+  'BEL':'BEL', 'EGY':'EGP', 'EGP':'EGP', 'IRN':'IRN', 'NZL':'NEW',
+  'NEWZ':'NEW', 'NEW':'NEW',
+  // Grupa H
+  'ESP':'HIS', 'HIS':'HIS', 'HISZ':'HIS', 'KSA':'ARB', 'ARB':'ARB',
+  'URU':'URU', 'CPV':'CAB', 'RZP':'CAB', 'CAB':'CAB',
+  // Grupa I
+  'FRA':'FRA', 'SEN':'SEN', 'IRQ':'IRK', 'IRK':'IRK', 'NOR':'NOR',
+  // Grupa J
+  'ARG':'ARG', 'ALG':'ALG', 'AUT':'AUT', 'JOR':'JOR',
+  // Grupa K
+  'POR':'POR', 'COD':'DRK', 'DRK':'DRK', 'UZB':'UZB', 'COL':'KOL', 'KOL':'KOL',
+  // Grupa L
+  'ENG':'ANG', 'ANG':'ANG', 'CRO':'CHR', 'CHR':'CHR', 'GHA':'GHA', 'PAN':'PAN',
+};
+
+function rozwijAlias(k) {
+  const n = normKod(k);
+  return ALIASY[n] || n;
+}
+
 function kodujDruzyne(name) {
   const n = normKod(name);
   return [n.substring(0,3), n.substring(0,4), n.replace(/\s/g,'').substring(0,3), n.replace(/\s/g,'').substring(0,4)];
@@ -536,12 +572,17 @@ function parsujLinie(lines, meczePuli) {
   const matched=[], unmatched=[];
   const wynik = {};
   for (const line of lines) {
-    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})[^A-ZĄĆĘŁŃÓŚŹŻ\d]+([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)$/i;
+    // obsługuje separatory: vs, VS, -, –, przestrzeń
+    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s*(?:vs\.?|VS\.?|–|-)\s*([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)$/i;
     const m = line.match(re);
     if (!m) { unmatched.push({line, reason:'niepoprawny format'}); continue; }
-    const kH=normKod(m[1]), kA=normKod(m[2]);
+    const kH = rozwijAlias(m[1]);
+    const kA = rozwijAlias(m[2]);
     const gh=parseInt(m[3]), ga=parseInt(m[4]);
+
+    // szukaj po kodzie bazy
     let found = meczePuli.find(mc => mc.kod && normKod(mc.kod) === kH+'-'+kA);
+    // szukaj po nazwie drużyny
     if (!found) {
       found = meczePuli.find(mc => {
         const hk = kodujDruzyne(mc.home);
