@@ -136,7 +136,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 <!-- TYPY -->
 <div id="tab-typy" class="section">
   <div class="card">
-    <div class="card-title">Wpisz swoje typy</div>
+    <div class="card-title">Moje typy</div>
     <div style="margin-bottom:12px">
       <label class="fl">Twoje imię / nick</label>
       <div class="row">
@@ -147,23 +147,13 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
     <div id="typy-status"></div>
   </div>
 
-  <div id="typy-form-card" class="card" style="display:none">
-    <div class="card-title" id="typy-form-title">Wklej typy</div>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:10px">
-      Wklej listę typów w formacie <code style="background:var(--gray-bg);padding:1px 6px;border-radius:4px;font-family:var(--mono)">KOD-KOD wynik:wynik</code>, każdy mecz w nowej linii.
-    </p>
-    <textarea id="typy-paste" rows="12" placeholder="MEK-RPA 2:0&#10;KOR-CZE 1:1&#10;CAN-BOŚ 2:1&#10;..." style="font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical"></textarea>
-    <div id="typy-preview" style="margin-top:12px"></div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn" onclick="parsujTypy()">Sprawdź typy</button>
-      <button class="btn primary" id="btn-zapisz-typy" onclick="zapiszTypy()" style="display:none">Zapisz i zablokuj 🔒</button>
+  <div id="typy-kolejki" style="display:none">
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+      <button class="btn" id="kbtn-1" onclick="pokazKolejke(1)">Kolejka 1</button>
+      <button class="btn" id="kbtn-2" onclick="pokazKolejke(2)">Kolejka 2</button>
+      <button class="btn" id="kbtn-3" onclick="pokazKolejke(3)">Kolejka 3</button>
     </div>
-    <p id="typy-msg" style="margin-top:8px"></p>
-  </div>
-
-  <div id="typy-podglad-card" class="card" style="display:none">
-    <div class="card-title">Twoje zapisane typy</div>
-    <div id="typy-podglad"></div>
+    <div id="kolejka-content"></div>
   </div>
 </div>
 
@@ -207,6 +197,41 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
     <div class="card">
       <div class="card-title">Uczestnicy i punkty</div>
       <div id="admin-uczestnicy"><div class="loading">Ładowanie...</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Edytuj typy uczestnika</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px">
+          <label class="fl">Uczestnik</label>
+          <select id="admin-typ-nick" onchange="adminZaladujTypy()"></select>
+        </div>
+        <div style="flex:1;min-width:100px">
+          <label class="fl">Kolejka</label>
+          <select id="admin-typ-kolejka" onchange="adminZaladujTypy()">
+            <option value="1">Kolejka 1</option>
+            <option value="2">Kolejka 2</option>
+            <option value="3">Kolejka 3</option>
+          </select>
+        </div>
+      </div>
+      <div id="admin-typ-status"></div>
+      <div id="admin-typ-akcje" style="display:none;margin-bottom:10px">
+        <button class="btn" style="background:var(--amber-bg);color:var(--amber);border-color:var(--amber);margin-right:8px" onclick="adminOdblokuj()">🔓 Odblokuj uczestnika</button>
+        <button class="btn primary" onclick="adminEdytujTypy()">✏️ Edytuj typy (admin)</button>
+      </div>
+      <div id="admin-typ-form" style="display:none">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:8px">Wklej nowe typy – zastąpią poprzednie.</p>
+        <textarea id="admin-typy-paste" rows="10" style="width:100%;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="CZE-RPA 2:1&#10;SUI-BOS 2:0&#10;..."></textarea>
+        <div id="admin-typy-preview" style="margin-top:8px"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" onclick="adminParsujTypy()">Sprawdź</button>
+          <button class="btn primary" id="btn-admin-zapisz" onclick="adminZapiszTypy()" style="display:none">Zapisz typy admina</button>
+          <button class="btn" onclick="document.getElementById('admin-typ-form').style.display='none'">Anuluj</button>
+        </div>
+        <p id="admin-typ-msg" style="margin-top:6px;font-size:13px"></p>
+      </div>
+      <div id="admin-typ-podglad"></div>
     </div>
 
   </div>
@@ -287,7 +312,7 @@ function renderAll() {
   renderRanking();
   renderMecze();
   renderWynikSelect();
-  if (adminVerified) renderAdminUczestnicy();
+  if (adminVerified) { renderAdminUczestnicy(); renderAdminNickSelect(); }
 }
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
@@ -398,6 +423,22 @@ function renderMecze() {
 }
 
 // ─── TYPY ─────────────────────────────────────────────────────────────────────
+// Kolejka 1: m01-m24, Kolejka 2: m25-m48, Kolejka 3: m49-m72
+function meczeDlaKolejki(k) {
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72]};
+  const [od, do_] = zakresy[k];
+  return allMecze.filter(m => {
+    const nr = parseInt(m.id.replace('m',''));
+    return nr >= od && nr <= do_;
+  });
+}
+
+function maTypyDlaKolejki(nick, k) {
+  const typy = allTypy[nick] || {};
+  const mecze = meczeDlaKolejki(k);
+  return mecze.some(m => typy[m.id] !== undefined);
+}
+
 async function zaladujTypy() {
   typNick = document.getElementById('typ-nick').value.trim();
   const statusEl = document.getElementById('typy-status');
@@ -405,25 +446,77 @@ async function zaladujTypy() {
   const istnieje = allUczestnicy.some(u => u.name===typNick);
   if (!istnieje) {
     statusEl.innerHTML=`<p class="err">Nie znaleziono uczestnika "${esc(typNick)}". Poproś administratora o dodanie Cię do gry.</p>`;
-    document.getElementById('typy-form-card').style.display='none';
-    document.getElementById('typy-podglad-card').style.display='none';
+    document.getElementById('typy-kolejki').style.display='none';
     return;
   }
   statusEl.innerHTML='';
-  const saved = allTypy[typNick] || {};
-  typZablokowane = Object.keys(saved).length > 0;
-  if (typZablokowane) {
-    document.getElementById('typy-form-card').style.display='none';
-    document.getElementById('typy-podglad-card').style.display='block';
-    renderTypyPodglad(saved);
+  document.getElementById('typy-kolejki').style.display='block';
+  // pokaż kolejkę 1 domyślnie lub pierwszą niezapisaną
+  let domyslna = 1;
+  for (let k=1; k<=3; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
+  pokazKolejke(domyslna);
+}
+
+let aktywnaKolejka = 1;
+
+function pokazKolejke(k) {
+  aktywnaKolejka = k;
+  // zaktualizuj przyciski
+  for (let i=1; i<=3; i++) {
+    const btn = document.getElementById('kbtn-'+i);
+    if (!btn) continue;
+    const maTypy = maTypyDlaKolejki(typNick, i);
+    btn.className = 'btn' + (i===k?' primary':'');
+    btn.textContent = 'Kolejka '+i + (maTypy?' ✓':'');
+  }
+  const content = document.getElementById('kolejka-content');
+  const maTypy = maTypyDlaKolejki(typNick, k);
+  const mecze = meczeDlaKolejki(k);
+  const typy = allTypy[typNick] || {};
+
+  if (maTypy) {
+    // pokaż zapisane typy z wynikami
+    let html = `<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="card-title" style="margin-bottom:0">Kolejka ${k} – zapisane typy 🔒</div>
+    </div>`;
+    html += '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+    let totalPkt = 0;
+    mecze.forEach(m => {
+      const t = typy[m.id], w = allWyniki[m.id];
+      let pts='—', col='';
+      if (t && w) {
+        if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; totalPkt+=3; }
+        else {
+          const tw=t.home>t.away?1:t.home<t.away?-1:0;
+          const ww=w.home>w.away?1:w.home<w.away?-1:0;
+          if (tw===ww) { pts='+1'; col='color:var(--amber)'; totalPkt+=1; }
+          else { pts='0'; col='color:var(--text2)'; }
+        }
+      }
+      html+=`<tr>
+        <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
+        <td class="mono" style="text-align:center">${t?t.home+':'+t.away:'—'}</td>
+        <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
+        <td class="mono" style="text-align:center;font-weight:600;${col}">${pts}</td>
+      </tr>`;
+    });
+    html+=`</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600">Kolejka ${k}: <span style="color:var(--green)">${totalPkt} pkt</span></div></div>`;
+    content.innerHTML = html;
   } else {
-    document.getElementById('typy-podglad-card').style.display='none';
-    document.getElementById('typy-form-card').style.display='block';
-    document.getElementById('typy-form-title').textContent='Typy dla: '+typNick;
-    parsedTypy={};
-    document.getElementById('typy-preview').innerHTML='';
-    document.getElementById('btn-zapisz-typy').style.display='none';
-    document.getElementById('typy-msg').textContent='';
+    // pokaż formularz wklejania
+    content.innerHTML = `<div class="card">
+      <div class="card-title">Kolejka ${k} – wpisz typy</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:10px">
+        Wklej typy w formacie <code style="background:var(--gray-bg);padding:1px 6px;border-radius:4px;font-family:var(--mono)">KOD-KOD wynik:wynik</code> – po jednym meczu na linię.
+      </p>
+      <textarea id="typy-paste" rows="12" style="width:100%;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="CZE-RPA 2:1&#10;SUI-BOS 2:0&#10;..."></textarea>
+      <div id="typy-preview" style="margin-top:12px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" onclick="parsujTypy()">Sprawdź typy</button>
+        <button class="btn primary" id="btn-zapisz-typy" onclick="zapiszTypy()" style="display:none">Zapisz i zablokuj 🔒</button>
+      </div>
+      <p id="typy-msg" style="margin-top:8px"></p>
+    </div>`;
   }
 }
 
@@ -439,35 +532,34 @@ function kodujDruzyne(name) {
   return [n.substring(0,3), n.substring(0,4), n.replace(/\s/g,'').substring(0,3), n.replace(/\s/g,'').substring(0,4)];
 }
 
-function parsujTypy() {
-  const text = document.getElementById('typy-paste').value;
-  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
-  parsedTypy = {};
+function parsujLinie(lines, meczePuli) {
   const matched=[], unmatched=[];
-
+  const wynik = {};
   for (const line of lines) {
-    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,5})[^A-ZĄĆĘŁŃÓŚŹŻ\d]+([A-ZĄĆĘŁŃÓŚŹŻ]{2,5})\s+(\d+)[:\-](\d+)$/i;
+    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})[^A-ZĄĆĘŁŃÓŚŹŻ\d]+([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)$/i;
     const m = line.match(re);
     if (!m) { unmatched.push({line, reason:'niepoprawny format'}); continue; }
     const kH=normKod(m[1]), kA=normKod(m[2]);
     const gh=parseInt(m[3]), ga=parseInt(m[4]);
-    // szukaj po polu kod lub po nazwie drużyny
-    let found = allMecze.find(mc => mc.kod && normKod(mc.kod) === kH+'-'+kA);
+    let found = meczePuli.find(mc => mc.kod && normKod(mc.kod) === kH+'-'+kA);
     if (!found) {
-      found = allMecze.find(mc => {
+      found = meczePuli.find(mc => {
         const hk = kodujDruzyne(mc.home);
         const ak = kodujDruzyne(mc.away);
         return hk.includes(kH) && ak.includes(kA);
       });
     }
     if (found) {
-      parsedTypy[found.id] = {home:gh, away:ga};
+      wynik[found.id] = {home:gh, away:ga};
       matched.push({line, mecz:found.home+' – '+found.away, gh, ga});
     } else {
-      unmatched.push({line, reason:'nie znaleziono meczu (kod: '+kH+'-'+kA+')'});
+      unmatched.push({line, reason:'nie znaleziono ('+kH+'-'+kA+')'});
     }
   }
+  return {matched, unmatched, wynik};
+}
 
+function renderParsResult(matched, unmatched, previewId) {
   let html='';
   if (matched.length) {
     html += `<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:var(--green);margin-bottom:6px">✓ Dopasowano ${matched.length} meczów</div>`;
@@ -485,24 +577,31 @@ function parsujTypy() {
     });
     html+='</tbody></table></div>';
   }
+  document.getElementById(previewId).innerHTML = html;
+}
 
-  document.getElementById('typy-preview').innerHTML = html;
+function parsujTypy() {
+  const text = document.getElementById('typy-paste').value;
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
+  const meczePuli = meczeDlaKolejki(aktywnaKolejka);
+  const {matched, unmatched, wynik} = parsujLinie(lines, meczePuli);
+  parsedTypy = wynik;
+  renderParsResult(matched, unmatched, 'typy-preview');
   document.getElementById('btn-zapisz-typy').style.display = matched.length?'inline-block':'none';
   document.getElementById('typy-msg').textContent='';
 }
 
 async function zapiszTypy() {
-  if (!typNick || typZablokowane || !Object.keys(parsedTypy).length) return;
+  if (!typNick || !Object.keys(parsedTypy).length) return;
   const btn = document.getElementById('btn-zapisz-typy');
   btn.disabled=true; btn.textContent='Zapisywanie...';
   try {
-    const res = await apiPost({action:'setTypy', nick:typNick, typy:parsedTypy});
+    const res = await apiPost({action:'setTypy', nick:typNick, typy:parsedTypy, kolejka:aktywnaKolejka});
     if (res.ok) {
-      typZablokowane=true;
       document.getElementById('typy-msg').className='ok';
       document.getElementById('typy-msg').textContent='Zapisano! Typy zablokowane. 🔒';
       await loadAll();
-      setTimeout(()=>zaladujTypy(), 800);
+      setTimeout(()=>pokazKolejke(aktywnaKolejka), 800);
     } else {
       document.getElementById('typy-msg').className='err';
       document.getElementById('typy-msg').textContent=res.error||'Błąd zapisu.';
@@ -513,33 +612,6 @@ async function zapiszTypy() {
     document.getElementById('typy-msg').textContent='Błąd: '+e.message;
     btn.disabled=false; btn.textContent='Zapisz i zablokuj 🔒';
   }
-}
-
-function renderTypyPodglad(typy) {
-  const c = document.getElementById('typy-podglad');
-  let html='<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
-  let totalPkt=0;
-  allMecze.forEach(m => {
-    const t=typy[m.id], w=allWyniki[m.id];
-    let pts='—', col='';
-    if (t && w) {
-      if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; totalPkt+=3; }
-      else {
-        const tw=t.home>t.away?1:t.home<t.away?-1:0;
-        const ww=w.home>w.away?1:w.home<w.away?-1:0;
-        if (tw===ww) { pts='+1'; col='color:var(--amber)'; totalPkt+=1; }
-        else { pts='0'; col='color:var(--text2)'; }
-      }
-    }
-    html+=`<tr>
-      <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}</td>
-      <td class="mono" style="text-align:center">${t?t.home+':'+t.away:'—'}</td>
-      <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
-      <td class="mono" style="text-align:center;font-weight:600;${col}">${pts}</td>
-    </tr>`;
-  });
-  html+=`</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600;font-size:15px">Razem: <span style="color:var(--green)">${totalPkt} pkt</span></div>`;
-  c.innerHTML=html;
 }
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────
@@ -649,6 +721,119 @@ async function usunUczestnika(name) {
     msg.className='ok'; msg.textContent='Usunięto: '+name;
     await loadAll(); renderAll();
   } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+// ─── ADMIN TYPY ──────────────────────────────────────────────────────────────
+let adminParsedTypy = {};
+
+function adminZaladujTypy() {
+  const nick = document.getElementById('admin-typ-nick').value;
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  const statusEl = document.getElementById('admin-typ-status');
+  const akcjeEl = document.getElementById('admin-typ-akcje');
+  const formEl = document.getElementById('admin-typ-form');
+  const podgladEl = document.getElementById('admin-typ-podglad');
+  if (!nick) { statusEl.innerHTML=''; akcjeEl.style.display='none'; formEl.style.display='none'; podgladEl.innerHTML=''; return; }
+  const maTypy = maTypyDlaKolejki(nick, k);
+  akcjeEl.style.display = 'block';
+  formEl.style.display = 'none';
+  adminParsedTypy = {};
+  document.getElementById('admin-typy-preview').innerHTML='';
+  document.getElementById('btn-admin-zapisz').style.display='none';
+  if (maTypy) {
+    statusEl.innerHTML=`<div class="badge b-green" style="margin-bottom:8px">✓ Kolejka ${k} – typy zapisane</div>`;
+    renderAdminTypyPodglad(nick, k);
+  } else {
+    statusEl.innerHTML=`<div class="badge b-gray" style="margin-bottom:8px">Kolejka ${k} – brak typów</div>`;
+    podgladEl.innerHTML='';
+  }
+}
+
+function renderAdminTypyPodglad(nick, k) {
+  const typy = allTypy[nick] || {};
+  const mecze = meczeDlaKolejki(k);
+  const podgladEl = document.getElementById('admin-typ-podglad');
+  let html='<table style="margin-top:10px"><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+  mecze.forEach(m => {
+    const t=typy[m.id], w=allWyniki[m.id];
+    let pts='—', col='';
+    if (t && w) {
+      if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; }
+      else {
+        const tw=t.home>t.away?1:t.home<t.away?-1:0;
+        const ww=w.home>w.away?1:w.home<w.away?-1:0;
+        pts = tw===ww ? '+1' : '0';
+        col = tw===ww ? 'color:var(--amber)' : 'color:var(--text2)';
+      }
+    }
+    html+=`<tr>
+      <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}</td>
+      <td class="mono" style="text-align:center">${t?t.home+':'+t.away:'—'}</td>
+      <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
+      <td class="mono" style="text-align:center;font-weight:600;${col}">${pts}</td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  podgladEl.innerHTML=html;
+}
+
+async function adminOdblokuj() {
+  const nick = document.getElementById('admin-typ-nick').value;
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  if (!nick) return;
+  if (!confirm(`Odblokować typy kolejki ${k} dla "${nick}"? Uczestnik będzie mógł je ponownie wpisać.`)) return;
+  const msg = document.getElementById('admin-typ-msg');
+  msg.textContent='Odblokowywanie...';
+  try {
+    const res = await apiPost({action:'deleteTypyKolejka', nick, kolejka:k});
+    if (res.ok) {
+      msg.className='ok'; msg.textContent='Odblokowano. Uczestnik może teraz wpisać typy.';
+      await loadAll(); adminZaladujTypy();
+    } else { msg.className='err'; msg.textContent=res.error||'Błąd.'; }
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+function adminEdytujTypy() {
+  document.getElementById('admin-typ-form').style.display='block';
+  document.getElementById('admin-typy-paste').value='';
+  document.getElementById('admin-typy-preview').innerHTML='';
+  document.getElementById('btn-admin-zapisz').style.display='none';
+}
+
+function adminParsujTypy() {
+  const text = document.getElementById('admin-typy-paste').value;
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  const meczePuli = meczeDlaKolejki(k);
+  const {matched, unmatched, wynik} = parsujLinie(lines, meczePuli);
+  adminParsedTypy = wynik;
+  renderParsResult(matched, unmatched, 'admin-typy-preview');
+  document.getElementById('btn-admin-zapisz').style.display = matched.length?'inline-block':'none';
+}
+
+async function adminZapiszTypy() {
+  const nick = document.getElementById('admin-typ-nick').value;
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  if (!nick || !Object.keys(adminParsedTypy).length) return;
+  const msg = document.getElementById('admin-typ-msg');
+  msg.textContent='Zapisywanie...';
+  try {
+    // najpierw usuń stare typy tej kolejki, potem zapisz nowe
+    await apiPost({action:'deleteTypyKolejka', nick, kolejka:k});
+    const res = await apiPost({action:'setTypy', nick, typy:adminParsedTypy, kolejka:k});
+    if (res.ok) {
+      msg.className='ok'; msg.textContent='Typy admina zapisane.';
+      document.getElementById('admin-typ-form').style.display='none';
+      await loadAll(); adminZaladujTypy();
+    } else { msg.className='err'; msg.textContent=res.error||'Błąd.'; }
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+function renderAdminNickSelect() {
+  const sel = document.getElementById('admin-typ-nick');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— wybierz —</option>' +
+    allUczestnicy.map(u=>`<option value="${esc(u.name)}">${esc(u.name)}</option>`).join('');
 }
 
 // ─── UTIL ─────────────────────────────────────────────────────────────────────
