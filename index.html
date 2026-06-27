@@ -101,6 +101,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   <button class="tab-btn active" onclick="showTab('ranking')">🏆 Tabela</button>
   <button class="tab-btn" onclick="showTab('mecze')">⚽ Mecze</button>
   <button class="tab-btn" onclick="showTab('typy')">📋 Moje typy</button>
+  <button class="tab-btn" onclick="showTab('puchar')">🏆 Faza pucharna</button>
   <button class="tab-btn" onclick="showTab('regulamin')">📜 Regulamin</button>
   <button class="tab-btn" onclick="showTab('admin')">🔧 Admin</button>
 </div>
@@ -163,6 +164,22 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
     </div>
   </div>
 </div>
+
+<!-- FAZA PUCHARNA -->
+<div id="tab-puchar" class="section">
+  <div class="card">
+    <div class="card-title">🏆 Faza pucharowa – 1/32 finału</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Pary generowane automatycznie na podstawie wyników fazy grupowej. Wyniki po 90 minutach.</p>
+    <div id="puchar-body"><div class="loading"><span class="spinner"></span>Ładowanie...</div></div>
+  </div>
+  <div id="puchar-dalej" style="display:none">
+    <div class="card">
+      <div class="card-title">Dalsza faza (1/16, ćwierćfinały, półfinały, finał)</div>
+      <div id="puchar-dalej-body"></div>
+    </div>
+  </div>
+</div>
+
 
 <!-- REGULAMIN -->
 <div id="tab-regulamin" class="section">
@@ -380,10 +397,11 @@ function renderAll() {
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 function showTab(name) {
-  const names = ['ranking','mecze','typy','regulamin','admin'];
+  const names = ['ranking','mecze','typy','puchar','regulamin','admin'];
   document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', names[i]===name));
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
+  if (name==='puchar') renderPuchar();
 }
 
 // ─── RANKING ──────────────────────────────────────────────────────────────────
@@ -899,6 +917,150 @@ async function usunUczestnika(name) {
     msg.className='ok'; msg.textContent='Usunięto: '+name;
     await loadAll(); renderAll();
   } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+
+// ─── FAZA PUCHARNA ────────────────────────────────────────────────────────────
+
+// Oficjalny klucz par 1/32 FIFA 2026
+// Format: [pozycja1, pozycja2] gdzie pozycja = 'A1'=zwycięzca gr A, 'A2'=wicemistrz gr A, 'A3'=3. miejsce gr A
+const KLUCZ_PAR = [
+  // 28.06
+  {home:'A2', away:'B2', data:'28.06 22:00', mecz:'m73'},  // RPA vs Kanada
+  // 29.06
+  {home:'C1', away:'F2', data:'29.06 20:00', mecz:'m76'},  // Brazylia vs Japonia
+  {home:'E1', away:'D3', data:'29.06 23:30', mecz:'m74'},  // Niemcy vs Paragwaj
+  // 30.06
+  {home:'F1', away:'C2', data:'30.06 02:00', mecz:'m75'},  // Holandia vs Maroko
+  {home:'E2', away:'I2', data:'30.06 20:00', mecz:'m78'},  // W.Kości Słon. vs Norwegia
+  {home:'I1', away:'F3', data:'30.06 22:00', mecz:'m77'},  // Francja vs Szwecja(3)
+  // 01.07
+  {home:'A1', away:'BEST3_CEHI', data:'01.07 02:00', mecz:'m79'}, // Meksyk vs 3.msc C/E/H/I
+  {home:'L1', away:'BEST3_EHIJK', data:'01.07 19:00', mecz:'m80'}, // Anglia vs 3.msc
+  {home:'G1', away:'BEST3_AEHIJ', data:'01.07 23:00', mecz:'m82'}, // Belgia vs 3.msc
+  // 02.07
+  {home:'D1', away:'B3', data:'02.07 01:00', mecz:'m81'},  // USA vs Bośnia
+  {home:'H1', away:'J2', data:'02.07 20:00', mecz:'m84'},  // Hiszpania vs Austria/Algieria
+  {home:'B1', away:'BEST3_EFGIJ', data:'02.07 22:00', mecz:'m83'}, // Szwajcaria vs 3.msc
+  // 03.07
+  {home:'K2', away:'L2', data:'03.07 01:00', mecz:'m85'},  // Portugalia vs Chorwacja
+  {home:'D2', away:'G2', data:'03.07 19:00', mecz:'m86'},  // Australia vs Egipt
+  {home:'J1', away:'H2', data:'03.07 23:00', mecz:'m87'},  // Argentyna vs Cabo Verde
+  {home:'K1', away:'BEST3_DEIJL', data:'04.07 01:00', mecz:'m88'}, // Kolumbia vs 3.msc
+];
+
+function obliczTabelaGrupy(grupa) {
+  const meczeGr = allMecze.filter(m => m.grupa === grupa);
+  const druzyny = {};
+  meczeGr.forEach(m => {
+    if (!druzyny[m.home]) druzyny[m.home] = {name:m.home, pkt:0, bramki:0, stracone:0, bilans:0, mecze:0, wygrane:0, remisy:0};
+    if (!druzyny[m.away]) druzyny[m.away] = {name:m.away, pkt:0, bramki:0, stracone:0, bilans:0, mecze:0, wygrane:0, remisy:0};
+  });
+  meczeGr.forEach(m => {
+    const w = allWyniki[m.id];
+    if (!w) return;
+    const h = druzyny[m.home], a = druzyny[m.away];
+    h.mecze++; a.mecze++;
+    h.bramki += w.home; h.stracone += w.away;
+    a.bramki += w.away; a.stracone += w.home;
+    if (w.home > w.away) { h.pkt+=3; h.wygrane++; }
+    else if (w.home < w.away) { a.pkt+=3; a.wygrane++; }
+    else { h.pkt+=1; a.pkt+=1; h.remisy++; a.remisy++; }
+  });
+  Object.values(druzyny).forEach(d => d.bilans = d.bramki - d.stracone);
+  return Object.values(druzyny).sort((a,b) => b.pkt-a.pkt || b.bilans-a.bilans || b.bramki-a.bramki);
+}
+
+function pobierzPozycje() {
+  const grupy = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+  const poz = {};
+  const trzecie = [];
+  grupy.forEach(g => {
+    const tab = obliczTabelaGrupy(g);
+    if (tab[0]) poz[g+'1'] = tab[0];
+    if (tab[1]) poz[g+'2'] = tab[1];
+    if (tab[2]) {
+      const d = {...tab[2], grupa:g};
+      poz[g+'3'] = d;
+      trzecie.push(d);
+    }
+    if (tab[3]) poz[g+'4'] = tab[3];
+  });
+  // Sortuj 3. miejsca i przydziel 8 najlepszych
+  trzecie.sort((a,b) => b.pkt-a.pkt || b.bilans-a.bilans || b.bramki-a.bramki);
+  const top8 = trzecie.slice(0,8);
+  poz['_top8trzecie'] = top8;
+  return poz;
+}
+
+function rozwijPozycje(klucz, poz) {
+  if (!klucz.startsWith('BEST3')) return poz[klucz];
+  // Przydziel najlepsze 3. miejsca do par
+  const top8 = poz['_top8trzecie'] || [];
+  // uproszczone: zwróć kolejne 3. miejsce z puli
+  const idx = parseInt(klucz.replace('BEST3_','').length % top8.length);
+  return top8[idx] || null;
+}
+
+function renderPuchar() {
+  const c = document.getElementById('puchar-body');
+  const poz = pobierzPozycje();
+  const grupy = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+  
+  // Sprawdź czy faza grupowa skończona
+  const meczeGrupowe = allMecze.filter(m => parseInt(m.id.replace('m','')) <= 72);
+  const wynikow = meczeGrupowe.filter(m => allWyniki[m.id]).length;
+  
+  if (wynikow < 72) {
+    // Pokaż tabelki grupowe w trakcie
+    let html = `<div class="info" style="margin-bottom:1rem">⏳ Faza grupowa w toku (${wynikow}/72 meczów). Pary 1/32 pojawią się automatycznie po zakończeniu wszystkich grup.</div>`;
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">';
+    grupy.forEach(g => {
+      const tab = obliczTabelaGrupy(g);
+      html += `<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <div style="background:var(--gray-bg);padding:6px 12px;font-weight:600;font-size:13px">Grupa ${g}</div>
+        <table style="width:100%;font-size:12px"><thead><tr>
+          <th style="padding:5px 8px">Drużyna</th>
+          <th style="text-align:center;padding:5px 4px">M</th>
+          <th style="text-align:center;padding:5px 4px">Pkt</th>
+          <th style="text-align:center;padding:5px 4px">Br</th>
+        </tr></thead><tbody>`;
+      tab.forEach((d,i) => {
+        const awans = i < 2 ? 'background:rgba(21,128,61,.08)' : '';
+        html += `<tr style="${awans}">
+          <td style="padding:5px 8px;font-weight:${i<2?'500':'400'}">${i===0?'🥇':i===1?'🥈':i===2?'🔸':''} ${esc(d.name)}</td>
+          <td style="text-align:center;padding:5px 4px">${d.mecze}</td>
+          <td style="text-align:center;padding:5px 4px;font-weight:600">${d.pkt}</td>
+          <td style="text-align:center;padding:5px 4px;font-family:var(--mono);font-size:11px">${d.bramki}:${d.stracone}</td>
+        </tr>`;
+      });
+      html += '</tbody></table></div>';
+    });
+    html += '</div>';
+    c.innerHTML = html;
+    return;
+  }
+
+  // Faza grupowa skończona – pokaż pary 1/32
+  let html = '<div style="display:grid;gap:10px">';
+  KLUCZ_PAR.forEach(par => {
+    const home = poz[par.home];
+    const away = poz[par.away] || rozwijPozycje(par.away, poz);
+    const w = allWyniki[par.mecz];
+    const homeName = home ? home.name : par.home;
+    const awayName = away ? away.name : par.away;
+    const score = w ? `<span style="font-family:var(--mono);font-weight:700;font-size:16px">${w.home}:${w.away}</span>` : '<span style="color:var(--text2)">—:—</span>';
+    const badge = w ? '<span class="badge b-green">Koniec</span>' : '<span class="badge b-gray">Nadchodzi</span>';
+    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--card)">
+      <div style="flex:1;font-weight:500;font-size:14px">${esc(homeName)}</div>
+      <div style="text-align:center;min-width:60px">${score}</div>
+      <div style="flex:1;font-weight:500;font-size:14px;text-align:right">${esc(awayName)}</div>
+      ${badge}
+      <span style="font-size:12px;color:var(--text2);min-width:80px;text-align:right">${par.data}</span>
+    </div>`;
+  });
+  html += '</div>';
+  c.innerHTML = html;
 }
 
 // ─── ADMIN TYPY ──────────────────────────────────────────────────────────────
