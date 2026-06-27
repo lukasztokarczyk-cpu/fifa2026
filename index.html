@@ -718,7 +718,12 @@ function parsujLinie(lines, meczePuli) {
 function meczRozpoczety(dateStr) {
   if (!dateStr) return false;
   try {
-    const parts = dateStr.match(/(\d+)\.(\d+)\s+(\d+):(\d+)/);
+    // format ISO: 2026-06-11T20:00:00.000Z
+    if (String(dateStr).includes('T') || String(dateStr).includes('-202')) {
+      return new Date() >= new Date(dateStr);
+    }
+    // format DD.MM HH:MM
+    const parts = String(dateStr).match(/(\d+)\.(\d+)\s+(\d+):(\d+)/);
     if (!parts) return false;
     const d = new Date(2026, parseInt(parts[2])-1, parseInt(parts[1]), parseInt(parts[3]), parseInt(parts[4]));
     return new Date() >= d;
