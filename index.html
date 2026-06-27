@@ -449,24 +449,15 @@ function pokazTypyModal(nick) {
   let html = '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
   allMecze.forEach(m => {
     const t = typy[m.id], w = allWyniki[m.id];
+    if (!t) return; // pomiń mecze bez typów
+    const started = meczRozpoczety(m.date);
     let pts = '—', col = '';
-    if (t && w) {
+    if (t && w && started) {
       if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; totalPkt+=3; }
       else {
         const tw=t.home>t.away?1:t.home<t.away?-1:0;
         const ww=w.home>w.away?1:w.home<w.away?-1:0;
         if (tw===ww) { pts='+1'; col='color:var(--amber)'; totalPkt+=1; }
-        else { pts='0'; col='color:var(--text2)'; }
-      }
-    }
-    if (!t) return; // pomiń mecze bez typów
-    const started = meczRozpoczety(m.date);
-    if (t && w && started) {
-      if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; totalPkt+=3; }
-      else {
-        const tw2=t.home>t.away?1:t.home<t.away?-1:0;
-        const ww2=w.home>w.away?1:w.home<w.away?-1:0;
-        if (tw2===ww2) { pts='+1'; col='color:var(--amber)'; totalPkt+=1; }
         else { pts='0'; col='color:var(--text2)'; }
       }
     }
