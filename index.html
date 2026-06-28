@@ -1227,11 +1227,9 @@ async function adminOdblokuj() {
   const msg = document.getElementById('admin-typ-msg');
   msg.textContent='Odblokowywanie...';
   try {
-    const res = await apiPost({action:'deleteTypyKolejka', nick, kolejka:k});
-    if (res.ok) {
-      msg.className='ok'; msg.textContent='Odblokowano. Uczestnik może teraz wpisać typy.';
-      await loadAll(); adminZaladujTypy();
-    } else { msg.className='err'; msg.textContent=res.error||'Błąd.'; }
+    await apicall({action:'deleteTypyKolejka', payload: JSON.stringify({action:'deleteTypyKolejka', nick, kolejka:k})});
+    msg.className='ok'; msg.textContent='Odblokowano. Uczestnik może teraz wpisać typy.';
+    await loadAll(); adminZaladujTypy();
   } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
 }
 
@@ -1260,14 +1258,21 @@ async function adminZapiszTypy() {
   const msg = document.getElementById('admin-typ-msg');
   msg.textContent='Zapisywanie...';
   try {
-    // najpierw usuń stare typy tej kolejki, potem zapisz nowe
-    await apiPost({action:'deleteTypyKolejka', nick, kolejka:k});
-    const res = await apiPost({action:'setTypy', nick, typy:adminParsedTypy, kolejka:k});
-    if (res.ok) {
-      msg.className='ok'; msg.textContent='Typy admina zapisane.';
-      document.getElementById('admin-typ-form').style.display='none';
-      await loadAll(); adminZaladujTypy();
-    } else { msg.className='err'; msg.textContent=res.error||'Błąd.'; }
+    // usuń stare typy
+    await apicall({action:'deleteTypyKolejka', payload: JSON.stringify({action:'deleteTypyKolejka', nick, kolejka:k})});
+    // zapisz nowe – admin używa partial:true żeby ominąć sprawdzanie duplikatów
+    const typy = adminParsedTypy;
+    const mecze = Object.keys(typy);
+    for (let i = 0; i < mecze.length; i += 6) {
+      const partial = {};
+      mecze.slice(i, i+6).forEach(key => partial[key] = typy[key]);
+      await apicall({action:'setTypy', payload: JSON.stringify({
+        action:'setTypy', nick, typy:partial, kolejka:k, partial:true
+      })});
+    }
+    msg.className='ok'; msg.textContent='Typy admina zapisane.';
+    document.getElementById('admin-typ-form').style.display='none';
+    await loadAll(); adminZaladujTypy();
   } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
 }
 
