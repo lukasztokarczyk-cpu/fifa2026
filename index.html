@@ -159,6 +159,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
         <button class="btn" id="kbtn-1" onclick="pokazKolejke(1)">Kolejka 1</button>
         <button class="btn" id="kbtn-2" onclick="pokazKolejke(2)">Kolejka 2</button>
         <button class="btn" id="kbtn-3" onclick="pokazKolejke(3)">Kolejka 3</button>
+        <button class="btn" id="kbtn-4" onclick="pokazKolejke(4)">⚡ Faza pucharna</button>
       </div>
       <div id="kolejka-content"></div>
     </div>
@@ -536,8 +537,8 @@ function wylogujTypera() {
 
 // Kolejka 1: m01-m24, Kolejka 2: m25-m48, Kolejka 3: m49-m72
 function meczeDlaKolejki(k) {
-  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72]};
-  const [od, do_] = zakresy[k];
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,999]};
+  const [od, do_] = zakresy[k] || [1,24];
   return allMecze.filter(m => {
     const nr = parseInt(m.id.replace('m',''));
     return nr >= od && nr <= do_;
@@ -548,6 +549,10 @@ function maTypyDlaKolejki(nick, k) {
   const typy = allTypy[nick] || {};
   const mecze = meczeDlaKolejki(k);
   return mecze.some(m => typy[m.id] !== undefined);
+}
+
+function labelKolejki(k) {
+  return k===4 ? '⚡ Faza pucharna' : 'Kolejka '+k;
 }
 
 async function zaladujTypy() {
@@ -564,7 +569,7 @@ async function zaladujTypy() {
   document.getElementById('typy-kolejki').style.display='block';
   // pokaż kolejkę 1 domyślnie lub pierwszą niezapisaną
   let domyslna = 1;
-  for (let k=1; k<=3; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
+  for (let k=1; k<=4; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
   pokazKolejke(domyslna);
 }
 
@@ -573,12 +578,12 @@ let aktywnaKolejka = 1;
 function pokazKolejke(k) {
   aktywnaKolejka = k;
   // zaktualizuj przyciski
-  for (let i=1; i<=3; i++) {
+  for (let i=1; i<=4; i++) {
     const btn = document.getElementById('kbtn-'+i);
     if (!btn) continue;
     const maTypy = maTypyDlaKolejki(typNick, i);
     btn.className = 'btn' + (i===k?' primary':'');
-    btn.textContent = 'Kolejka '+i + (maTypy?' ✓':'');
+    btn.textContent = labelKolejki(i) + (maTypy?' ✓':'');
   }
   const content = document.getElementById('kolejka-content');
   const maTypy = maTypyDlaKolejki(typNick, k);
@@ -588,7 +593,7 @@ function pokazKolejke(k) {
   if (maTypy) {
     // pokaż zapisane typy z wynikami
     let html = `<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div class="card-title" style="margin-bottom:0">Kolejka ${k} – zapisane typy 🔒</div>
+      <div class="card-title" style="margin-bottom:0">${labelKolejki(k)} – zapisane typy 🔒</div>
     </div>`;
     html += '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
     let totalPkt = 0;
@@ -614,7 +619,7 @@ function pokazKolejke(k) {
         <td class="mono" style="text-align:center;font-weight:600;${col}">${started&&t&&w?pts:'—'}</td>
       </tr>`;
     });
-    html+=`</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600">Kolejka ${k}: <span style="color:var(--green)">${totalPkt} pkt</span></div></div>`;
+    html+=`</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600">${labelKolejki(k)}: <span style="color:var(--green)">${totalPkt} pkt</span></div></div>`;
     content.innerHTML = html;
   } else {
     // pokaż formularz wklejania
@@ -623,7 +628,7 @@ function pokazKolejke(k) {
       <p style="font-size:13px;color:var(--text2);margin-bottom:10px">
         Wklej typy w formacie <code style="background:var(--gray-bg);padding:1px 6px;border-radius:4px;font-family:var(--mono)">KOD-KOD wynik:wynik</code> – po jednym meczu na linię.
       </p>
-      <textarea id="typy-paste" rows="12" style="width:100%;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="CZE-RPA 2:1&#10;SUI-BOS 2:0&#10;..."></textarea>
+      <textarea id="typy-paste" rows="${k===4?'8':'12'}" style="width:100%;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="${k===4?'m73 2:1\nm74 1:0\n...':'CZE-RPA 2:1\nSUI-BOS 2:0\n...'}"></textarea>
       <div id="typy-preview" style="margin-top:12px"></div>
       <div style="display:flex;gap:8px;margin-top:12px">
         <button class="btn" onclick="parsujTypy()">Sprawdź typy</button>
@@ -686,6 +691,19 @@ function parsujLinie(lines, meczePuli) {
   const matched=[], unmatched=[];
   const wynik = {};
   for (const line of lines) {
+    // obsługuje format mID wynik:wynik np. m73 2:1
+    const reMid = /^(m\d+)\s+(\d+)[:\-](\d+)$/i;
+    const mMid = line.match(reMid);
+    if (mMid) {
+      const found = meczePuli.find(mc => mc.id.toLowerCase() === mMid[1].toLowerCase());
+      if (found) {
+        wynik[found.id] = {home:parseInt(mMid[2]), away:parseInt(mMid[3])};
+        matched.push({line, mecz:found.home+' – '+found.away, gh:parseInt(mMid[2]), ga:parseInt(mMid[3])});
+      } else {
+        unmatched.push({line, reason:'nie znaleziono meczu '+mMid[1]});
+      }
+      continue;
+    }
     // obsługuje separatory: vs, VS, -, –, przestrzeń
     const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s*(?:vs\.?|VS\.?|–|-)\s*([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)$/i;
     const m = line.match(re);
@@ -918,31 +936,24 @@ async function usunUczestnika(name) {
 
 // ─── FAZA PUCHARNA ────────────────────────────────────────────────────────────
 
-// Oficjalny klucz par 1/32 FIFA 2026
-// Format: [pozycja1, pozycja2] gdzie pozycja = 'A1'=zwycięzca gr A, 'A2'=wicemistrz gr A, 'A3'=3. miejsce gr A
+// Pary 1/32 finału FIFA 2026 (rzeczywiste)
 const KLUCZ_PAR = [
-  // 28.06
-  {home:'A2', away:'B2', data:'28.06 22:00', mecz:'m73'},  // RPA vs Kanada
-  // 29.06
-  {home:'C1', away:'F2', data:'29.06 20:00', mecz:'m76'},  // Brazylia vs Japonia
-  {home:'E1', away:'D3', data:'29.06 23:30', mecz:'m74'},  // Niemcy vs Paragwaj
-  // 30.06
-  {home:'F1', away:'C2', data:'30.06 02:00', mecz:'m75'},  // Holandia vs Maroko
-  {home:'E2', away:'I2', data:'30.06 20:00', mecz:'m78'},  // W.Kości Słon. vs Norwegia
-  {home:'I1', away:'F3', data:'30.06 22:00', mecz:'m77'},  // Francja vs Szwecja(3)
-  // 01.07
-  {home:'A1', away:'BEST3_CEHI', data:'01.07 02:00', mecz:'m79'}, // Meksyk vs 3.msc C/E/H/I
-  {home:'L1', away:'BEST3_EHIJK', data:'01.07 19:00', mecz:'m80'}, // Anglia vs 3.msc
-  {home:'G1', away:'BEST3_AEHIJ', data:'01.07 23:00', mecz:'m82'}, // Belgia vs 3.msc
-  // 02.07
-  {home:'D1', away:'B3', data:'02.07 01:00', mecz:'m81'},  // USA vs Bośnia
-  {home:'H1', away:'J2', data:'02.07 20:00', mecz:'m84'},  // Hiszpania vs Austria/Algieria
-  {home:'B1', away:'BEST3_EFGIJ', data:'02.07 22:00', mecz:'m83'}, // Szwajcaria vs 3.msc
-  // 03.07
-  {home:'K2', away:'L2', data:'03.07 01:00', mecz:'m85'},  // Portugalia vs Chorwacja
-  {home:'D2', away:'G2', data:'03.07 19:00', mecz:'m86'},  // Australia vs Egipt
-  {home:'J1', away:'H2', data:'03.07 23:00', mecz:'m87'},  // Argentyna vs Cabo Verde
-  {home:'K1', away:'BEST3_DEIJL', data:'04.07 01:00', mecz:'m88'}, // Kolumbia vs 3.msc
+  {home:'Rep. Płd. Afryki', away:'Kanada',              data:'28.06 21:00', mecz:'m73'},
+  {home:'Brazylia',          away:'Japonia',              data:'29.06 19:00', mecz:'m74'},
+  {home:'Niemcy',            away:'Paragwaj',             data:'29.06 22:30', mecz:'m75'},
+  {home:'Holandia',          away:'Maroko',               data:'30.06 03:00', mecz:'m76'},
+  {home:'W. Kości Słon.',    away:'Norwegia',             data:'30.06 19:00', mecz:'m77'},
+  {home:'Francja',           away:'Szwecja',              data:'30.06 23:00', mecz:'m78'},
+  {home:'Meksyk',            away:'Ekwador',              data:'01.07 03:00', mecz:'m79'},
+  {home:'Anglia',            away:'DR Konga',             data:'01.07 18:00', mecz:'m80'},
+  {home:'Belgia',            away:'Senegal',              data:'01.07 22:00', mecz:'m81'},
+  {home:'USA',               away:'Bośnia i Herceg.',     data:'02.07 02:00', mecz:'m82'},
+  {home:'Hiszpania',         away:'Austria',              data:'02.07 21:00', mecz:'m83'},
+  {home:'Portugalia',        away:'Chorwacja',            data:'03.07 01:00', mecz:'m84'},
+  {home:'Szwajcaria',        away:'Algieria',             data:'03.07 05:00', mecz:'m85'},
+  {home:'Australia',         away:'Egipt',                data:'03.07 20:00', mecz:'m86'},
+  {home:'Argentyna',         away:'Rep. Ziel. Przylądka', data:'04.07 00:00', mecz:'m87'},
+  {home:'Kolumbia',          away:'Ghana',                data:'04.07 03:30', mecz:'m88'},
 ];
 
 function obliczTabelaGrupy(grupa) {
@@ -1000,60 +1011,53 @@ function rozwijPozycje(klucz, poz) {
 
 function renderPuchar() {
   const c = document.getElementById('puchar-body');
-  const poz = pobierzPozycje();
+  // Pokaż tabelki grupowe + pary 1/32
   const grupy = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-  
-  // Sprawdź czy faza grupowa skończona
-  const meczeGrupowe = allMecze.filter(m => parseInt(m.id.replace('m','')) <= 72);
-  const wynikow = meczeGrupowe.filter(m => allWyniki[m.id]).length;
-  
-  if (wynikow < 72) {
-    // Pokaż tabelki grupowe w trakcie
-    let html = `<div class="info" style="margin-bottom:1rem">⏳ Faza grupowa w toku (${wynikow}/72 meczów). Pary 1/32 pojawią się automatycznie po zakończeniu wszystkich grup.</div>`;
-    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">';
-    grupy.forEach(g => {
-      const tab = obliczTabelaGrupy(g);
-      html += `<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <div style="background:var(--gray-bg);padding:6px 12px;font-weight:600;font-size:13px">Grupa ${g}</div>
-        <table style="width:100%;font-size:12px"><thead><tr>
-          <th style="padding:5px 8px">Drużyna</th>
-          <th style="text-align:center;padding:5px 4px">M</th>
-          <th style="text-align:center;padding:5px 4px">Pkt</th>
-          <th style="text-align:center;padding:5px 4px">Br</th>
-        </tr></thead><tbody>`;
-      tab.forEach((d,i) => {
-        const awans = i < 2 ? 'background:rgba(21,128,61,.08)' : '';
-        html += `<tr style="${awans}">
-          <td style="padding:5px 8px;font-weight:${i<2?'500':'400'}">${i===0?'🥇':i===1?'🥈':i===2?'🔸':''} ${esc(d.name)}</td>
-          <td style="text-align:center;padding:5px 4px">${d.mecze}</td>
-          <td style="text-align:center;padding:5px 4px;font-weight:600">${d.pkt}</td>
-          <td style="text-align:center;padding:5px 4px;font-family:var(--mono);font-size:11px">${d.bramki}:${d.stracone}</td>
-        </tr>`;
-      });
-      html += '</tbody></table></div>';
-    });
-    html += '</div>';
-    c.innerHTML = html;
-    return;
-  }
+  const wynikow = allMecze.filter(m => parseInt(m.id.replace('m','')) <= 72 && allWyniki[m.id]).length;
 
-  // Faza grupowa skończona – pokaż pary 1/32
-  let html = '<div style="display:grid;gap:10px">';
+  let html = '';
+
+  // Pary 1/32
+  html += '<div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">1/32 finału</div>';
+  html += '<div style="display:grid;gap:8px;margin-bottom:1.5rem">';
   KLUCZ_PAR.forEach(par => {
-    const home = poz[par.home];
-    const away = poz[par.away] || rozwijPozycje(par.away, poz);
+    const mecz = allMecze.find(m => m.id === par.mecz);
     const w = allWyniki[par.mecz];
-    const homeName = home ? home.name : par.home;
-    const awayName = away ? away.name : par.away;
-    const score = w ? `<span style="font-family:var(--mono);font-weight:700;font-size:16px">${w.home}:${w.away}</span>` : '<span style="color:var(--text2)">—:—</span>';
-    const badge = w ? '<span class="badge b-green">Koniec</span>' : '<span class="badge b-gray">Nadchodzi</span>';
-    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--card)">
-      <div style="flex:1;font-weight:500;font-size:14px">${esc(homeName)}</div>
-      <div style="text-align:center;min-width:60px">${score}</div>
-      <div style="flex:1;font-weight:500;font-size:14px;text-align:right">${esc(awayName)}</div>
+    const score = w ? `<span style="font-family:var(--mono);font-weight:700;font-size:15px">${w.home}:${w.away}</span>` : '<span style="color:var(--text2);font-size:13px">—:—</span>';
+    const badge = w ? '<span class="badge b-green" style="font-size:11px">Koniec</span>' : '<span class="badge b-gray" style="font-size:11px">Nadchodzi</span>';
+    html += `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card)">
+      <span style="font-size:11px;color:var(--text2);min-width:70px">${par.data}</span>
+      <div style="flex:1;font-weight:500;font-size:13px">${esc(par.home)}</div>
+      <div style="text-align:center;min-width:52px">${score}</div>
+      <div style="flex:1;font-weight:500;font-size:13px;text-align:right">${esc(par.away)}</div>
       ${badge}
-      <span style="font-size:12px;color:var(--text2);min-width:80px;text-align:right">${par.data}</span>
     </div>`;
+  });
+  html += '</div>';
+
+  // Tabelki grupowe
+  html += `<div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Tabele grupowe (${wynikow}/72)</div>`;
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">';
+  grupy.forEach(g => {
+    const tab = obliczTabelaGrupy(g);
+    html += `<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <div style="background:var(--gray-bg);padding:5px 10px;font-weight:600;font-size:12px">Grupa ${g}</div>
+      <table style="width:100%;font-size:12px"><thead><tr>
+        <th style="padding:4px 8px">Drużyna</th>
+        <th style="text-align:center;padding:4px 3px">M</th>
+        <th style="text-align:center;padding:4px 3px">Pkt</th>
+        <th style="text-align:center;padding:4px 3px">Br</th>
+      </tr></thead><tbody>`;
+    tab.forEach((d,i) => {
+      const bg = i<2 ? 'background:rgba(21,128,61,.07)' : '';
+      html += `<tr style="${bg}">
+        <td style="padding:4px 8px;font-weight:${i<2?'500':'400'}">${i===0?'🥇':i===1?'🥈':i===2?'🔸':'  '} ${esc(d.name)}</td>
+        <td style="text-align:center;padding:4px 3px">${d.mecze}</td>
+        <td style="text-align:center;padding:4px 3px;font-weight:600">${d.pkt}</td>
+        <td style="text-align:center;padding:4px 3px;font-family:var(--mono);font-size:11px">${d.bramki}:${d.stracone}</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
   });
   html += '</div>';
   c.innerHTML = html;
