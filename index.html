@@ -383,7 +383,7 @@ async function loadAll() {
     allTypy = {};
     (typy||[]).forEach(t => {
       if (!allTypy[t.nick]) allTypy[t.nick] = {};
-      allTypy[t.nick][t.mecz_id] = { home: Number(t.home), away: Number(t.away) };
+      allTypy[t.nick][t.mecz_id] = { home: Number(t.home), away: Number(t.away), awans: t.awans||null };
     });
     document.getElementById('hdr-sub').textContent = allUczestnicy.length + ' graczy';
   } catch(e) { console.error(e); }
@@ -406,16 +406,75 @@ function showTab(name) {
 }
 
 // ─── RANKING ──────────────────────────────────────────────────────────────────
+function czyMeczPucharowy(mid) {
+  const nr = parseInt(String(mid).replace('m',''));
+  return nr >= 73;
+}
+
+function czyFinał(mid) {
+  // m101=mecz o 3. miejsce, m102=finał (przykładowe ID – admin doda)
+  const nr = parseInt(String(mid).replace('m',''));
+  return nr >= 101;
+}
+
+function sprawdzAwans(awansTyp, homeTeam, awayTeam, awansReal) {
+  if (!awansTyp || !awansReal) return false;
+  const a = normKod(awansTyp);
+  const r = normKod(awansReal);
+  // sprawdź po nazwie lub skrócie
+  const homeKody = kodujDruzyne(homeTeam);
+  const awayKody = kodujDruzyne(awayTeam);
+  const realKody = kodujDruzyne(awansReal);
+  return a === r || homeKody.includes(a) && realKody.some(k=>homeKody.includes(k)) ||
+         awayKody.includes(a) && realKody.some(k=>awayKody.includes(k)) ||
+         realKody.includes(a);
+}
+
+function obliczPktMecz(t, w, mid, mecz) {
+  if (!t || !w) return {pkt:0, typ:'—'};
+  const puchar = czyMeczPucharowy(mid);
+  const final_ = czyFinał(mid);
+  const pkt3 = final_ ? 5 : 3;
+  const pkt1 = final_ ? 2 : 1;
+
+  const dokladny = t.home===w.home && t.away===w.away;
+  const tw = t.home>t.away?1:t.home<t.away?-1:0;
+  const ww = w.home>w.away?1:w.home<w.away?-1:0;
+  const trafionyWynik = tw===ww;
+  const remis = ww===0;
+
+  if (dokladny) {
+    let bonus = 0;
+    if (puchar && remis && t.awans && w.awans) {
+      bonus = sprawdzAwans(t.awans, mecz?.home||'', mecz?.away||'', w.awans) ? 1 : 0;
+    }
+    return {pkt: pkt3+bonus, typ: dokladny?'+'+pkt3+(bonus?'+1':''):'+'+(pkt3+bonus)};
+  }
+  if (trafionyWynik) {
+    let bonus = 0;
+    if (puchar && remis && t.awans && w.awans) {
+      bonus = sprawdzAwans(t.awans, mecz?.home||'', mecz?.away||'', w.awans) ? 1 : 0;
+    }
+    return {pkt: pkt1+bonus, typ: '+'+(pkt1+bonus)};
+  }
+  return {pkt:0, typ:'0'};
+}
+
 function obliczPkt(nick) {
   const typy = allTypy[nick] || {};
   let pkt=0, t3=0, t1=0;
   for (const [mid, w] of Object.entries(allWyniki)) {
     const t = typy[mid];
     if (!t) continue;
-    if (t.home===w.home && t.away===w.away) { pkt+=3; t3++; continue; }
-    const tw = t.home>t.away?1:t.home<t.away?-1:0;
-    const ww = w.home>w.away?1:w.home<w.away?-1:0;
-    if (tw===ww) { pkt+=1; t1++; }
+    const mecz = allMecze.find(m=>m.id===mid);
+    const {pkt:p} = obliczPktMecz(t, w, mid, mecz);
+    pkt += p;
+    if (t.home===w.home && t.away===w.away) t3++;
+    else {
+      const tw=t.home>t.away?1:t.home<t.away?-1:0;
+      const ww=w.home>w.away?1:w.home<w.away?-1:0;
+      if (tw===ww) t1++;
+    }
   }
   return {pkt, t3, t1};
 }
@@ -454,15 +513,13 @@ function pokazTypyModal(nick) {
     const started = meczRozpoczety(m.date);
     let pts = '—', col = '';
     if (t && w && started) {
-      if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; totalPkt+=3; }
-      else {
-        const tw=t.home>t.away?1:t.home<t.away?-1:0;
-        const ww=w.home>w.away?1:w.home<w.away?-1:0;
-        if (tw===ww) { pts='+1'; col='color:var(--amber)'; totalPkt+=1; }
-        else { pts='0'; col='color:var(--text2)'; }
-      }
+      const {pkt:p} = obliczPktMecz(t, w, m.id, m);
+      pts = p>0 ? '+'+p : '0';
+      col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
+      totalPkt += p;
     }
-    const typCell = started ? `${t.home}:${t.away}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty</span>';
+    const awansInfo = t && t.awans ? ` (→${t.awans})` : '';
+    const typCell = started ? `${t.home}:${t.away}${awansInfo}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty</span>';
     html += `<tr>
       <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
       <td class="mono" style="text-align:center">${typCell}</td>
@@ -603,15 +660,13 @@ function pokazKolejke(k) {
       const widoczny = started || (loggedNick && loggedNick === typNick);
       let pts='—', col='';
       if (t && w && started) {
-        if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; totalPkt+=3; }
-        else {
-          const tw=t.home>t.away?1:t.home<t.away?-1:0;
-          const ww=w.home>w.away?1:w.home<w.away?-1:0;
-          if (tw===ww) { pts='+1'; col='color:var(--amber)'; totalPkt+=1; }
-          else { pts='0'; col='color:var(--text2)'; }
-        }
+        const {pkt:p, typ:tp} = obliczPktMecz(t, w, m.id, m);
+        pts = p>0 ? '+'+p : '0';
+        col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
+        totalPkt += p;
       }
-      const typCell = t ? (widoczny ? `${t.home}:${t.away}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty</span>') : '—';
+      const awansInfo = t && t.awans ? ` <span style="font-size:11px;color:var(--blue)">(→${t.awans})</span>` : '';
+      const typCell = t ? (widoczny ? `${t.home}:${t.away}${awansInfo}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty</span>') : '—';
       html+=`<tr>
         <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
         <td class="mono" style="text-align:center">${typCell}</td>
@@ -691,26 +746,29 @@ function parsujLinie(lines, meczePuli) {
   const matched=[], unmatched=[];
   const wynik = {};
   for (const line of lines) {
-    // obsługuje format mID wynik:wynik np. m73 2:1
-    const reMid = /^(m\d+)\s+(\d+)[:\-](\d+)$/i;
+    // obsługuje format mID wynik:wynik np. m73 2:1 (awans: Kanada)
+    const reMid = /^(m\d+)\s+(\d+)[:\-](\d+)(?:\s*\(awans:\s*([^)]+)\))?$/i;
     const mMid = line.match(reMid);
     if (mMid) {
       const found = meczePuli.find(mc => mc.id.toLowerCase() === mMid[1].toLowerCase());
       if (found) {
-        wynik[found.id] = {home:parseInt(mMid[2]), away:parseInt(mMid[3])};
-        matched.push({line, mecz:found.home+' – '+found.away, gh:parseInt(mMid[2]), ga:parseInt(mMid[3])});
+        const awansMid = mMid[4] ? mMid[4].trim() : null;
+        wynik[found.id] = {home:parseInt(mMid[2]), away:parseInt(mMid[3]), awans:awansMid};
+        matched.push({line, mecz:found.home+' – '+found.away, gh:parseInt(mMid[2]), ga:parseInt(mMid[3]), awans:awansMid});
       } else {
         unmatched.push({line, reason:'nie znaleziono meczu '+mMid[1]});
       }
       continue;
     }
     // obsługuje separatory: vs, VS, -, –, przestrzeń
-    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s*(?:vs\.?|VS\.?|–|-)\s*([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)$/i;
+    // obsługuje awans: KOD-KOD 1:1 (awans: Kanada) lub (awans: CAN)
+    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s*(?:vs\.?|VS\.?|–|-)\s*([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)(?:\s*\(awans:\s*([^)]+)\))?$/i;
     const m = line.match(re);
     if (!m) { unmatched.push({line, reason:'niepoprawny format'}); continue; }
     const kH = rozwijAlias(m[1]);
     const kA = rozwijAlias(m[2]);
     const gh=parseInt(m[3]), ga=parseInt(m[4]);
+    const awans = m[5] ? m[5].trim() : null;
 
     // szukaj po kodzie bazy
     let found = meczePuli.find(mc => mc.kod && normKod(mc.kod) === kH+'-'+kA);
@@ -723,8 +781,8 @@ function parsujLinie(lines, meczePuli) {
       });
     }
     if (found) {
-      wynik[found.id] = {home:gh, away:ga};
-      matched.push({line, mecz:found.home+' – '+found.away, gh, ga});
+      wynik[found.id] = {home:gh, away:ga, awans: awans||null};
+      matched.push({line, mecz:found.home+' – '+found.away, gh, ga, awans});
     } else {
       unmatched.push({line, reason:'nie znaleziono ('+kH+'-'+kA+')'});
     }
@@ -1099,13 +1157,9 @@ function renderAdminTypyPodglad(nick, k) {
     const started = meczRozpoczety(m.date);
     let pts='—', col='';
     if (t && w && started) {
-      if (t.home===w.home && t.away===w.away) { pts='+3'; col='color:var(--green)'; }
-      else {
-        const tw=t.home>t.away?1:t.home<t.away?-1:0;
-        const ww=w.home>w.away?1:w.home<w.away?-1:0;
-        pts = tw===ww ? '+1' : '0';
-        col = tw===ww ? 'color:var(--amber)' : 'color:var(--text2)';
-      }
+      const {pkt:p} = obliczPktMecz(t, w, m.id, m);
+      pts = p>0?'+'+p:'0';
+      col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
     }
     // Admin widzi typy zawsze (bo musi móc je edytować)
     html+=`<tr>
