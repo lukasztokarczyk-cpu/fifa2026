@@ -160,6 +160,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
         <button class="btn" id="kbtn-2" onclick="pokazKolejke(2)">Kolejka 2</button>
         <button class="btn" id="kbtn-3" onclick="pokazKolejke(3)">Kolejka 3</button>
         <button class="btn" id="kbtn-4" onclick="pokazKolejke(4)">⚡ Faza pucharna</button>
+        <button class="btn" id="kbtn-5" onclick="pokazKolejke(5)">🏆 1/8 finału</button>
       </div>
       <div id="kolejka-content"></div>
     </div>
@@ -640,7 +641,7 @@ function wylogujTypera() {
 
 // Kolejka 1: m01-m24, Kolejka 2: m25-m48, Kolejka 3: m49-m72
 function meczeDlaKolejki(k) {
-  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,999]};
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,999]};
   const [od, do_] = zakresy[k] || [1,24];
   return allMecze.filter(m => {
     const nr = parseInt(m.id.replace('m',''));
@@ -655,7 +656,9 @@ function maTypyDlaKolejki(nick, k) {
 }
 
 function labelKolejki(k) {
-  return k===4 ? '⚡ Faza pucharna' : 'Kolejka '+k;
+  if (k===4) return '⚡ Faza pucharna';
+  if (k===5) return '🏆 1/8 finału';
+  return 'Kolejka '+k;
 }
 
 async function zaladujTypy() {
@@ -672,7 +675,7 @@ async function zaladujTypy() {
   document.getElementById('typy-kolejki').style.display='block';
   // pokaż kolejkę 1 domyślnie lub pierwszą niezapisaną
   let domyslna = 1;
-  for (let k=1; k<=4; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
+  for (let k=1; k<=5; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
   pokazKolejke(domyslna);
 }
 
@@ -681,7 +684,7 @@ let aktywnaKolejka = 1;
 function pokazKolejke(k) {
   aktywnaKolejka = k;
   // zaktualizuj przyciski
-  for (let i=1; i<=4; i++) {
+  for (let i=1; i<=5; i++) {
     const btn = document.getElementById('kbtn-'+i);
     if (!btn) continue;
     const maTypy = maTypyDlaKolejki(typNick, i);
