@@ -77,6 +77,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 </head>
 <body>
 
+<!-- CONFIG OVERLAY -->
 <div id="cfg-overlay">
   <div id="cfg-box">
     <h2>⚽ Strzałka FIFA 2026</h2>
@@ -107,6 +108,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 
 <main>
 
+<!-- MODAL TYPY -->
 <div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;padding:1rem;overflow-y:auto" onclick="if(event.target===this)closeModal()">
   <div style="background:var(--card);border-radius:var(--radius);max-width:600px;margin:2rem auto;padding:1.25rem">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
@@ -117,6 +119,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
+<!-- RANKING -->
 <div id="tab-ranking" class="section active">
   <div class="card">
     <div class="card-title">Ranking uczestników <span style="font-size:13px;font-weight:400;color:var(--text2)">(kliknij uczestnika, aby zobaczyć typy)</span></div>
@@ -124,6 +127,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
+<!-- MECZE -->
 <div id="tab-mecze" class="section">
   <div class="info">Wyniki wpisuje administrator. Brak możliwości ręcznej edycji wyników.</div>
   <div class="card">
@@ -131,6 +135,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
+<!-- TYPY -->
 <div id="tab-typy" class="section">
   <div class="card" id="typy-login-card">
     <div class="card-title">Moje typy</div>
@@ -163,6 +168,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
+<!-- FAZA PUCHARNA -->
 <div id="tab-puchar" class="section">
   <div class="card">
     <div class="card-title">🏆 Faza pucharowa – 1/32 finału</div>
@@ -178,6 +184,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 </div>
 
 
+<!-- REGULAMIN -->
 <div id="tab-regulamin" class="section">
   <div class="card">
     <div class="card-title">⚽ Regulamin – faza pucharowa</div>
@@ -212,6 +219,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
+<!-- ADMIN -->
 <div id="tab-admin" class="section">
   <div class="card">
     <div class="card-title">Panel administratora</div>
@@ -621,7 +629,8 @@ function wylogujTypera() {
 }
 
 function meczeDlaKolejki(k) {
-  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,96], 6: [97,999]};
+  // Przeniesiono mecze 93, 94, 95, 96 z kolejki 5 (1/8 finału) do kolejki 6 (1/4 finału)
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,92], 6: [93,999]};
   const [od, do_] = zakresy[k] || [1,24];
   return allMecze.filter(m => {
     const nr = parseInt(m.id.replace('m',''));
@@ -688,7 +697,6 @@ function pokazKolejke(k) {
     return;
   }
   
-  // formularz do wprowadzania typów
   html += '<form id="form-typy" onsubmit="zapiszTypyUczestnika(event)">';
   mecze.forEach(m => {
     html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
@@ -715,7 +723,7 @@ async function zapiszTypyUczestnika(e) {
     if (key.startsWith('m_')) {
       const parts = key.split('_');
       const mid = parts[1];
-      const type = parts[2]; // home lub away
+      const type = parts[2];
       if (!typy[mid]) typy[mid] = {};
       typy[mid][type] = Number(val);
     }
@@ -739,4 +747,70 @@ async function zapiszTypyUczestnika(e) {
       msg.textContent = 'Błąd: ' + (res.error || 'Nieznany błąd');
     }
   } catch(err) {
-    msg.
+    msg.className = 'err';
+    msg.textContent = 'Błąd połączenia: ' + err.message;
+  }
+}
+
+// ─── HELPERY I INNE FUNKCJE ───────────────────────────────────────────────────
+function esc(str) { return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function meczRozpoczety(dstr) { if(!dstr) return false; return Date.now() > new Date(dstr.replace(/-/g,'/')).getTime(); }
+function normKod(s) { return String(s).trim().toUpperCase(); }
+function kodujDruzyne(s) { const n=normKod(s); return [n, n.substring(0,3)]; }
+
+function renderWynikSelect() {
+  const sel = document.getElementById('wynik-mecz');
+  if(!sel) return;
+  let html = '';
+  allMecze.forEach(m => { html += `<option value="${m.id}">${m.home} - ${m.away} (${m.id})</option>`; });
+  sel.innerHTML = html;
+}
+function renderAdminNickSelect() {
+  const sel = document.getElementById('admin-typ-nick');
+  if(!sel) return;
+  let html = '';
+  allUczestnicy.forEach(u => { html += `<option value="${u.name}">${u.name}</option>`; });
+  sel.innerHTML = html;
+}
+function verifyAdmin() {
+  const pass = document.getElementById('admin-pass').value.trim();
+  if(cfg && cfg.adminPass === pass) {
+    adminVerified = true;
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('admin-login-msg').textContent = '';
+    renderAdminUczestnicy();
+    renderAdminNickSelect();
+  } else {
+    document.getElementById('admin-login-msg').textContent = 'Błędne hasło administratora.';
+  }
+}
+function renderAdminUczestnicy() {
+  const c = document.getElementById('admin-uczestnicy');
+  if(!c) return;
+  let html = '<ul>';
+  allUczestnicy.forEach(u => { html += `<li><strong>${esc(u.name)}</strong> - hasło: ${u.haslo}</li>`; });
+  html += '</ul>';
+  c.innerHTML = html;
+}
+async function dodajUczestnika() {
+  const name = document.getElementById('nowy-ucz').value.trim();
+  const haslo = document.getElementById('nowy-ucz-haslo').value.trim();
+  if(!name || !haslo) return;
+  await apiPost({action:'addUczestnik', name, haslo});
+  await loadAll(); renderAll();
+}
+async function zapiszWynik() {
+  const mid = document.getElementById('wynik-mecz').value;
+  const home = document.getElementById('wynik-home').value;
+  const away = document.getElementById('wynik-away').value;
+  await apiPost({action:'setWynik', mecz_id:mid, home:Number(home), away:Number(away)});
+  await loadAll(); renderAll();
+}
+function renderPuchar() {
+  const pb = document.getElementById('puchar-body');
+  if(pb) pb.innerHTML = '<div class="info">Faza pucharowa generuje się automatycznie po wprowadzeniu odpowiednich wyników grup przez Admina.</div>';
+}
+window.onload = () => { loadConfig(); if(cfg) { document.getElementById('cfg-overlay').style.display='none'; initApp(); } };
+</script>
+</body>
+</html>
