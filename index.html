@@ -145,7 +145,7 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWoKqY23evFiFgIzuLp
 let cbIndex = 0;
 function api(action, data = {}) {
   return new Promise((resolve, reject) => {
-    if (!SCRIPT_URL || SCRIPT_URL === "WKLEJ_URL_GAS_TUTAJ") {
+    if (!SCRIPT_URL || SCRIPT_URL === "https://script.google.com/macros/s/AKfycbxWoKqY23evFiFgIzuLpwwadvssW_Z41IrxxbmWEKQ7TWhxdWOJo2Dro7GGb6e_4rcm/exec") {
       reject(new Error("Nie skonfigurowano SCRIPT_URL w pliku index.html")); return;
     }
     const cbName = "_gcb" + (++cbIndex);
