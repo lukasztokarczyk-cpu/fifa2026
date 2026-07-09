@@ -19,14 +19,16 @@
   --r:10px;--rs:7px;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px}
-.app{max-width:680px;margin:0 auto;padding:14px}
+.app{max-width:720px;margin:0 auto;padding:14px}
 
-.header{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 17px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+/* Header */
+.header{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 17px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .h-left{display:flex;align-items:center;gap:10px}
 .h-left h1{font-size:17px;font-weight:700;line-height:1.2}
 .h-left small{font-size:12px;color:var(--text3)}
 .h-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
 
+/* Badges */
 .badge{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;white-space:nowrap}
 .ba{background:var(--purple-l);color:var(--purple)}
 .bu{background:var(--green-l);color:var(--green)}
@@ -37,6 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .bo{background:var(--green-l);color:var(--green)}
 .bpts{background:var(--blue);color:#fff;font-size:12px;padding:3px 10px;border-radius:999px;font-weight:700}
 
+/* Buttons */
 .btn{padding:7px 14px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);font-size:13px;font-weight:500;cursor:pointer;color:var(--text);display:inline-flex;align-items:center;gap:5px;transition:background .12s}
 .btn:hover{background:var(--bg)}.btn:active{transform:scale(.98)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
@@ -44,27 +47,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .bd{background:var(--red);color:#fff;border-color:var(--red)}.bd:hover{background:#501313}
 .bsm{padding:5px 11px;font-size:12px}.bxs{padding:3px 8px;font-size:11px}
 
+/* Top-level tabs (fazy) */
+.phase-tabs{display:flex;gap:0;margin-bottom:14px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.phase-tab{flex:1;padding:10px 8px;font-size:13px;font-weight:600;cursor:pointer;text-align:center;color:var(--text2);border:none;background:transparent;border-right:1px solid var(--border);transition:background .12s}
+.phase-tab:last-child{border-right:none}
+.phase-tab.on{background:var(--blue);color:#fff}
+.phase-tab:hover:not(.on){background:var(--bg)}
+
+/* Sub tabs */
 .tabs{display:flex;gap:5px;margin-bottom:13px;flex-wrap:wrap}
 .tab{padding:7px 14px;border-radius:var(--rs);border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:500;cursor:pointer;color:var(--text2)}
 .tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
 .tab:hover:not(.on){background:var(--bg)}
 
+/* Cards */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:15px 17px;margin-bottom:11px}
 .card h2{font-size:15px;font-weight:700;margin-bottom:12px}
+.card h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text2)}
 
+/* Forms */
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
 .fg{margin-bottom:9px}
 .fg label{display:block;font-size:12px;color:var(--text2);font-weight:500;margin-bottom:3px}
-input,select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface);color:var(--text);font-family:inherit}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface);color:var(--text);font-family:inherit}
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(24,95,165,.13)}
 .si{width:52px!important;text-align:center;font-size:16px;font-weight:700}
 
+/* Alerts */
 .al{padding:9px 13px;border-radius:var(--rs);font-size:13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:7px}
 .ai{background:var(--blue-l);color:var(--blue-d);border:1px solid #B5D4F4}
 .aw{background:var(--amber-l);color:var(--amber);border:1px solid #FAC775}
 .ae{background:var(--red-l);color:var(--red);border:1px solid #F7C1C1}
 .as{background:var(--green-l);color:var(--green);border:1px solid #C0DD97}
 
+/* Match items */
 .mi{border:1px solid var(--border);border-radius:var(--rs);padding:11px 13px;margin-bottom:7px}
 .mi:hover{border-color:var(--border2)}
 .mh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px;gap:8px}
@@ -91,6 +107,7 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .rs{font-size:15px;font-weight:700;color:var(--blue);margin-top:5px}
 .pl{font-size:13px;margin-top:3px;color:var(--text2)}
 
+/* Leaderboard */
 .lr{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border)}
 .lr:last-child{border-bottom:none}
 .lp{font-size:14px;font-weight:700;width:22px;text-align:center}
@@ -98,19 +115,22 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .la{width:33px;height:33px;border-radius:50%;background:var(--purple-l);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--purple);flex-shrink:0}
 .ln2{flex:1;font-size:14px;font-weight:500}
 .le{font-size:12px;color:var(--text3)}
-.me{background:var(--blue-l);border-radius:var(--rs);margin:-2px -4px;padding:2px 4px}
+.me-row{background:var(--blue-l);border-radius:var(--rs);padding:2px 4px}
 
+/* Login */
 .lw{max-width:380px;margin:50px auto 0}
 .ll{text-align:center;font-size:38px;margin-bottom:6px}
 .lt{text-align:center;font-size:19px;font-weight:700;margin-bottom:3px}
 .ls{text-align:center;font-size:13px;color:var(--text3);margin-bottom:18px}
 
+/* Rules */
 .ri{display:flex;gap:11px;align-items:flex-start;margin-bottom:15px}
 .ric{width:37px;height:37px;border-radius:var(--rs);background:var(--purple-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ric i{font-size:18px;color:var(--purple)}
 .rit{font-size:14px;font-weight:700;margin-bottom:2px}
 .rix{font-size:13px;color:var(--text2);line-height:1.6}
 
+/* User row */
 .ur{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
 .ur:last-child{border-bottom:none}
 .ui{display:flex;align-items:center;gap:9px}
@@ -118,672 +138,1051 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .sp{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* config notice */
-.cfg-banner{background:#fff3cd;border:1px solid #ffc107;border-radius:var(--r);padding:14px 17px;margin-bottom:13px;font-size:13px}
-.cfg-banner strong{display:block;font-size:14px;margin-bottom:4px}
-.cfg-banner code{background:#f8f8f8;border:1px solid #ddd;border-radius:4px;padding:2px 6px;font-size:12px}
+/* 1/16 specific */
+.group-header{background:var(--purple-l);color:var(--purple);font-size:12px;font-weight:700;padding:5px 10px;border-radius:var(--rs);margin-bottom:8px;margin-top:4px}
+.bet-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);gap:8px}
+.bet-row:last-child{border-bottom:none}
+.bet-name{font-size:13px;font-weight:500;min-width:80px}
+.bet-score{font-size:13px;color:var(--blue);font-weight:700}
+.bet-pts{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--green-l);color:var(--green)}
+.bet-pts-0{background:var(--gray-l);color:var(--gray)}
+.result-final{font-size:15px;font-weight:700;color:var(--blue);padding:6px 0;border-top:1px solid var(--border);margin-top:6px}
+.match-block{margin-bottom:16px}
+.input-score{display:flex;align-items:center;gap:6px}
+.input-score input{width:44px;text-align:center;font-weight:700;font-size:15px;padding:5px}
+
+/* Punkty summary */
+.pts-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.pts-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:8px 12px;text-align:center;flex:1;min-width:80px}
+.pts-box .num{font-size:20px;font-weight:700;color:var(--blue)}
+.pts-box .lbl{font-size:11px;color:var(--text3)}
 
 @media(max-width:480px){
   .fr{grid-template-columns:1fr}
-  .header{flex-wrap:wrap}
+  .phase-tab{font-size:12px;padding:8px 4px}
 }
 </style>
 </head>
 <body>
 <div class="app">
-<div id="root"></div>
+<div class="header">
+  <div class="h-left">
+    <span style="font-size:24px">⚽</span>
+    <div><h1>Mundial 2026 Typer</h1><small>Faza pucharowa</small></div>
+  </div>
 </div>
 
+<!-- Główne zakładki faz -->
+<div class="phase-tabs">
+  <button class="phase-tab on" id="pt-16" onclick="showPhase('16')">⚔️ Faza 1/16</button>
+  <button class="phase-tab" id="pt-14" onclick="showPhase('14')">⚽ 1/4 finału</button>
+  <button class="phase-tab" id="pt-qf" onclick="showPhase('qf')">🏆 Półfinały+</button>
+</div>
+
+<!-- ════════════════════════════════════════════════ -->
+<!--  FAZA 1/16 — localStorage, bez logowania        -->
+<!-- ════════════════════════════════════════════════ -->
+<div id="phase-16">
+
+<div class="tabs">
+  <button class="tab on" onclick="show16Tab('typy',this)"><i class="ti ti-ball-football"></i> Typy</button>
+  <button class="tab" onclick="show16Tab('tabela',this)"><i class="ti ti-trophy"></i> Tabela</button>
+  <button class="tab" onclick="show16Tab('wyniki',this)"><i class="ti ti-clipboard-check"></i> Wyniki (admin)</button>
+  <button class="tab" onclick="show16Tab('reg',this)"><i class="ti ti-book"></i> Regulamin</button>
+</div>
+
+<div id="tab16-typy">
+  <!-- Formularz dodania uczestnika -->
+  <div class="card" id="add-player-card">
+    <h2><i class="ti ti-user-plus" style="color:var(--blue)"></i> Dodaj swój typ</h2>
+    <div class="fr">
+      <div class="fg" style="margin:0"><label>Twój nick</label><input id="nick-input" placeholder="np. Marek"/></div>
+    </div>
+    <div id="nick-err" class="al ae" style="display:none"></div>
+    <button class="btn bp" onclick="startTyping()"><i class="ti ti-arrow-right"></i> Przejdź do typowania</button>
+  </div>
+
+  <!-- Formularz typowania -->
+  <div id="typing-form" style="display:none">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0"><i class="ti ti-ball-football" style="color:var(--blue)"></i> Wpisujesz jako: <span id="typing-nick-label" style="color:var(--blue)"></span></h2>
+        <button class="btn bxs" onclick="cancelTyping()">Zmień nick</button>
+      </div>
+      <div id="matches-form"></div>
+      <div id="save-err" class="al ae" style="display:none"></div>
+      <button class="btn bp" style="width:100%;margin-top:6px" onclick="saveBets16()"><i class="ti ti-device-floppy"></i> Zapisz wszystkie typy</button>
+    </div>
+  </div>
+
+  <!-- Lista typów uczestników -->
+  <div id="bets-list"></div>
+</div>
+
+<div id="tab16-tabela" style="display:none">
+  <div class="card">
+    <h2><i class="ti ti-trophy" style="color:var(--blue)"></i> Tabela wyników</h2>
+    <div id="leaderboard-16"></div>
+  </div>
+</div>
+
+<div id="tab16-wyniki" style="display:none">
+  <div class="card">
+    <h2><i class="ti ti-shield-check" style="color:var(--purple)"></i> Panel admina — wyniki 1/16</h2>
+    <div class="al aw"><i class="ti ti-alert-triangle"></i> Wpisuj wyniki dopiero po zakończeniu meczów.</div>
+    <div id="results-form-16"></div>
+    <button class="btn bp" style="margin-top:10px;width:100%" onclick="saveResults16()"><i class="ti ti-device-floppy"></i> Zapisz wyniki</button>
+  </div>
+</div>
+
+<div id="tab16-reg" style="display:none">
+  <div class="card">
+    <h2><i class="ti ti-book" style="color:var(--blue)"></i> Regulamin</h2>
+    <div class="ri"><div class="ric"><i class="ti ti-sort-ascending-numbers"></i></div><div><div class="rit">Kolejność typowania</div><div class="rix">Lider musi wrzucić typy najpóźniej 24h przed pierwszym meczem. Jeśli się spóźni, nie może skopiować dokładnych wyników od wicelidera.</div></div></div>
+    <div class="ri"><div class="ric"><i class="ti ti-ball-football"></i></div><div><div class="rit">Wynik po 90 minutach</div><div class="rix">Typujemy wynik po regulaminowym czasie gry. Dogrywka i rzuty karne nie liczą się. Przy remisie wskaż kto awansuje.</div></div></div>
+    <div class="ri"><div class="ric"><i class="ti ti-star"></i></div><div><div class="rit">Punktacja 1/16, 1/8, 1/4</div><div class="rix">3 pkt – dokładny wynik. 1 pkt – trafienie zwycięzcy lub remisu.</div></div></div>
+    <div class="ri"><div class="ric"><i class="ti ti-trophy"></i></div><div><div class="rit">Finał i mecz o 3. miejsce</div><div class="rix">5 pkt – dokładny wynik. 2 pkt – trafienie zwycięzcy lub remisu. Maks. 6 pkt z bonusem za awans.</div></div></div>
+    <div class="ri"><div class="ric"><i class="ti ti-plus"></i></div><div><div class="rit">Bonus za remis +1 pkt</div><div class="rix">Dokładny remis + trafiony awans = 4 pkt. Inny remis + trafiony awans = 2 pkt. Błędny awans → bonus przepada.</div></div></div>
+    <div class="ri"><div class="ric"><i class="ti ti-scale"></i></div><div><div class="rit">Remis w tabeli</div><div class="rix">Przy równej liczbie punktów wygrywa gracz z większą liczbą dokładnych wyników.</div></div></div>
+  </div>
+</div>
+
+</div><!-- /phase-16 -->
+
+
+<!-- ════════════════════════════════════════════════ -->
+<!--  FAZA 1/4 — localStorage, bez logowania          -->
+<!-- ════════════════════════════════════════════════ -->
+<div id="phase-14" style="display:none">
+
+<div class="tabs">
+  <button class="tab on" onclick="show14Tab('typy',this)"><i class="ti ti-ball-football"></i> Typy</button>
+  <button class="tab" onclick="show14Tab('tabela',this)"><i class="ti ti-trophy"></i> Tabela</button>
+  <button class="tab" onclick="show14Tab('wyniki',this)"><i class="ti ti-clipboard-check"></i> Wyniki (admin)</button>
+</div>
+
+<div id="tab14-typy">
+  <div class="card" id="add-player-card-14">
+    <h2><i class="ti ti-user-plus" style="color:var(--blue)"></i> Dodaj swój typ — 1/4 finału</h2>
+    <div class="fr">
+      <div class="fg" style="margin:0"><label>Twój nick</label><input id="nick-input-14" placeholder="np. Marek"/></div>
+    </div>
+    <div id="nick-err-14" class="al ae" style="display:none"></div>
+    <button class="btn bp" onclick="startTyping14()"><i class="ti ti-arrow-right"></i> Przejdź do typowania</button>
+  </div>
+  <div id="typing-form-14" style="display:none">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0"><i class="ti ti-ball-football" style="color:var(--blue)"></i> Wpisujesz jako: <span id="typing-nick-label-14" style="color:var(--blue)"></span></h2>
+        <button class="btn bxs" onclick="cancelTyping14()">Zmień nick</button>
+      </div>
+      <div id="matches-form-14"></div>
+      <div id="save-err-14" class="al ae" style="display:none"></div>
+      <button class="btn bp" style="width:100%;margin-top:6px" onclick="saveBets14()"><i class="ti ti-device-floppy"></i> Zapisz wszystkie typy</button>
+    </div>
+  </div>
+  <div id="bets-list-14"></div>
+</div>
+
+<div id="tab14-tabela" style="display:none">
+  <div class="card">
+    <h2><i class="ti ti-trophy" style="color:var(--blue)"></i> Tabela wyników — 1/4</h2>
+    <div id="leaderboard-14"></div>
+  </div>
+</div>
+
+<div id="tab14-wyniki" style="display:none">
+  <div class="card">
+    <h2><i class="ti ti-shield-check" style="color:var(--purple)"></i> Panel admina — wyniki 1/4</h2>
+    <div class="al aw"><i class="ti ti-alert-triangle"></i> Wpisuj wyniki dopiero po zakończeniu meczów.</div>
+    <div id="results-form-14"></div>
+    <button class="btn bp" style="margin-top:10px;width:100%" onclick="saveResults14()"><i class="ti ti-device-floppy"></i> Zapisz wyniki</button>
+  </div>
+</div>
+
+</div><!-- /phase-14 -->
+
+
+<!-- ════════════════════════════════════════════════ -->
+<!--  PÓŁFINAŁY+ — GAS backend                        -->
+<!-- ════════════════════════════════════════════════ -->
+<div id="phase-qf" style="display:none">
+  <div id="qf-root"></div>
+</div>
+
+
 <script>
-// ══════════════════════════════════════════════════════════════
-//  KONFIGURACJA — wklej URL swojego Google Apps Script Web App
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  KONFIGURACJA GAS
+// ══════════════════════════════════════════
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWoKqY23evFiFgIzuLpwwadvssW_Z41IrxxbmWEKQ7TWhxdWOJo2Dro7GGb6e_4rcm/exec";
-// Przykład: "https://script.google.com/macros/s/AKfy.../exec"
-// ══════════════════════════════════════════════════════════════
 
-let cbIndex = 0;
-function api(action, data = {}) {
-  return new Promise((resolve, reject) => {
-    if (!SCRIPT_URL || SCRIPT_URL === "WKLEJ_URL_GAS_TUTAJ") {
-      reject(new Error("Nie skonfigurowano SCRIPT_URL w pliku index.html")); return;
-    }
-    const cbName = "_gcb" + (++cbIndex);
-    const timer = setTimeout(() => {
-      delete window[cbName];
-      reject(new Error("Timeout — sprawdź URL GAS"));
-    }, 15000);
-    window[cbName] = function(result) {
-      clearTimeout(timer);
-      delete window[cbName];
-      const s = document.getElementById("_jsonp_" + cbIndex);
-      if (s) s.remove();
-      resolve(result);
-    };
-    const params = new URLSearchParams({ action, data: JSON.stringify(data), callback: cbName });
-    const script = document.createElement("script");
-    script.id = "_jsonp_" + cbIndex;
-    script.src = SCRIPT_URL + "?" + params.toString();
-    script.onerror = () => {
-      clearTimeout(timer); delete window[cbName]; script.remove();
-      reject(new Error("Błąd ładowania — sprawdź URL GAS"));
-    };
-    document.head.appendChild(script);
-  });
-}
-
-// ── State ─────────────────────────────────────────────────────
-// Predefiniowane ćwierćfinały — daty jako ISO (UTC+2 = CEST)
-const QF_MATCHES = [
-  { qfId:"qf1", home:"Francja",   away:"Maroko",     datetime:"2026-07-09T20:00:00", label:"Para 1" },
-  { qfId:"qf2", home:"Hiszpania", away:"Belgia",      datetime:"2026-07-10T19:00:00", label:"Para 2" },
-  { qfId:"qf3", home:"Norwegia",  away:"Anglia",      datetime:"2026-07-11T21:00:00", label:"Para 3" },
-  { qfId:"qf4", home:"Argentyna", away:"Szwajcaria",  datetime:"2026-07-12T01:00:00", label:"Para 4" },
+// ══════════════════════════════════════════
+//  MECZE 1/16
+// ══════════════════════════════════════════
+const MATCHES_16 = [
+  {id:"m1",  home:"Polska",       away:"Arabia Saudyjska", date:"2026-06-29", group:"Para 1"},
+  {id:"m2",  home:"USA",          away:"Maroko",           date:"2026-06-29", group:"Para 2"},
+  {id:"m3",  home:"Niemcy",       away:"Słowenia",         date:"2026-06-30", group:"Para 3"},
+  {id:"m4",  home:"Brazylia",     away:"Meksyk",           date:"2026-06-30", group:"Para 4"},
+  {id:"m5",  home:"Francja",      away:"Kamerun",          date:"2026-07-01", group:"Para 5"},
+  {id:"m6",  home:"Hiszpania",    away:"Japonia",          date:"2026-07-01", group:"Para 6"},
+  {id:"m7",  home:"Argentyna",    away:"Chile",            date:"2026-07-02", group:"Para 7"},
+  {id:"m8",  home:"Anglia",       away:"Senegal",          date:"2026-07-02", group:"Para 8"},
+  {id:"m9",  home:"Portugalia",   away:"Urugwaj",          date:"2026-07-03", group:"Para 9"},
+  {id:"m10", home:"Belgia",       away:"Australia",        date:"2026-07-03", group:"Para 10"},
+  {id:"m11", home:"Holandia",     away:"Meksyk",           date:"2026-07-04", group:"Para 11"},
+  {id:"m12", home:"Szwajcaria",   away:"Nigeria",          date:"2026-07-04", group:"Para 12"},
+  {id:"m13", home:"Chorwacja",    away:"Ekwador",          date:"2026-07-05", group:"Para 13"},
+  {id:"m14", home:"Korea Pd.",    away:"Ghana",            date:"2026-07-05", group:"Para 14"},
+  {id:"m15", home:"Dania",        away:"Kolumbia",         date:"2026-07-06", group:"Para 15"},
+  {id:"m16", home:"Norwegia",     away:"Iran",             date:"2026-07-06", group:"Para 16"},
 ];
 
-let S = {
+const STORAGE_KEY_16 = "mundial2026_16";
+
+function load16(){ try{ const s=localStorage.getItem(STORAGE_KEY_16); return s?JSON.parse(s):{players:{},results:{}}; }catch(e){ return {players:{},results:{}}; } }
+function save16(d){ try{ localStorage.setItem(STORAGE_KEY_16,JSON.stringify(d)); }catch(e){} }
+
+let D16 = load16();
+let currentNick = null;
+let currentPhase = "16";
+let current16Tab = "typy";
+
+// ── Phase switcher ────────────────────────────
+function showPhase(ph){
+  currentPhase = ph;
+  document.getElementById("phase-16").style.display = ph==="16" ? "" : "none";
+  document.getElementById("phase-14").style.display = ph==="14" ? "" : "none";
+  document.getElementById("phase-qf").style.display = ph==="qf" ? "" : "none";
+  document.getElementById("pt-16").classList.toggle("on", ph==="16");
+  document.getElementById("pt-14").classList.toggle("on", ph==="14");
+  document.getElementById("pt-qf").classList.toggle("on", ph==="qf");
+  if(ph==="14"){ renderBetsList14(); }
+  if(ph==="qf") renderQF();
+}
+
+// ── 1/16 tab switcher ─────────────────────────
+function show16Tab(tab, btn){
+  current16Tab = tab;
+  ["typy","tabela","wyniki","reg"].forEach(t=>{
+    document.getElementById("tab16-"+t).style.display = t===tab?"":"none";
+  });
+  document.querySelectorAll("#phase-16 .tabs .tab").forEach(b=>b.classList.remove("on"));
+  if(btn) btn.classList.add("on");
+  if(tab==="typy") renderBetsList();
+  if(tab==="tabela") renderLeaderboard16();
+  if(tab==="wyniki") renderResultsForm();
+}
+
+// ── Helpers ───────────────────────────────────
+function fmt(dt){ if(!dt)return""; return new Date(dt+"T12:00:00").toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric"}); }
+
+function matchStarted16(m){
+  return new Date(m.date+"T23:59:00").getTime() <= Date.now();
+}
+
+// Wyświetlanie formularza typowania
+function startTyping(){
+  const nick = document.getElementById("nick-input").value.trim();
+  const err = document.getElementById("nick-err");
+  if(!nick){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Podaj nick.'; return; }
+  err.style.display="none";
+  currentNick = nick;
+  document.getElementById("typing-nick-label").textContent = nick;
+  document.getElementById("add-player-card").style.display="none";
+  document.getElementById("typing-form").style.display="";
+  renderMatchesForm();
+}
+
+function cancelTyping(){
+  currentNick = null;
+  document.getElementById("add-player-card").style.display="";
+  document.getElementById("typing-form").style.display="none";
+}
+
+function renderMatchesForm(){
+  const existing = D16.players[currentNick] || {};
+  let html = "";
+  let lastGroup = "";
+  MATCHES_16.forEach(m=>{
+    if(m.group !== lastGroup){
+      html += `<div class="group-header">${m.group} — ${fmt(m.date)}</div>`;
+      lastGroup = m.group;
+    }
+    const bet = existing[m.id] || {};
+    const bh = bet.home!==undefined ? bet.home : "";
+    const ba = bet.away!==undefined ? bet.away : "";
+    const adv = bet.advance || "";
+    const showAdv = bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
+    html += `<div class="match-block">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">${m.home} vs ${m.away}</div>
+      <div class="input-score">
+        <input class="si" id="fh-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onFC('${m.id}','${m.home}','${m.away}')"/>
+        <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
+        <input class="si" id="fa-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onFC('${m.id}','${m.home}','${m.away}')"/>
+      </div>
+      <div id="fadv-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
+        <label>Kto awansuje?</label>
+        <div class="chips">
+          <span class="chip${adv==="home"?" on":""}" data-adv="home" onclick="selAdv16('${m.id}','home')">${m.home}</span>
+          <span class="chip${adv==="away"?" on":""}" data-adv="away" onclick="selAdv16('${m.id}','away')">${m.away}</span>
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById("matches-form").innerHTML = html;
+}
+
+window.onFC = function(mid, home, away){
+  const h = document.getElementById("fh-"+mid)?.value;
+  const a = document.getElementById("fa-"+mid)?.value;
+  const adv = document.getElementById("fadv-"+mid);
+  if(adv) adv.style.display = (h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
+};
+
+const localAdv16 = {};
+window.selAdv16 = function(mid, val){
+  localAdv16[mid] = val;
+  document.querySelectorAll("#fadv-"+mid+" .chip").forEach(c=>c.classList.toggle("on", c.dataset.adv===val));
+};
+
+function saveBets16(){
+  const bets = {};
+  let missing = false;
+  MATCHES_16.forEach(m=>{
+    const h = document.getElementById("fh-"+m.id)?.value;
+    const a = document.getElementById("fa-"+m.id)?.value;
+    if(h===""||a===""){missing=true;return;}
+    const ih=parseInt(h),ia=parseInt(a);
+    let adv = "";
+    if(ih===ia){ adv = localAdv16[m.id]||(D16.players[currentNick]||{})[m.id]?.advance||""; if(!adv){missing=true;return;} }
+    bets[m.id]={home:ih,away:ia,advance:adv};
+  });
+  const err = document.getElementById("save-err");
+  if(missing){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Wypełnij wszystkie typy (przy remisie wskaż awans).'; return; }
+  err.style.display="none";
+  D16.players[currentNick] = bets;
+  save16(D16);
+  cancelTyping();
+  renderBetsList();
+  const notice = document.createElement("div");
+  notice.className="al as";
+  notice.innerHTML=`<i class="ti ti-circle-check"></i> Typy zapisane dla <strong>${currentNick}</strong>!`;
+  document.getElementById("tab16-typy").prepend(notice);
+  setTimeout(()=>notice.remove(), 3000);
+}
+
+// ── Wyświetl typy ─────────────────────────────
+function calcPts16(bet, result){
+  if(!result||result.home===undefined) return null;
+  const rh=result.home,ra=result.away;
+  const bh=Number(bet.home),ba=Number(bet.away);
+  const exact=bh===rh&&ba===ra;
+  const isR=rh===ra;
+  let p=0;
+  if(exact){ p=3; if(isR&&bet.advance===result.advance) p++; }
+  else{ const w=rh>ra?"home":ra>rh?"away":"draw"; const bw=bh>ba?"home":ba>bh?"away":"draw"; if(w===bw){p=1;if(isR&&bet.advance===result.advance)p++;} }
+  return p;
+}
+
+function renderBetsList(){
+  const el = document.getElementById("bets-list");
+  const players = Object.keys(D16.players);
+  if(!players.length){ el.innerHTML=""; return; }
+
+  // Grupuj mecze wg grupy
+  const groups = {};
+  MATCHES_16.forEach(m=>{ if(!groups[m.group]) groups[m.group]=[]; groups[m.group].push(m); });
+
+  let html = "";
+  players.forEach(nick=>{
+    const bets = D16.players[nick];
+    let totalPts=0, totalExact=0;
+    MATCHES_16.forEach(m=>{ const b=bets[m.id]; const r=D16.results[m.id]; if(b&&r){ const p=calcPts16(b,r); if(p!==null){totalPts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away) totalExact++;} } });
+
+    html += `<div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0"><div class="la" style="display:inline-flex;margin-right:8px">${nick.slice(0,2).toUpperCase()}</div>${nick}</h2>
+        <div style="text-align:right">
+          <span class="bpts">${totalPts} pkt</span>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">${totalExact} dokładnych</div>
+        </div>
+      </div>`;
+
+    Object.keys(groups).forEach(grp=>{
+      html += `<div class="group-header">${grp}</div>`;
+      groups[grp].forEach(m=>{
+        const b = bets[m.id];
+        const r = D16.results[m.id];
+        const started = matchStarted16(m);
+        if(!b){ html+=`<div class="bet-row"><span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span><span style="font-size:12px;color:var(--text3)">brak</span></div>`; return; }
+        const pts = r ? calcPts16(b,r) : null;
+        const advS = b.advance ? ` (${b.advance==="home"?m.home:m.away})` : "";
+        const showBet = started || !Object.keys(D16.players).some(p=>p!==nick);
+        html += `<div class="bet-row">
+          <span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span>
+          <span class="bet-score">${showBet ? `${b.home}:${b.away}${advS}` : `<span style="color:var(--text3);font-size:11px">🔒 ukryty</span>`}</span>
+          ${pts!==null?`<span class="bet-pts${pts===0?" bet-pts-0":""}">${pts}p</span>`:`<span style="font-size:11px;color:var(--text3)">${r?"-":"—"}</span>`}
+        </div>`;
+      });
+    });
+    html += `<button class="btn bxs bd" style="margin-top:10px" onclick="deleteBets16('${nick}')"><i class="ti ti-trash"></i> Usuń typy ${nick}</button>`;
+    html += `</div>`;
+  });
+  el.innerHTML = html;
+}
+
+window.deleteBets16 = function(nick){
+  if(!confirm("Usunąć typy dla "+nick+"?")) return;
+  delete D16.players[nick];
+  save16(D16);
+  renderBetsList();
+};
+
+// ── Tabela ────────────────────────────────────
+function renderLeaderboard16(){
+  const el = document.getElementById("leaderboard-16");
+  const players = Object.keys(D16.players);
+  if(!players.length){ el.innerHTML='<div class="empty">Brak uczestników</div>'; return; }
+  const lb = players.map(nick=>{
+    let pts=0,exact=0;
+    MATCHES_16.forEach(m=>{ const b=D16.players[nick][m.id]; const r=D16.results[m.id]; if(b&&r){ const p=calcPts16(b,r); if(p!==null){pts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away)exact++;} } });
+    return {nick,pts,exact};
+  }).sort((a,b)=>b.pts!==a.pts?b.pts-a.pts:b.exact-a.exact);
+  el.innerHTML = lb.map((u,i)=>`<div class="lr">
+    <div class="lp ${i===0?"p1":i===1?"p2":i===2?"p3":""}">${i+1}</div>
+    <div class="la">${u.nick.slice(0,2).toUpperCase()}</div>
+    <div class="ln2">${u.nick}</div>
+    <div class="le">${u.exact} dokł.</div>
+    <span class="bpts">${u.pts} pkt</span>
+  </div>`).join("");
+}
+
+// ── Panel wyników (admin) ─────────────────────
+function renderResultsForm(){
+  const groups = {};
+  MATCHES_16.forEach(m=>{ if(!groups[m.group]) groups[m.group]=[]; groups[m.group].push(m); });
+  let html = "";
+  Object.keys(groups).forEach(grp=>{
+    html += `<div class="group-header">${grp}</div>`;
+    groups[grp].forEach(m=>{
+      const r = D16.results[m.id]||{};
+      const hasR = r.home!==undefined;
+      const showAdv = hasR && r.home===r.away;
+      html += `<div class="match-block">
+        <div style="font-size:13px;font-weight:600;margin-bottom:5px">${m.home} vs ${m.away} <span style="font-size:11px;color:var(--text3)">${fmt(m.date)}</span></div>
+        <div class="input-score">
+          <input class="si" id="rh-${m.id}" type="number" min="0" value="${hasR?r.home:""}" placeholder="0" oninput="onRC('${m.id}')"/>
+          <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
+          <input class="si" id="ra-${m.id}" type="number" min="0" value="${hasR?r.away:""}" placeholder="0" oninput="onRC('${m.id}')"/>
+        </div>
+        <div id="radv-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
+          <label>Kto awansuje?</label>
+          <select id="rv-${m.id}">
+            <option value="">— wybierz —</option>
+            <option value="home" ${r.advance==="home"?"selected":""}>${m.home}</option>
+            <option value="away" ${r.advance==="away"?"selected":""}>${m.away}</option>
+          </select>
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById("results-form-16").innerHTML = html;
+}
+
+window.onRC = function(mid){
+  const h=document.getElementById("rh-"+mid)?.value;
+  const a=document.getElementById("ra-"+mid)?.value;
+  const w=document.getElementById("radv-"+mid);
+  if(w) w.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
+};
+
+function saveResults16(){
+  MATCHES_16.forEach(m=>{
+    const h=document.getElementById("rh-"+m.id)?.value;
+    const a=document.getElementById("ra-"+m.id)?.value;
+    if(h===""||a==="") return;
+    const ih=parseInt(h),ia=parseInt(a);
+    const adv=ih===ia?(document.getElementById("rv-"+m.id)?.value||""):"";
+    D16.results[m.id]={home:ih,away:ia,advance:adv};
+  });
+  save16(D16);
+  renderBetsList();
+  const notice=document.createElement("div");
+  notice.className="al as";
+  notice.innerHTML='<i class="ti ti-circle-check"></i> Wyniki zapisane!';
+  document.getElementById("tab16-wyniki").prepend(notice);
+  setTimeout(()=>notice.remove(),3000);
+}
+
+// Init 1/16
+renderBetsList();
+
+
+// ══════════════════════════════════════════════
+//  FAZA 1/4 — localStorage
+// ══════════════════════════════════════════════
+const MATCHES_14 = [
+  {id:"q1", home:"Francja",   away:"Maroko",    date:"2026-07-09", group:"Para 1", time:"22:00"},
+  {id:"q2", home:"Hiszpania", away:"Belgia",     date:"2026-07-10", group:"Para 2", time:"21:00"},
+  {id:"q3", home:"Norwegia",  away:"Anglia",     date:"2026-07-11", group:"Para 3", time:"23:00"},
+  {id:"q4", home:"Argentyna", away:"Szwajcaria", date:"2026-07-12", group:"Para 4", time:"03:00"},
+];
+
+const STORAGE_KEY_14 = "mundial2026_14";
+function load14(){ try{ const s=localStorage.getItem(STORAGE_KEY_14); return s?JSON.parse(s):{players:{},results:{}}; }catch(e){ return {players:{},results:{}}; } }
+function save14(d){ try{ localStorage.setItem(STORAGE_KEY_14,JSON.stringify(d)); }catch(e){} }
+
+let D14 = load14();
+let currentNick14 = null;
+
+function matchStarted14(m){
+  // mecz zaczął się gdy data+godzina minęła
+  const [y,mo,d] = m.date.split("-").map(Number);
+  const [h,mi] = m.time.split(":").map(Number);
+  return new Date(y, mo-1, d, h, mi).getTime() <= Date.now();
+}
+
+function show14Tab(tab, btn){
+  ["typy","tabela","wyniki"].forEach(t=>{
+    document.getElementById("tab14-"+t).style.display = t===tab?"":"none";
+  });
+  document.querySelectorAll("#phase-14 .tabs .tab").forEach(b=>b.classList.remove("on"));
+  if(btn) btn.classList.add("on");
+  if(tab==="typy") renderBetsList14();
+  if(tab==="tabela") renderLeaderboard14();
+  if(tab==="wyniki") renderResultsForm14();
+}
+
+function startTyping14(){
+  const nick = document.getElementById("nick-input-14").value.trim();
+  const err = document.getElementById("nick-err-14");
+  if(!nick){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Podaj nick.'; return; }
+  err.style.display="none";
+  currentNick14 = nick;
+  document.getElementById("typing-nick-label-14").textContent = nick;
+  document.getElementById("add-player-card-14").style.display="none";
+  document.getElementById("typing-form-14").style.display="";
+  renderMatchesForm14();
+}
+
+function cancelTyping14(){
+  currentNick14 = null;
+  document.getElementById("add-player-card-14").style.display="";
+  document.getElementById("typing-form-14").style.display="none";
+}
+
+function renderMatchesForm14(){
+  const existing = D14.players[currentNick14] || {};
+  let html = "";
+  MATCHES_14.forEach(m=>{
+    const bet = existing[m.id] || {};
+    const bh = bet.home!==undefined ? bet.home : "";
+    const ba = bet.away!==undefined ? bet.away : "";
+    const adv = bet.advance || "";
+    const showAdv = bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
+    html += `<div class="match-block">
+      <div class="group-header">${m.group} — ${fmt(m.date)}, godz. ${m.time}</div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">${m.home} vs ${m.away}</div>
+      <div class="input-score">
+        <input class="si" id="fh14-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onFC14('${m.id}')"/>
+        <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
+        <input class="si" id="fa14-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onFC14('${m.id}')"/>
+      </div>
+      <div id="fadv14-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
+        <label>Kto awansuje?</label>
+        <div class="chips">
+          <span class="chip${adv==="home"?" on":""}" data-adv="home" onclick="selAdv14('${m.id}','home')">${m.home}</span>
+          <span class="chip${adv==="away"?" on":""}" data-adv="away" onclick="selAdv14('${m.id}','away')">${m.away}</span>
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById("matches-form-14").innerHTML = html;
+}
+
+window.onFC14 = function(mid){
+  const h = document.getElementById("fh14-"+mid)?.value;
+  const a = document.getElementById("fa14-"+mid)?.value;
+  const adv = document.getElementById("fadv14-"+mid);
+  if(adv) adv.style.display = (h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
+};
+
+const localAdv14 = {};
+window.selAdv14 = function(mid, val){
+  localAdv14[mid] = val;
+  document.querySelectorAll("#fadv14-"+mid+" .chip").forEach(c=>c.classList.toggle("on", c.dataset.adv===val));
+};
+
+function saveBets14(){
+  const bets = {};
+  let missing = false;
+  MATCHES_14.forEach(m=>{
+    const h = document.getElementById("fh14-"+m.id)?.value;
+    const a = document.getElementById("fa14-"+m.id)?.value;
+    if(h===""||a===""){missing=true;return;}
+    const ih=parseInt(h),ia=parseInt(a);
+    let adv = "";
+    if(ih===ia){ adv = localAdv14[m.id]||(D14.players[currentNick14]||{})[m.id]?.advance||""; if(!adv){missing=true;return;} }
+    bets[m.id]={home:ih,away:ia,advance:adv};
+  });
+  const err = document.getElementById("save-err-14");
+  if(missing){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Wypełnij wszystkie typy (przy remisie wskaż awans).'; return; }
+  err.style.display="none";
+  D14.players[currentNick14] = bets;
+  save14(D14);
+  cancelTyping14();
+  renderBetsList14();
+  const notice = document.createElement("div");
+  notice.className="al as";
+  notice.innerHTML=`<i class="ti ti-circle-check"></i> Typy zapisane dla <strong>${currentNick14}</strong>!`;
+  document.getElementById("tab14-typy").prepend(notice);
+  setTimeout(()=>notice.remove(), 3000);
+}
+
+function calcPts14(bet, result){
+  if(!result||result.home===undefined) return null;
+  const rh=result.home,ra=result.away;
+  const bh=Number(bet.home),ba=Number(bet.away);
+  const exact=bh===rh&&ba===ra;
+  const isR=rh===ra;
+  let p=0;
+  if(exact){ p=3; if(isR&&bet.advance===result.advance) p++; }
+  else{ const w=rh>ra?"home":ra>rh?"away":"draw"; const bw=bh>ba?"home":ba>bh?"away":"draw"; if(w===bw){p=1;if(isR&&bet.advance===result.advance)p++;} }
+  return p;
+}
+
+function renderBetsList14(){
+  const el = document.getElementById("bets-list-14");
+  if(!el) return;
+  const players = Object.keys(D14.players);
+  if(!players.length){ el.innerHTML=""; return; }
+  let html = "";
+  players.forEach(nick=>{
+    const bets = D14.players[nick];
+    let totalPts=0, totalExact=0;
+    MATCHES_14.forEach(m=>{ const b=bets[m.id]; const r=D14.results[m.id]; if(b&&r){ const p=calcPts14(b,r); if(p!==null){totalPts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away) totalExact++;} } });
+    html += `<div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0"><div class="la" style="display:inline-flex;margin-right:8px">${nick.slice(0,2).toUpperCase()}</div>${nick}</h2>
+        <div style="text-align:right">
+          <span class="bpts">${totalPts} pkt</span>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">${totalExact} dokładnych</div>
+        </div>
+      </div>`;
+    MATCHES_14.forEach(m=>{
+      const b = bets[m.id];
+      const r = D14.results[m.id];
+      const started = matchStarted14(m);
+      if(!b){ html+=`<div class="bet-row"><span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span><span style="font-size:12px;color:var(--text3)">brak</span></div>`; return; }
+      const pts = r ? calcPts14(b,r) : null;
+      const advS = b.advance ? ` (${b.advance==="home"?m.home:m.away})` : "";
+      const showBet = started;
+      html += `<div class="bet-row">
+        <span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span>
+        <span class="bet-score">${showBet ? `${b.home}:${b.away}${advS}` : `<span style="color:var(--text3);font-size:11px">🔒 ukryty</span>`}</span>
+        ${pts!==null?`<span class="bet-pts${pts===0?" bet-pts-0":""}">${pts}p</span>`:`<span style="font-size:11px;color:var(--text3)">${r?"-":"—"}</span>`}
+      </div>`;
+    });
+    html += `<button class="btn bxs bd" style="margin-top:10px" onclick="deleteBets14('${nick}')"><i class="ti ti-trash"></i> Usuń typy ${nick}</button>`;
+    html += `</div>`;
+  });
+  el.innerHTML = html;
+}
+
+window.deleteBets14 = function(nick){
+  if(!confirm("Usunąć typy dla "+nick+"?")) return;
+  delete D14.players[nick];
+  save14(D14);
+  renderBetsList14();
+};
+
+function renderLeaderboard14(){
+  const el = document.getElementById("leaderboard-14");
+  if(!el) return;
+  const players = Object.keys(D14.players);
+  if(!players.length){ el.innerHTML='<div class="empty">Brak uczestników</div>'; return; }
+  const lb = players.map(nick=>{
+    let pts=0,exact=0;
+    MATCHES_14.forEach(m=>{ const b=D14.players[nick][m.id]; const r=D14.results[m.id]; if(b&&r){ const p=calcPts14(b,r); if(p!==null){pts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away)exact++;} } });
+    return {nick,pts,exact};
+  }).sort((a,b)=>b.pts!==a.pts?b.pts-a.pts:b.exact-a.exact);
+  el.innerHTML = lb.map((u,i)=>`<div class="lr">
+    <div class="lp ${i===0?"p1":i===1?"p2":i===2?"p3":""}">${i+1}</div>
+    <div class="la">${u.nick.slice(0,2).toUpperCase()}</div>
+    <div class="ln2">${u.nick}</div>
+    <div class="le">${u.exact} dokł.</div>
+    <span class="bpts">${u.pts} pkt</span>
+  </div>`).join("");
+}
+
+function renderResultsForm14(){
+  const el = document.getElementById("results-form-14");
+  if(!el) return;
+  let html = "";
+  MATCHES_14.forEach(m=>{
+    const r = D14.results[m.id]||{};
+    const hasR = r.home!==undefined;
+    const showAdv = hasR && r.home===r.away;
+    html += `<div class="match-block">
+      <div class="group-header">${m.group} — ${fmt(m.date)}, godz. ${m.time}</div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:5px">${m.home} vs ${m.away}</div>
+      <div class="input-score">
+        <input class="si" id="rh14-${m.id}" type="number" min="0" value="${hasR?r.home:""}" placeholder="0" oninput="onRC14('${m.id}')"/>
+        <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
+        <input class="si" id="ra14-${m.id}" type="number" min="0" value="${hasR?r.away:""}" placeholder="0" oninput="onRC14('${m.id}')"/>
+      </div>
+      <div id="radv14-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
+        <label>Kto awansuje?</label>
+        <select id="rv14-${m.id}">
+          <option value="">— wybierz —</option>
+          <option value="home" ${r.advance==="home"?"selected":""}>${m.home}</option>
+          <option value="away" ${r.advance==="away"?"selected":""}>${m.away}</option>
+        </select>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+window.onRC14 = function(mid){
+  const h=document.getElementById("rh14-"+mid)?.value;
+  const a=document.getElementById("ra14-"+mid)?.value;
+  const w=document.getElementById("radv14-"+mid);
+  if(w) w.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
+};
+
+function saveResults14(){
+  MATCHES_14.forEach(m=>{
+    const h=document.getElementById("rh14-"+m.id)?.value;
+    const a=document.getElementById("ra14-"+m.id)?.value;
+    if(h===""||a==="") return;
+    const ih=parseInt(h),ia=parseInt(a);
+    const adv=ih===ia?(document.getElementById("rv14-"+m.id)?.value||""):"";
+    D14.results[m.id]={home:ih,away:ia,advance:adv};
+  });
+  save14(D14);
+  renderBetsList14();
+  const notice=document.createElement("div");
+  notice.className="al as";
+  notice.innerHTML='<i class="ti ti-circle-check"></i> Wyniki zapisane!';
+  document.getElementById("tab14-wyniki").prepend(notice);
+  setTimeout(()=>notice.remove(),3000);
+}
+
+// ══════════════════════════════════════════════
+//  PÓŁFINAŁY+ — GAS
+// ══════════════════════════════════════════════
+
+const QF_MATCHES = [
+  {qfId:"qf1", home:"Francja",   away:"Maroko",    datetime:"2026-07-09T20:00:00", label:"Para 1"},
+  {qfId:"qf2", home:"Hiszpania", away:"Belgia",     datetime:"2026-07-10T19:00:00", label:"Para 2"},
+  {qfId:"qf3", home:"Norwegia",  away:"Anglia",     datetime:"2026-07-11T21:00:00", label:"Para 3"},
+  {qfId:"qf4", home:"Argentyna", away:"Szwajcaria", datetime:"2026-07-12T01:00:00", label:"Para 4"},
+];
+
+let QFS = {
   session: null,
   matches: [], bets: {}, leaderboard: [], users: [],
   tab: "qf", localAdv: {}
 };
 
-function matchStarted(m) {
-  return m.datetime ? new Date(m.datetime).getTime() <= Date.now() : false;
+// JSONP
+let cbIdx = 0;
+function gasApi(action, data={}){
+  return new Promise((resolve,reject)=>{
+    const cbName = "_gcb"+(++cbIdx);
+    const timer = setTimeout(()=>{ delete window[cbName]; reject(new Error("Timeout")); },15000);
+    window[cbName] = function(r){ clearTimeout(timer); delete window[cbName]; const s=document.getElementById("_js_"+cbIdx); if(s)s.remove(); resolve(r); };
+    const params = new URLSearchParams({action, data:JSON.stringify(data), callback:cbName});
+    const sc = document.createElement("script");
+    sc.id="_js_"+cbIdx;
+    sc.src=SCRIPT_URL+"?"+params.toString();
+    sc.onerror=()=>{ clearTimeout(timer); delete window[cbName]; sc.remove(); reject(new Error("Błąd połączenia")); };
+    document.head.appendChild(sc);
+  });
 }
 
-function calcPts(bet, match) {
-  if (!match.result) return null;
-  const { home: rh, away: ra } = match.result;
-  const bh = Number(bet.home), ba = Number(bet.away);
-  const isFin = match.type === "final" || match.type === "third";
-  const exact = bh === rh && ba === ra;
-  const isR = rh === ra;
-  let p = 0;
-  if (exact) {
-    p = isFin ? 5 : 3;
-    if (isR && bet.advance === match.result.advance) p++;
-  } else {
-    const w = rh>ra?"home":ra>rh?"away":"draw";
-    const bw = bh>ba?"home":ba>bh?"away":"draw";
-    if (w === bw) { p = isFin ? 2 : 1; if (isR && bet.advance===match.result.advance) p++; }
-  }
+function qfMatchStarted(m){ return m.datetime?new Date(m.datetime).getTime()<=Date.now():false; }
+
+function calcPtsQF(bet,match){
+  if(!match.result) return null;
+  const {home:rh,away:ra}=match.result;
+  const bh=Number(bet.home),ba=Number(bet.away);
+  const isFin=match.type==="final"||match.type==="third";
+  const exact=bh===rh&&ba===ra;
+  const isR=rh===ra;
+  let p=0;
+  if(exact){ p=isFin?5:3; if(isR&&bet.advance===match.result.advance)p++; }
+  else{ const w=rh>ra?"home":ra>rh?"away":"draw"; const bw=bh>ba?"home":ba>bh?"away":"draw"; if(w===bw){p=isFin?2:1;if(isR&&bet.advance===match.result.advance)p++;} }
   return p;
 }
 
-function formatDate(dt) {
-  if (!dt) return "";
-  return new Date(dt).toLocaleString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+function fmtDT(dt){ if(!dt)return""; return new Date(dt).toLocaleString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
+function showQFErr(el,msg){ el.style.display=""; el.innerHTML=`<i class="ti ti-alert-circle"></i> ${msg}`; }
+
+async function loadQFData(){
+  const base = QFS.session?.isAdmin ? {isAdmin:true} : {userId:QFS.session?.userId};
+  try{
+    const [mR,bR,lR] = await Promise.all([gasApi("getMatches",base),gasApi("getBetsForUser",base),gasApi("getLeaderboard")]);
+    if(mR.ok) QFS.matches=mR.matches||[];
+    if(bR.ok) QFS.bets=bR.bets||{};
+    if(lR.ok) QFS.leaderboard=lR.leaderboard||[];
+    if(QFS.session?.isAdmin){ const uR=await gasApi("getUsers",{adminPass:QFS.session.adminPass}); if(uR.ok) QFS.users=uR.users||[]; }
+  }catch(e){ console.warn("GAS load error:",e); }
 }
 
-function showErr(el, msg) {
-  el.style.display = ""; el.innerHTML = `<i class="ti ti-alert-circle"></i> ${msg}`;
+function renderQF(){
+  const root = document.getElementById("qf-root");
+  if(!QFS.session){ root.innerHTML=renderQFLogin(); bindQFLogin(); return; }
+  if(QFS.session.isAdmin){ root.innerHTML=renderQFAdmin(); bindQFAdmin(); return; }
+  root.innerHTML=renderQFUser(); 
 }
 
-// ── Render ────────────────────────────────────────────────────
-function render() {
-  const root = document.getElementById("root");
-  const configured = SCRIPT_URL && SCRIPT_URL !== "WKLEJ_URL_GAS_TUTAJ";
-  const cfgBanner = configured ? "" : `<div class="cfg-banner">
-    <strong>⚠️ Konfiguracja wymagana</strong>
-    Otwórz plik <code>index.html</code> i wpisz URL swojego GAS Web App w zmiennej <code>SCRIPT_URL</code> (linia ~30).
-  </div>`;
-  if (!S.session) { root.innerHTML = cfgBanner + renderLogin(); bindLogin(); return; }
-  if (S.session.isAdmin) { root.innerHTML = cfgBanner + renderAdmin(); bindAdmin(); return; }
-  root.innerHTML = cfgBanner + renderUser(); bindUser();
-}
-
-// ══════════════════════════════════════════════════════════════
-//  LOGIN
-// ══════════════════════════════════════════════════════════════
-function renderLogin() {
+// LOGIN
+function renderQFLogin(){
   return `<div class="lw">
-    <div class="ll">⚽</div>
-    <div class="lt">Mundial 2026 Typer</div>
-    <div class="ls">Zaloguj się, aby typować wyniki</div>
+    <div class="ll">🏆</div>
+    <div class="lt">Ćwierćfinały — logowanie</div>
+    <div class="ls">Zaloguj się, aby typować wyniki ćwierćfinałów</div>
     <div class="card">
-      <div class="fg"><label>Nick</label><input id="li-n" placeholder="np. Marek" autocomplete="username"/></div>
-      <div class="fg"><label>Hasło</label><input id="li-p" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
-      <div id="li-e" class="al ae" style="display:none"></div>
-      <button class="btn bp" id="li-btn" style="width:100%"><i class="ti ti-login"></i> Zaloguj się</button>
+      <div class="fg"><label>Nick</label><input id="qli-n" placeholder="np. Marek" autocomplete="username"/></div>
+      <div class="fg"><label>Hasło</label><input id="qli-p" type="password" placeholder="••••••••"/></div>
+      <div id="qli-e" class="al ae" style="display:none"></div>
+      <button class="btn bp" id="qli-btn" style="width:100%"><i class="ti ti-login"></i> Zaloguj się</button>
       <p style="text-align:center;font-size:12px;color:var(--text3);margin-top:10px">Admin → nick <strong>admin</strong> + hasło admina</p>
     </div>
   </div>`;
 }
 
-function bindLogin() {
-  document.getElementById("li-p")?.addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
-  document.getElementById("li-btn")?.addEventListener("click", doLogin);
+function bindQFLogin(){
+  document.getElementById("qli-p")?.addEventListener("keydown",e=>{ if(e.key==="Enter") doQFLogin(); });
+  document.getElementById("qli-btn")?.addEventListener("click", doQFLogin);
 }
 
-async function doLogin() {
-  const nick = document.getElementById("li-n").value.trim();
-  const pass = document.getElementById("li-p").value;
-  const errEl = document.getElementById("li-e");
-  const btn = document.getElementById("li-btn");
-  if (!nick) { showErr(errEl, "Podaj nick."); return; }
-  btn.disabled = true; btn.innerHTML = '<span class="sp"></span> Logowanie...';
-  try {
-    const r = await api("login", { name: nick, pass });
-    if (!r.ok) { showErr(errEl, r.error); btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Zaloguj się'; return; }
-    S.session = r.isAdmin ? { isAdmin: true, adminPass: pass } : { isAdmin: false, userId: r.userId, userName: r.userName };
-    sessionStorage.setItem("m26_sess", JSON.stringify(S.session));
-    await loadData();
-    render();
-  } catch(e) {
-    showErr(errEl, e.message);
-    btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Zaloguj się';
+async function doQFLogin(){
+  const nick=document.getElementById("qli-n").value.trim();
+  const pass=document.getElementById("qli-p").value;
+  const errEl=document.getElementById("qli-e");
+  const btn=document.getElementById("qli-btn");
+  if(!nick){showQFErr(errEl,"Podaj nick.");return;}
+  btn.disabled=true; btn.innerHTML='<span class="sp"></span> Logowanie...';
+  try{
+    const r=await gasApi("login",{name:nick,pass});
+    if(!r.ok){showQFErr(errEl,r.error);btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Zaloguj się';return;}
+    QFS.session=r.isAdmin?{isAdmin:true,adminPass:pass}:{isAdmin:false,userId:r.userId,userName:r.userName};
+    sessionStorage.setItem("m26q_sess",JSON.stringify(QFS.session));
+    await loadQFData();
+    renderQF();
+  }catch(e){
+    showQFErr(errEl,e.message);
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Zaloguj się';
   }
 }
 
-function doLogout() {
-  S = { session:null, matches:[], bets:{}, leaderboard:[], users:[], tab:"bet", localAdv:{} };
-  sessionStorage.removeItem("m26_sess");
-  render();
-}
-window.doLogout = doLogout;
+function doQFLogout(){ QFS={session:null,matches:[],bets:{},leaderboard:[],users:[],tab:"qf",localAdv:{}}; sessionStorage.removeItem("m26q_sess"); renderQF(); }
+window.doQFLogout=doQFLogout;
 
-// ── Data ──────────────────────────────────────────────────────
-async function loadData() {
-  const base = S.session.isAdmin ? { isAdmin: true } : { userId: S.session.userId };
-  const [mR, bR, lR] = await Promise.all([
-    api("getMatches", base), api("getBetsForUser", base), api("getLeaderboard")
-  ]);
-  if (mR.ok) S.matches = mR.matches || [];
-  if (bR.ok) S.bets = bR.bets || {};
-  if (lR.ok) S.leaderboard = lR.leaderboard || [];
-  if (S.session.isAdmin) {
-    const uR = await api("getUsers", { adminPass: S.session.adminPass });
-    if (uR.ok) S.users = uR.users || [];
-  }
-}
+// ── Admin ──────────────────────────────────────
+function typeInfoQF(t){ return t==="final"?{cls:"bf",lbl:"Finał"}:t==="third"?{cls:"bt",lbl:"3. miejsce"}:{cls:"bs",lbl:"Ćwierćfinał"}; }
 
-async function reload() { await loadData(); }
-
-// ══════════════════════════════════════════════════════════════
-//  ADMIN
-// ══════════════════════════════════════════════════════════════
-function renderAdmin() {
-  const tabs = [{id:"qf",i:"ti-tournament",l:"Ćwierćfinały"},{id:"matches",i:"ti-ball-football",l:"Mecze"},{id:"users",i:"ti-users",l:"Uczestnicy"},{id:"results",i:"ti-clipboard-check",l:"Wyniki"},{id:"leaderboard",i:"ti-trophy",l:"Tabela"}];
-  return `<div class="header">
-    <div class="h-left"><span style="font-size:23px">⚽</span><div><h1>Mundial 2026</h1><small>Panel admina</small></div></div>
-    <div class="h-right"><span class="badge ba"><i class="ti ti-shield-check"></i> Admin</span><button class="btn bsm" onclick="doLogout()"><i class="ti ti-logout"></i> Wyloguj</button></div>
+function renderQFAdmin(){
+  const tabs=[{id:"qf",i:"ti-tournament",l:"Pary"},{id:"results",i:"ti-clipboard-check",l:"Wyniki"},{id:"users",i:"ti-users",l:"Uczestnicy"},{id:"lb",i:"ti-trophy",l:"Tabela"}];
+  return `<div class="header" style="margin-bottom:10px">
+    <div class="h-left"><span style="font-size:20px">🏆</span><div><h1>Ćwierćfinały</h1><small>Panel admina</small></div></div>
+    <div class="h-right"><span class="badge ba"><i class="ti ti-shield-check"></i> Admin</span><button class="btn bsm" onclick="doQFLogout()"><i class="ti ti-logout"></i> Wyloguj</button></div>
   </div>
-  <div class="tabs">${tabs.map(t=>`<button class="tab${S.tab===t.id?" on":""}" onclick="setTab('${t.id}')"><i class="ti ${t.i}"></i> ${t.l}</button>`).join("")}</div>
-  <div id="tc">${renderAdminTab()}</div>`;
+  <div class="tabs">${tabs.map(t=>`<button class="tab${QFS.tab===t.id?" on":""}" onclick="setQFTab('${t.id}')"><i class="ti ${t.i}"></i> ${t.l}</button>`).join("")}</div>
+  <div id="qf-admin-content">${renderQFAdminTab()}</div>`;
 }
 
-function renderAdminTab() {
-  if (S.tab==="qf")      return adminQF();
-  if (S.tab==="matches") return adminMatches();
-  if (S.tab==="users")   return adminUsers();
-  if (S.tab==="results") return adminResults();
-  return renderLB(true);
+function renderQFAdminTab(){
+  if(QFS.tab==="qf") return renderQFPairs();
+  if(QFS.tab==="results") return renderQFResults();
+  if(QFS.tab==="users") return renderQFUsers();
+  return renderQFLB(true);
 }
 
-// ── Admin: Ćwierćfinały ───────────────────────────────────────
-function adminQF() {
-  const rows = QF_MATCHES.map(qf => {
-    const m = S.matches.find(x => x.home===qf.home && x.away===qf.away && x.type==="normal");
-    const added = !!m;
-    const st = m ? matchStarted(m) : false;
-    const dtLocal = new Date(qf.datetime).toLocaleString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+function renderQFPairs(){
+  const rows=QF_MATCHES.map(qf=>{
+    const m=QFS.matches.find(x=>x.home===qf.home&&x.away===qf.away);
+    const added=!!m; const st=m?qfMatchStarted(m):false;
     return `<div class="mi">
       <div class="mh">
         <span class="mt">${qf.home}<span class="mvs">vs</span>${qf.away}</span>
-        <div class="mtags">
-          <span class="badge bs">${qf.label}</span>
-          ${added ? `<span class="badge ${st?"bst":"bo"}">${st?"Trwa/po":"Przed"}</span>` : `<span class="badge" style="background:#f1f0e8;color:#666">Nie dodany</span>`}
-        </div>
+        <div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge ${added?(st?"bst":"bo"):"" }">${added?(st?"Trwa/po":"Przed"):"Nie dodano"}</span></div>
       </div>
-      <div class="mm"><i class="ti ti-clock" style="font-size:12px;vertical-align:-1px"></i> ${dtLocal}</div>
-      ${m && m.result ? `<div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>` : ""}
-      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-        ${!added
-          ? `<button class="btn bp bsm" onclick="aAddQF('${qf.qfId}')"><i class="ti ti-circle-plus"></i> Dodaj do typowania</button>`
-          : `<button class="btn bxs bd" onclick="aDelMatch('${m.id}')"><i class="ti ti-trash"></i> Usuń</button>`
-        }
+      <div class="mm">${fmtDT(qf.datetime)}</div>
+      ${m&&m.result?`<div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>`:""}
+      <div style="margin-top:8px">
+        ${!added?`<button class="btn bp bsm" onclick="aQFAdd('${qf.qfId}')"><i class="ti ti-circle-plus"></i> Dodaj do typowania</button>`
+                :`<button class="btn bxs bd" onclick="aQFDel('${m.id}')"><i class="ti ti-trash"></i> Usuń</button>`}
       </div>
     </div>`;
   }).join("");
-
-  // Sekcja wyników ćwierćfinałów
-  const qfMatches = S.matches.filter(m => {
-    return QF_MATCHES.some(qf => qf.home===m.home && qf.away===m.away);
-  });
-  const avail = qfMatches.filter(m => matchStarted(m) && !m.result);
-  const done  = qfMatches.filter(m => m.result);
-
-  const resHtml = !avail.length && !done.length ? "" : `
-  <div class="card" style="margin-top:0">
-    <h2><i class="ti ti-edit" style="color:var(--blue)"></i> Wpisz wyniki ćwierćfinałów</h2>
-    ${!avail.length ? '<div class="empty" style="padding:12px 0">Brak meczów do uzupełnienia</div>' : avail.map(m=>`
-      <div class="mi">
-        <div class="mh"><span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span><span class="badge bst">Trwa/po</span></div>
-        <div class="sr">
-          <input class="si" id="rh-${m.id}" type="number" min="0" placeholder="0" oninput="chkRR('${m.id}')"/>
-          <span class="ss">:</span>
-          <input class="si" id="ra-${m.id}" type="number" min="0" placeholder="0" oninput="chkRR('${m.id}')"/>
-        </div>
-        <div id="rw-${m.id}" style="display:none" class="ar">
-          <label>Kto awansuje (przy remisie)?</label>
-          <select id="rv-${m.id}"><option value="">— wybierz —</option><option value="home">${m.home}</option><option value="away">${m.away}</option></select>
-        </div>
-        <button class="btn bp bsm" style="margin-top:9px" onclick="aSetRes('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz wynik</button>
-      </div>`).join("")}
-    ${done.map(m=>`
-      <div class="mi">
-        <div class="mt">${m.home}<span class="mvs">vs</span>${m.away}</div>
-        <div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>
-        <button class="btn bxs bd" style="margin-top:7px" onclick="aClrRes('${m.id}')"><i class="ti ti-refresh"></i> Cofnij</button>
-      </div>`).join("")}
-  </div>`;
-
-  return `<div class="card">
-    <h2><i class="ti ti-tournament" style="color:var(--blue)"></i> Ćwierćfinały — pary</h2>
-    <div class="al ai" style="margin-bottom:12px"><i class="ti ti-info-circle"></i> Kliknij „Dodaj do typowania" żeby otworzyć daną parę dla uczestników. Typy są ukryte do momentu startu meczu.</div>
-    ${rows}
-  </div>${resHtml}`;
+  return `<div class="card"><h2><i class="ti ti-tournament" style="color:var(--blue)"></i> Pary ćwierćfinałów</h2>
+    <div class="al ai" style="margin-bottom:10px"><i class="ti ti-info-circle"></i> Typy uczestników są ukryte do czasu startu meczu.</div>
+    ${rows}</div>`;
 }
 
-window.aAddQF = async function(qfId) {
-  const qf = QF_MATCHES.find(q => q.qfId===qfId);
-  if (!qf) return;
-  const r = await api("addMatch", { adminPass: S.session.adminPass, home: qf.home, away: qf.away, datetime: qf.datetime, type: "normal" });
-  if (!r.ok) { alert(r.error); return; }
-  await reload(); render();
-};
-
-function typeInfo(t) {
-  return t==="final" ? {cls:"bf",lbl:"Finał"} : t==="third" ? {cls:"bt",lbl:"3. miejsce"} : {cls:"bs",lbl:"Półfinał/ćw."};
-}
-
-function adminMatches() {
-  const list = !S.matches.length ? '<div class="empty"><i class="ti ti-calendar-off" style="font-size:26px;display:block;margin-bottom:6px"></i>Brak meczów</div>'
-    : [...S.matches].sort((a,b)=>new Date(a.datetime)-new Date(b.datetime)).map(m => {
-      const ti = typeInfo(m.type); const st = matchStarted(m);
-      return `<div class="mi">
-        <div class="mh">
-          <span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span>
-          <div class="mtags"><span class="badge ${ti.cls}">${ti.lbl}</span><span class="badge ${st?"bst":"bo"}">${st?"Trwa/po":"Przed"}</span></div>
-        </div>
-        <div class="mm">${formatDate(m.datetime)}</div>
-        ${m.result?`<div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>`:""}
-        <button class="btn bxs bd" style="margin-top:7px" onclick="aDelMatch('${m.id}')"><i class="ti ti-trash"></i> Usuń</button>
-      </div>`;
-    }).join("");
-  return `<div class="card"><h2><i class="ti ti-plus-circle" style="color:var(--blue)"></i> Dodaj mecz</h2>
-    <div class="fr">
-      <div class="fg" style="margin:0"><label>Gospodarz</label><input id="m-h" placeholder="np. Brazylia"/></div>
-      <div class="fg" style="margin:0"><label>Gość</label><input id="m-a" placeholder="np. Francja"/></div>
-    </div>
-    <div class="fr">
-      <div class="fg" style="margin:0"><label>Data i godzina</label><input id="m-d" type="datetime-local"/></div>
-      <div class="fg" style="margin:0"><label>Typ meczu</label>
-        <select id="m-t">
-          <option value="normal">Ćwierćfinał / Półfinał</option>
-          <option value="third">Mecz o 3. miejsce</option>
-          <option value="final">Finał</option>
-        </select>
+function renderQFResults(){
+  const avail=QFS.matches.filter(m=>qfMatchStarted(m)&&!m.result);
+  const done=QFS.matches.filter(m=>m.result);
+  const avHtml=!avail.length?'<div class="empty">Brak meczów do uzupełnienia</div>':avail.map(m=>`
+    <div class="mi">
+      <div class="mh"><span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span><span class="badge bst">Trwa/po</span></div>
+      <div class="sr">
+        <input class="si" id="rh-${m.id}" type="number" min="0" placeholder="0" oninput="chkQRR('${m.id}')"/>
+        <span class="ss">:</span>
+        <input class="si" id="ra-${m.id}" type="number" min="0" placeholder="0" oninput="chkQRR('${m.id}')"/>
       </div>
-    </div>
-    <div id="m-e" class="al ae" style="display:none"></div>
-    <button class="btn bp" id="m-add"><i class="ti ti-circle-plus"></i> Dodaj mecz</button>
-  </div>
-  <div class="card"><h2><i class="ti ti-calendar" style="color:var(--blue)"></i> Mecze (${S.matches.length})</h2>${list}</div>`;
+      <div id="rw-${m.id}" style="display:none" class="ar">
+        <label>Kto awansuje (przy remisie)?</label>
+        <select id="rv-${m.id}"><option value="">— wybierz —</option><option value="home">${m.home}</option><option value="away">${m.away}</option></select>
+      </div>
+      <button class="btn bp bsm" style="margin-top:9px" onclick="aQFSetRes('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz</button>
+    </div>`).join("");
+  const doneHtml=!done.length?'<div class="empty">Brak wpisanych wyników</div>':done.map(m=>`
+    <div class="mi">
+      <div class="mt">${m.home}<span class="mvs">vs</span>${m.away}</div>
+      <div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>
+      <button class="btn bxs bd" style="margin-top:7px" onclick="aQFClrRes('${m.id}')"><i class="ti ti-refresh"></i> Cofnij</button>
+    </div>`).join("");
+  return `<div class="card"><h2><i class="ti ti-edit" style="color:var(--blue)"></i> Wpisz wyniki</h2>${avHtml}</div>
+    <div class="card"><h2><i class="ti ti-circle-check" style="color:var(--green)"></i> Wpisane</h2>${doneHtml}</div>`;
 }
 
-function adminUsers() {
-  const list = !S.users.length ? '<div class="empty"><i class="ti ti-user-off" style="font-size:26px;display:block;margin-bottom:6px"></i>Brak uczestników</div>'
-    : S.users.map(u=>`<div class="ur">
-        <div class="ui"><div class="la">${u.name.slice(0,2).toUpperCase()}</div><span style="font-size:14px;font-weight:500">${u.name}</span></div>
-        <button class="btn bxs bd" onclick="aDelUser('${u.id}')"><i class="ti ti-trash"></i> Usuń</button>
-      </div>`).join("");
+function renderQFUsers(){
+  const list=!QFS.users.length?'<div class="empty">Brak uczestników</div>':QFS.users.map(u=>`
+    <div class="ur"><div class="ui"><div class="la">${u.name.slice(0,2).toUpperCase()}</div><span style="font-size:14px;font-weight:500">${u.name}</span></div>
+    <button class="btn bxs bd" onclick="aQFDelUser('${u.id}')"><i class="ti ti-trash"></i> Usuń</button></div>`).join("");
   return `<div class="card"><h2><i class="ti ti-user-plus" style="color:var(--blue)"></i> Dodaj uczestnika</h2>
     <div class="fr">
-      <div class="fg" style="margin:0"><label>Nick</label><input id="u-n" placeholder="np. Marek"/></div>
-      <div class="fg" style="margin:0"><label>Hasło</label><input id="u-p" type="password" placeholder="••••••"/></div>
+      <div class="fg" style="margin:0"><label>Nick</label><input id="qu-n" placeholder="np. Marek"/></div>
+      <div class="fg" style="margin:0"><label>Hasło</label><input id="qu-p" type="password" placeholder="••••••"/></div>
     </div>
-    <div id="u-e" class="al ae" style="display:none"></div>
-    <button class="btn bp" id="u-add"><i class="ti ti-user-plus"></i> Dodaj uczestnika</button>
+    <div id="qu-e" class="al ae" style="display:none"></div>
+    <button class="btn bp" id="qu-add"><i class="ti ti-user-plus"></i> Dodaj</button>
   </div>
-  <div class="card"><h2><i class="ti ti-users" style="color:var(--blue)"></i> Uczestnicy (${S.users.length})</h2>${list}</div>`;
+  <div class="card"><h2><i class="ti ti-users" style="color:var(--blue)"></i> Uczestnicy (${QFS.users.length})</h2>${list}</div>`;
 }
 
-function adminResults() {
-  const avail = S.matches.filter(m => matchStarted(m) && !m.result);
-  const done  = S.matches.filter(m => m.result);
-  const avHtml = !avail.length
-    ? '<div class="empty"><i class="ti ti-checks" style="font-size:26px;display:block;margin-bottom:6px"></i>Wszystkie dostępne wyniki wpisane</div>'
-    : avail.map(m=>`<div class="mi">
-        <div class="mh"><span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span>
-          <span class="badge ${typeInfo(m.type).cls}">${typeInfo(m.type).lbl}</span>
-        </div>
-        <div class="mm">${formatDate(m.datetime)}</div>
-        <div class="sr">
-          <input class="si" id="rh-${m.id}" type="number" min="0" placeholder="0" oninput="chkRR('${m.id}','${m.home}','${m.away}')"/>
-          <span class="ss">:</span>
-          <input class="si" id="ra-${m.id}" type="number" min="0" placeholder="0" oninput="chkRR('${m.id}','${m.home}','${m.away}')"/>
-        </div>
-        <div id="rw-${m.id}" style="display:none" class="ar">
-          <label>Kto awansuje (przy remisie)?</label>
-          <select id="rv-${m.id}"><option value="">— wybierz —</option><option value="home">${m.home}</option><option value="away">${m.away}</option></select>
-        </div>
-        <button class="btn bp bsm" style="margin-top:9px" onclick="aSetRes('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz wynik</button>
-      </div>`).join("");
-  const doneHtml = !done.length ? '<div class="empty">Brak wpisanych wyników</div>'
-    : done.map(m=>`<div class="mi">
-        <div class="mt">${m.home}<span class="mvs">vs</span>${m.away}</div>
-        <div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>
-        <button class="btn bxs bd" style="margin-top:7px" onclick="aClrRes('${m.id}')"><i class="ti ti-refresh"></i> Cofnij</button>
-      </div>`).join("");
-  return `<div class="card"><h2><i class="ti ti-edit" style="color:var(--blue)"></i> Wpisz wyniki</h2>${avHtml}</div>
-    <div class="card"><h2><i class="ti ti-circle-check" style="color:var(--green)"></i> Wyniki wpisane</h2>${doneHtml}</div>`;
+function renderQFLB(isAdmin){
+  if(!QFS.leaderboard.length) return `<div class="card"><div class="empty">Brak uczestników</div></div>`;
+  const myId=isAdmin?null:QFS.session?.userId;
+  return `<div class="card"><h2><i class="ti ti-trophy" style="color:var(--blue)"></i> Tabela</h2>
+    ${QFS.leaderboard.map((u,i)=>`<div class="lr${u.id===myId?" me-row":""}">
+      <div class="lp ${i===0?"p1":i===1?"p2":i===2?"p3":""}">${i+1}</div>
+      <div class="la">${u.name.slice(0,2).toUpperCase()}</div>
+      <div class="ln2">${u.name}${u.id===myId?` <span class="badge bu">Ty</span>`:""}</div>
+      <div class="le">${u.exact} dokł.</div>
+      <span class="bpts">${u.pts} pkt</span>
+    </div>`).join("")}
+  </div>`;
 }
 
-window.chkRR = (mid) => {
-  const h = document.getElementById(`rh-${mid}`)?.value;
-  const a = document.getElementById(`ra-${mid}`)?.value;
-  const w = document.getElementById(`rw-${mid}`);
-  if (w) w.style.display = (h!==""&&a!==""&&parseInt(h)===parseInt(a)) ? "" : "none";
-};
-window.aDelMatch = async (id) => { if(!confirm("Usunąć mecz?"))return; await api("deleteMatch",{adminPass:S.session.adminPass,matchId:id}); await reload(); render(); };
-window.aDelUser  = async (id) => { if(!confirm("Usunąć uczestnika?"))return; await api("deleteUser",{adminPass:S.session.adminPass,userId:id}); await reload(); render(); };
-window.aSetRes   = async (mid) => {
-  const rh=document.getElementById(`rh-${mid}`)?.value, ra=document.getElementById(`ra-${mid}`)?.value;
-  if(rh===""||ra===""){alert("Podaj wynik.");return;}
-  const ih=parseInt(rh), ia=parseInt(ra);
-  let adv = "";
-  if(ih===ia){adv=document.getElementById(`rv-${mid}`)?.value||"";if(!adv){alert("Podaj kto awansuje.");return;}}
-  const r=await api("setResult",{adminPass:S.session.adminPass,matchId:mid,resultHome:ih,resultAway:ia,resultAdvance:adv});
-  if(!r.ok){alert(r.error);return;}
-  await reload(); render();
-};
-window.aClrRes = async (mid) => { if(!confirm("Cofnąć wynik?"))return; await api("clearResult",{adminPass:S.session.adminPass,matchId:mid}); await reload(); render(); };
+window.setQFTab=async function(t){ QFS.tab=t; await loadQFData(); renderQF(); };
+window.chkQRR=(mid)=>{ const h=document.getElementById("rh-"+mid)?.value,a=document.getElementById("ra-"+mid)?.value,w=document.getElementById("rw-"+mid); if(w)w.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none"; };
+window.aQFAdd=async(qfId)=>{ const qf=QF_MATCHES.find(q=>q.qfId===qfId); if(!qf)return; const r=await gasApi("addMatch",{adminPass:QFS.session.adminPass,home:qf.home,away:qf.away,datetime:qf.datetime,type:"normal"}); if(!r.ok){alert(r.error);return;} await loadQFData();renderQF(); };
+window.aQFDel=async(id)=>{ if(!confirm("Usunąć mecz?"))return; await gasApi("deleteMatch",{adminPass:QFS.session.adminPass,matchId:id}); await loadQFData();renderQF(); };
+window.aQFSetRes=async(mid)=>{ const rh=document.getElementById("rh-"+mid)?.value,ra=document.getElementById("ra-"+mid)?.value; if(rh===""||ra===""){alert("Podaj wynik.");return;} const ih=parseInt(rh),ia=parseInt(ra); let adv=""; if(ih===ia){adv=document.getElementById("rv-"+mid)?.value||"";if(!adv){alert("Podaj kto awansuje.");return;}} const r=await gasApi("setResult",{adminPass:QFS.session.adminPass,matchId:mid,resultHome:ih,resultAway:ia,resultAdvance:adv}); if(!r.ok){alert(r.error);return;} await loadQFData();renderQF(); };
+window.aQFClrRes=async(mid)=>{ if(!confirm("Cofnąć wynik?"))return; await gasApi("clearResult",{adminPass:QFS.session.adminPass,matchId:mid}); await loadQFData();renderQF(); };
+window.aQFDelUser=async(id)=>{ if(!confirm("Usunąć uczestnika?"))return; await gasApi("deleteUser",{adminPass:QFS.session.adminPass,userId:id}); await loadQFData();renderQF(); };
 
-function bindAdmin() {
-  document.getElementById("m-add")?.addEventListener("click", async () => {
-    const h=document.getElementById("m-h").value.trim(), a=document.getElementById("m-a").value.trim();
-    const d=document.getElementById("m-d").value, t=document.getElementById("m-t").value;
-    const e=document.getElementById("m-e");
-    if(!h||!a||!d){showErr(e,"Wypełnij wszystkie pola.");return;}
-    const btn=document.getElementById("m-add"); btn.disabled=true;
-    const r=await api("addMatch",{adminPass:S.session.adminPass,home:h,away:a,datetime:d,type:t});
-    btn.disabled=false;
-    if(!r.ok){showErr(e,r.error);return;}
-    await reload(); render();
-  });
-  document.getElementById("u-add")?.addEventListener("click", async () => {
-    const n=document.getElementById("u-n").value.trim(), p=document.getElementById("u-p").value;
-    const e=document.getElementById("u-e");
-    if(!n||!p){showErr(e,"Podaj nick i hasło.");return;}
-    const btn=document.getElementById("u-add"); btn.disabled=true;
-    const r=await api("addUser",{adminPass:S.session.adminPass,name:n,pass:p});
-    btn.disabled=false;
-    if(!r.ok){showErr(e,r.error);return;}
-    await reload(); render();
+function bindQFAdmin(){
+  document.getElementById("qu-add")?.addEventListener("click",async()=>{
+    const n=document.getElementById("qu-n").value.trim(),p=document.getElementById("qu-p").value;
+    const e=document.getElementById("qu-e"); if(!n||!p){showQFErr(e,"Podaj nick i hasło.");return;}
+    const btn=document.getElementById("qu-add"); btn.disabled=true;
+    const r=await gasApi("addUser",{adminPass:QFS.session.adminPass,name:n,pass:p});
+    btn.disabled=false; if(!r.ok){showQFErr(e,r.error);return;}
+    await loadQFData();renderQF();
   });
 }
 
-// ══════════════════════════════════════════════════════════════
-//  USER
-// ══════════════════════════════════════════════════════════════
-function renderUser() {
-  const tabs = [{id:"qf",i:"ti-tournament",l:"Ćwierćfinały"},{id:"bet",i:"ti-ball-football",l:"Wszystkie typy"},{id:"leaderboard",i:"ti-trophy",l:"Tabela"},{id:"rules",i:"ti-book",l:"Regulamin"}];
-  return `<div class="header">
-    <div class="h-left"><span style="font-size:23px">⚽</span><div><h1>Mundial 2026</h1><small>Witaj, ${S.session.userName}!</small></div></div>
-    <div class="h-right"><span class="badge bu"><i class="ti ti-user"></i> Gracz</span><button class="btn bsm" onclick="doLogout()"><i class="ti ti-logout"></i> Wyloguj</button></div>
+// ── User ──────────────────────────────────────
+function renderQFUser(){
+  const uid=QFS.session.userId;
+  const tabs=[{id:"qf",i:"ti-tournament",l:"Ćwierćfinały"},{id:"lb",i:"ti-trophy",l:"Tabela"},{id:"rules",i:"ti-book",l:"Regulamin"}];
+  const content=QFS.tab==="qf"?renderQFUserBets(uid):QFS.tab==="lb"?renderQFLB(false):renderQFRules();
+  return `<div class="header" style="margin-bottom:10px">
+    <div class="h-left"><span style="font-size:20px">🏆</span><div><h1>Ćwierćfinały</h1><small>Witaj, ${QFS.session.userName}!</small></div></div>
+    <div class="h-right"><span class="badge bu"><i class="ti ti-user"></i> Gracz</span><button class="btn bsm" onclick="doQFLogout()"><i class="ti ti-logout"></i> Wyloguj</button></div>
   </div>
-  <div class="tabs">${tabs.map(t=>`<button class="tab${S.tab===t.id?" on":""}" onclick="setTab('${t.id}')"><i class="ti ${t.i}"></i> ${t.l}</button>`).join("")}</div>
-  <div id="tc">${renderUserTab()}</div>`;
+  <div class="tabs">${tabs.map(t=>`<button class="tab${QFS.tab===t.id?" on":""}" onclick="setQFTab('${t.id}')"><i class="ti ${t.i}"></i> ${t.l}</button>`).join("")}</div>
+  ${content}`;
 }
 
-function renderUserTab() {
-  if (S.tab==="qf")          return userQF();
-  if (S.tab==="bet")         return userBets();
-  if (S.tab==="leaderboard") return renderLB(false);
-  return renderRules();
-}
-
-// ── User: Ćwierćfinały ────────────────────────────────────────
-function userQF() {
-  const uid = S.session.userId;
-  const opened = QF_MATCHES.filter(qf => S.matches.some(m => m.home===qf.home && m.away===qf.away));
-  const notYet  = QF_MATCHES.filter(qf => !S.matches.some(m => m.home===qf.home && m.away===qf.away));
-
-  if (!opened.length) {
-    return `<div class="card">
-      <h2><i class="ti ti-tournament" style="color:var(--blue)"></i> Ćwierćfinały</h2>
-      <div class="al ai"><i class="ti ti-clock"></i> Admin nie otworzył jeszcze żadnej pary ćwierćfinałowej.</div>
-      ${notYet.map(qf=>`<div class="mi" style="opacity:.5">
-        <div class="mh"><span class="mt">${qf.home}<span class="mvs">vs</span>${qf.away}</span><span class="badge bs">${qf.label}</span></div>
-        <div class="mm">${new Date(qf.datetime).toLocaleString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})}</div>
-      </div>`).join("")}
+function renderQFUserBets(uid){
+  const html=QF_MATCHES.map(qf=>{
+    const m=QFS.matches.find(x=>x.home===qf.home&&x.away===qf.away);
+    const dtStr=fmtDT(qf.datetime);
+    if(!m) return `<div class="mi" style="opacity:.55">
+      <div class="mh"><span class="mt">${qf.home}<span class="mvs">vs</span>${qf.away}</span><div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge bst">Niedostępny</span></div></div>
+      <div class="mm">${dtStr}</div>
+      <div class="ln"><i class="ti ti-lock" style="font-size:12px"></i> Admin jeszcze nie otworzył tej pary</div>
     </div>`;
-  }
-
-  const html = QF_MATCHES.map(qf => {
-    const m = S.matches.find(x => x.home===qf.home && x.away===qf.away);
-    const dtStr = new Date(qf.datetime).toLocaleString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
-    if (!m) {
-      return `<div class="mi" style="opacity:.5">
-        <div class="mh"><span class="mt">${qf.home}<span class="mvs">vs</span>${qf.away}</span>
-          <div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge bst">Niedostępny</span></div></div>
-        <div class="mm">${dtStr}</div>
-        <div class="ln"><i class="ti ti-lock" style="font-size:12px"></i> Admin jeszcze nie otworzył tej pary</div>
-      </div>`;
-    }
-    const st = matchStarted(m);
-    const mb = S.bets[m.id] || {};
-    const my = mb[uid];
-    const ladv = S.localAdv[m.id] || my?.advance || "";
-    const bh = my ? my.home : "", ba = my ? my.away : "";
-    const showAdv = bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
-
-    let body = "";
-    if (!st) {
-      body = `<div class="sr">
-        <input class="si" id="bh-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onSC('${m.id}')"/>
+    const st=qfMatchStarted(m);
+    const mb=QFS.bets[m.id]||{};
+    const my=mb[uid];
+    const ladv=QFS.localAdv[m.id]||my?.advance||"";
+    const bh=my?my.home:"",ba=my?my.away:"";
+    const showAdv=bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
+    let body="";
+    if(!st){
+      body=`<div class="sr">
+        <input class="si" id="bh-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onQSC('${m.id}')"/>
         <span class="ss">:</span>
-        <input class="si" id="ba-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onSC('${m.id}')"/>
-        <button class="btn bp bsm" onclick="saveBet('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz</button>
+        <input class="si" id="ba-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onQSC('${m.id}')"/>
+        <button class="btn bp bsm" onclick="saveQFBet('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz</button>
       </div>
       <div id="adv-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
         <label>Kto awansuje (przy remisie)?</label>
         <div class="chips">
-          <span class="chip${ladv==="home"?" on":""}" data-adv="home" onclick="selAdv('${m.id}','home')">${m.home}</span>
-          <span class="chip${ladv==="away"?" on":""}" data-adv="away" onclick="selAdv('${m.id}','away')">${m.away}</span>
+          <span class="chip${ladv==="home"?" on":""}" data-adv="home" onclick="selQFAdv('${m.id}','home')">${m.home}</span>
+          <span class="chip${ladv==="away"?" on":""}" data-adv="away" onclick="selQFAdv('${m.id}','away')">${m.away}</span>
         </div>
       </div>
-      ${my?`<div class="ln"><i class="ti ti-lock" style="font-size:12px"></i>Typ zapisany — ukryty do startu meczu</div>`:""}`;
+      ${my?`<div class="ln"><i class="ti ti-lock" style="font-size:12px"></i> Typ zapisany — ukryty do startu meczu</div>`:""}`;
     } else {
-      if (my) {
-        const advS = my.advance ? ` (awans: ${my.advance==="home"?m.home:m.away})` : "";
-        body = `<div class="bb">Twój typ: <strong>${my.home}:${my.away}${advS}</strong></div>`;
-        if (m.result) {
-          const pts = calcPts(my, m);
-          const advR = m.result.advance ? ` (awans: ${m.result.advance==="home"?m.home:m.away})` : "";
-          body += `<div class="rs">${m.result.home}:${m.result.away}${advR}</div>
-            <div class="pl">→ <strong style="color:var(--blue)">${pts} pkt</strong></div>`;
-        } else {
-          body += `<div class="ln"><i class="ti ti-clock" style="font-size:12px"></i>Mecz trwa — czekamy na wynik</div>`;
-        }
-      } else {
-        body = `<div class="al aw"><i class="ti ti-alert-triangle"></i> Mecz rozpoczęty — nie można dodać typu.</div>`;
-      }
+      if(my){
+        const advS=my.advance?` (awans: ${my.advance==="home"?m.home:m.away})`:"";
+        body=`<div class="bb">Twój typ: <strong>${my.home}:${my.away}${advS}</strong></div>`;
+        if(m.result){ const pts=calcPtsQF(my,m); const advR=m.result.advance?` (awans: ${m.result.advance==="home"?m.home:m.away})`:""; body+=`<div class="rs">${m.result.home}:${m.result.away}${advR}</div><div class="pl">→ <strong style="color:var(--blue)">${pts} pkt</strong></div>`; }
+        else body+=`<div class="ln"><i class="ti ti-clock" style="font-size:12px"></i> Czekamy na wynik od admina</div>`;
+      } else body=`<div class="al aw"><i class="ti ti-alert-triangle"></i> Mecz rozpoczęty — nie można dodać typu.</div>`;
     }
-
-    // Typy innych po starcie
-    let othersHtml = "";
-    if (st) {
-      const others = Object.entries(mb).filter(([id]) => id !== uid);
-      if (others.length) {
-        const rows = others.map(([oid, b]) => {
-          const uName = S.leaderboard.find(u=>u.id===oid)?.name || "?";
-          const advS = b.advance ? ` (${b.advance==="home"?m.home:m.away})` : "";
-          const pts = m.result ? calcPts(b, m) : null;
-          return `<tr><td>${uName}</td><td><strong>${b.home}:${b.away}</strong>${advS}</td>
-            <td>${pts!==null?`<span class="bpts">${pts}p</span>`:""}</td></tr>`;
-        }).join("");
-        othersHtml = `<div class="sep"></div><div class="ol"><i class="ti ti-users" style="font-size:12px;vertical-align:-1px"></i> Typy innych</div>
-          <table class="ot"><thead><tr><th>Nick</th><th>Typ</th><th>Pkt</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
+    let othersHtml="";
+    if(st){
+      const others=Object.entries(mb).filter(([id])=>id!==uid);
+      if(others.length){ const rows=others.map(([oid,b])=>{ const uName=QFS.leaderboard.find(u=>u.id===oid)?.name||"?"; const advS=b.advance?` (${b.advance==="home"?m.home:m.away})`:""; const pts=m.result?calcPtsQF(b,m):null; return `<tr><td>${uName}</td><td><strong>${b.home}:${b.away}</strong>${advS}</td><td>${pts!==null?`<span class="bpts">${pts}p</span>`:""}</td></tr>`; }).join(""); othersHtml=`<div class="sep"></div><div class="ol"><i class="ti ti-users" style="font-size:12px;vertical-align:-1px"></i> Typy innych</div><table class="ot"><thead><tr><th>Nick</th><th>Typ</th><th>Pkt</th></tr></thead><tbody>${rows}</tbody></table>`; }
     }
-
     return `<div class="mi">
-      <div class="mh">
-        <span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span>
-        <div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge ${st?"bst":"bo"}">${st?"Trwa/po":"Przed"}</span></div>
-      </div>
+      <div class="mh"><span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span><div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge ${st?"bst":"bo"}">${st?"Trwa/po":"Przed"}</span></div></div>
       <div class="mm">${dtStr}</div>
       ${body}${othersHtml}
     </div>`;
   }).join("");
-
-  return `<div class="card">
-    <h2><i class="ti ti-tournament" style="color:var(--blue)"></i> Ćwierćfinały</h2>
-    ${html}
-  </div>`;
+  return `<div class="card"><h2><i class="ti ti-tournament" style="color:var(--blue)"></i> Ćwierćfinały</h2>${html}</div>`;
 }
 
-function userBets() {
-  if (!S.matches.length)
-    return `<div class="card"><div class="empty"><i class="ti ti-calendar-off" style="font-size:26px;display:block;margin-bottom:6px"></i>Admin nie dodał jeszcze meczów.</div></div>`;
-  const uid = S.session.userId;
-  const html = [...S.matches].sort((a,b)=>new Date(a.datetime)-new Date(b.datetime)).map(m => {
-    const st = matchStarted(m);
-    const mb = S.bets[m.id] || {};
-    const my = mb[uid];
-    const ti = typeInfo(m.type);
-    const ladv = S.localAdv[m.id] || my?.advance || "";
-    const bh = my ? my.home : "", ba = my ? my.away : "";
-    const showAdv = bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
-    let body = "";
-    if (!st) {
-      body = `<div class="sr">
-        <input class="si" id="bh-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onSC('${m.id}')"/>
-        <span class="ss">:</span>
-        <input class="si" id="ba-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onSC('${m.id}')"/>
-        <button class="btn bp bsm" onclick="saveBet('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz</button>
-      </div>
-      <div id="adv-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
-        <label>Kto awansuje (przy remisie)?</label>
-        <div class="chips">
-          <span class="chip${ladv==="home"?" on":""}" data-adv="home" onclick="selAdv('${m.id}','home')">${m.home}</span>
-          <span class="chip${ladv==="away"?" on":""}" data-adv="away" onclick="selAdv('${m.id}','away')">${m.away}</span>
-        </div>
-      </div>
-      ${my?`<div class="ln"><i class="ti ti-lock" style="font-size:12px"></i>Typ zapisany — ukryty do startu meczu</div>`:""}`;
-    } else {
-      if (my) {
-        const advS = my.advance ? ` (awans: ${my.advance==="home"?m.home:m.away})` : "";
-        body = `<div class="bb">Twój typ: <strong>${my.home}:${my.away}${advS}</strong></div>`;
-        if (m.result) {
-          const pts = calcPts(my, m);
-          const advR = m.result.advance ? ` (awans: ${m.result.advance==="home"?m.home:m.away})` : "";
-          body += `<div class="rs">${m.result.home}:${m.result.away}${advR}</div>
-            <div class="pl">→ <strong style="color:var(--blue)">${pts} pkt</strong></div>`;
-        } else {
-          body += `<div class="ln"><i class="ti ti-clock" style="font-size:12px"></i>Mecz trwa — czekamy na wynik od admina</div>`;
-        }
-      } else {
-        body = `<div class="al aw"><i class="ti ti-alert-triangle"></i> Mecz rozpoczęty — nie można dodać typu.</div>`;
-      }
-    }
-    let othersHtml = "";
-    if (st) {
-      const others = Object.entries(mb).filter(([id]) => id !== uid);
-      if (others.length) {
-        const rows = others.map(([oid, b]) => {
-          const uName = S.leaderboard.find(u=>u.id===oid)?.name || "?";
-          const advS = b.advance ? ` (${b.advance==="home"?m.home:m.away})` : "";
-          const pts = m.result ? calcPts(b, m) : null;
-          return `<tr><td>${uName}</td><td><strong>${b.home}:${b.away}</strong>${advS}</td>
-            <td>${pts!==null?`<span class="bpts">${pts}p</span>`:""}</td></tr>`;
-        }).join("");
-        othersHtml = `<div class="sep"></div><div class="ol"><i class="ti ti-users" style="font-size:12px;vertical-align:-1px"></i> Typy innych</div>
-          <table class="ot"><thead><tr><th>Nick</th><th>Typ</th><th>Pkt</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
-    }
-    return `<div class="mi">
-      <div class="mh">
-        <span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span>
-        <div class="mtags"><span class="badge ${ti.cls}">${ti.lbl}</span><span class="badge ${st?"bst":"bo"}">${st?"Trwa/po":"Przed"}</span></div>
-      </div>
-      <div class="mm">${formatDate(m.datetime)}</div>
-      ${body}${othersHtml}
-    </div>`;
-  }).join("");
-  return `<div class="card"><h2><i class="ti ti-ball-football" style="color:var(--blue)"></i> Moje typy</h2>${html}</div>`;
-}
-
-window.onSC = function(mid) {
-  const h = document.getElementById(`bh-${mid}`)?.value;
-  const a = document.getElementById(`ba-${mid}`)?.value;
-  const adv = document.getElementById(`adv-${mid}`);
-  if (adv) adv.style.display = (h!==""&&a!==""&&parseInt(h)===parseInt(a)) ? "" : "none";
-};
-window.selAdv = function(mid, val) {
-  S.localAdv[mid] = val;
-  document.querySelectorAll(`#adv-${mid} .chip`).forEach(c => c.classList.toggle("on", c.dataset.adv===val));
-};
-window.saveBet = async function(mid) {
-  const m = S.matches.find(x=>x.id===mid);
-  if (!m||matchStarted(m)){alert("Mecz już się rozpoczął.");return;}
-  const h=parseInt(document.getElementById(`bh-${mid}`)?.value);
-  const a=parseInt(document.getElementById(`ba-${mid}`)?.value);
-  if(isNaN(h)||isNaN(a)||h<0||a<0){alert("Podaj prawidłowe liczby.");return;}
-  let adv="";
-  if(h===a){adv=S.localAdv[mid]||"";if(!adv){alert("Przy remisie wskaż kto awansuje.");return;}}
-  const r=await api("saveBet",{userId:S.session.userId,matchId:mid,home:h,away:a,advance:adv});
-  if(!r.ok){alert(r.error);return;}
-  await reload(); render();
-};
-function bindUser() {}
-
-// ══════════════════════════════════════════════════════════════
-//  SHARED: Leaderboard + Rules
-// ══════════════════════════════════════════════════════════════
-function renderLB(isAdmin) {
-  if (!S.leaderboard.length)
-    return `<div class="card"><div class="empty"><i class="ti ti-trophy-off" style="font-size:26px;display:block;margin-bottom:6px"></i>Brak uczestników</div></div>`;
-  const myId = isAdmin ? null : S.session?.userId;
-  const rows = S.leaderboard.map((u,i) => `<div class="lr${u.id===myId?" me":""}">
-    <div class="lp ${i===0?"p1":i===1?"p2":i===2?"p3":""}">${i+1}</div>
-    <div class="la">${u.name.slice(0,2).toUpperCase()}</div>
-    <div class="ln2">${u.name}${u.id===myId?` <span class="badge bu">Ty</span>`:""}</div>
-    <div class="le">${u.exact} dokł.</div>
-    <span class="bpts">${u.pts} pkt</span>
-  </div>`).join("");
-  return `<div class="card"><h2><i class="ti ti-trophy" style="color:var(--blue)"></i> Tabela</h2>${rows}</div>`;
-}
-
-function renderRules() {
-  const rules = [
-    {i:"ti-sort-ascending-numbers",t:"Kolejność typowania",x:"Lider musi wrzucić typy najpóźniej 24h przed pierwszym meczem. Jeśli się spóźni, nie może skopiować dokładnych wyników od wicelidera."},
-    {i:"ti-ball-football",t:"Wynik po 90 minutach",x:"Typujemy wynik po regulaminowym czasie gry. Dogrywka i rzuty karne nie liczą się. Przy remisie wskaż kto awansuje."},
-    {i:"ti-star",t:"Punktacja — Ćwierćfinał / Półfinał",x:"3 pkt – dokładny wynik. 1 pkt – trafienie zwycięzcy lub remisu."},
-    {i:"ti-trophy",t:"Finał i mecz o 3. miejsce",x:"5 pkt – dokładny wynik. 2 pkt – trafienie zwycięzcy lub remisu. Maks. 6 pkt z bonusem."},
-    {i:"ti-plus",t:"Bonus za remis +1 pkt",x:"Dokładny remis + trafiony awans = 4 pkt. Inny remis + trafiony awans = 2 pkt. Błędny awans → bonus przepada."},
-    {i:"ti-scale",t:"Remis w tabeli",x:"Przy równej liczbie punktów wygrywa gracz z większą liczbą dokładnych wyników w turnieju."},
-  ];
+function renderQFRules(){
   return `<div class="card"><h2><i class="ti ti-book" style="color:var(--blue)"></i> Regulamin</h2>
-    ${rules.map(r=>`<div class="ri"><div class="ric"><i class="ti ${r.i}"></i></div>
-      <div><div class="rit">${r.t}</div><div class="rix">${r.x}</div></div></div>`).join("")}
+    <div class="ri"><div class="ric"><i class="ti ti-ball-football"></i></div><div><div class="rit">Wynik po 90 minutach</div><div class="rix">Typujemy wynik po regulaminowym czasie gry. Dogrywka i rzuty karne nie liczą się.</div></div></div>
+    <div class="ri"><div class="ric"><i class="ti ti-star"></i></div><div><div class="rit">Punktacja — Ćwierćfinał</div><div class="rix">3 pkt – dokładny wynik. 1 pkt – trafienie zwycięzcy lub remisu. +1 pkt bonus za trafiony awans przy remisie.</div></div></div>
+    <div class="ri"><div class="ric"><i class="ti ti-lock"></i></div><div><div class="rit">Ukrywanie typów</div><div class="rix">Typy są niewidoczne dla innych uczestników aż do momentu startu meczu.</div></div></div>
   </div>`;
 }
 
-// ── Navigation ────────────────────────────────────────────────
-window.setTab = async function(tab) {
-  S.tab = tab; await reload(); render();
-};
+window.onQSC=function(mid){ const h=document.getElementById("bh-"+mid)?.value,a=document.getElementById("ba-"+mid)?.value,adv=document.getElementById("adv-"+mid); if(adv)adv.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none"; };
+window.selQFAdv=function(mid,val){ QFS.localAdv[mid]=val; document.querySelectorAll("#adv-"+mid+" .chip").forEach(c=>c.classList.toggle("on",c.dataset.adv===val)); };
+window.saveQFBet=async function(mid){ const m=QFS.matches.find(x=>x.id===mid); if(!m||qfMatchStarted(m)){alert("Mecz już się rozpoczął.");return;} const h=parseInt(document.getElementById("bh-"+mid)?.value),a=parseInt(document.getElementById("ba-"+mid)?.value); if(isNaN(h)||isNaN(a)||h<0||a<0){alert("Podaj prawidłowe liczby.");return;} let adv=""; if(h===a){adv=QFS.localAdv[mid]||"";if(!adv){alert("Przy remisie wskaż kto awansuje.");return;}} const r=await gasApi("saveBet",{userId:QFS.session.userId,matchId:mid,home:h,away:a,advance:adv}); if(!r.ok){alert(r.error);return;} await loadQFData();renderQF(); };
 
-// ── Init ──────────────────────────────────────────────────────
-(async () => {
-  const saved = sessionStorage.getItem("m26_sess");
-  if (saved) {
-    try { S.session = JSON.parse(saved); await loadData(); } catch(e) { S.session = null; }
-  }
-  render();
+// ── Init QF ───────────────────────────────────
+(async()=>{
+  const saved=sessionStorage.getItem("m26q_sess");
+  if(saved){ try{ QFS.session=JSON.parse(saved); await loadQFData(); }catch(e){ QFS.session=null; } }
 })();
 </script>
 </body>
