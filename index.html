@@ -1,1189 +1,1302 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mundial 2026 Typer</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strzałka ⚽ FIFA 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#f5f5f5;--surface:#fff;--border:#e2e2e2;--border2:#bbb;
-  --text:#1a1a1a;--text2:#555;--text3:#888;
-  --blue:#185FA5;--blue-l:#E6F1FB;--blue-d:#0C447C;
-  --purple:#3C3489;--purple-l:#EEEDFE;
-  --green:#27500A;--green-l:#EAF3DE;
-  --amber:#633806;--amber-l:#FAEEDA;
-  --red:#791F1F;--red-l:#FCEBEB;
-  --gray:#444441;--gray-l:#F1EFE8;
-  --r:10px;--rs:7px;
+:root {
+  --green:#16a34a; --green-bg:#dcfce7;
+  --amber:#d97706; --amber-bg:#fef3c7;
+  --red:#dc2626;   --red-bg:#fee2e2;
+  --blue:#2563eb;  --blue-bg:#dbeafe;
+  --gray:#6b7280;  --gray-bg:#f3f4f6;
+  --border:#e5e7eb; --text:#111827; --text2:#6b7280;
+  --bg:#f9fafb; --card:#ffffff;
+  --radius:10px;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',system-ui,sans-serif;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px}
-.app{max-width:720px;margin:0 auto;padding:14px}
-
-/* Header */
-.header{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 17px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.h-left{display:flex;align-items:center;gap:10px}
-.h-left h1{font-size:17px;font-weight:700;line-height:1.2}
-.h-left small{font-size:12px;color:var(--text3)}
-.h-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
-
-/* Badges */
-.badge{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;white-space:nowrap}
-.ba{background:var(--purple-l);color:var(--purple)}
-.bu{background:var(--green-l);color:var(--green)}
-.bf{background:var(--amber-l);color:var(--amber)}
-.bs{background:var(--purple-l);color:var(--purple)}
-.bt{background:var(--green-l);color:var(--green)}
-.bst{background:var(--gray-l);color:var(--gray)}
-.bo{background:var(--green-l);color:var(--green)}
-.bpts{background:var(--blue);color:#fff;font-size:12px;padding:3px 10px;border-radius:999px;font-weight:700}
-
-/* Buttons */
-.btn{padding:7px 14px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);font-size:13px;font-weight:500;cursor:pointer;color:var(--text);display:inline-flex;align-items:center;gap:5px;transition:background .12s}
-.btn:hover{background:var(--bg)}.btn:active{transform:scale(.98)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.bp{background:var(--blue);color:#fff;border-color:var(--blue)}.bp:hover{background:var(--blue-d)}
-.bd{background:var(--red);color:#fff;border-color:var(--red)}.bd:hover{background:#501313}
-.bsm{padding:5px 11px;font-size:12px}.bxs{padding:3px 8px;font-size:11px}
-
-/* Top-level tabs (fazy) */
-.phase-tabs{display:flex;gap:0;margin-bottom:14px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--surface)}
-.phase-tab{flex:1;padding:10px 8px;font-size:13px;font-weight:600;cursor:pointer;text-align:center;color:var(--text2);border:none;background:transparent;border-right:1px solid var(--border);transition:background .12s}
-.phase-tab:last-child{border-right:none}
-.phase-tab.on{background:var(--blue);color:#fff}
-.phase-tab:hover:not(.on){background:var(--bg)}
-
-/* Sub tabs */
-.tabs{display:flex;gap:5px;margin-bottom:13px;flex-wrap:wrap}
-.tab{padding:7px 14px;border-radius:var(--rs);border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:500;cursor:pointer;color:var(--text2)}
-.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
-.tab:hover:not(.on){background:var(--bg)}
-
-/* Cards */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:15px 17px;margin-bottom:11px}
-.card h2{font-size:15px;font-weight:700;margin-bottom:12px}
-.card h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text2)}
-
-/* Forms */
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
-.fg{margin-bottom:9px}
-.fg label{display:block;font-size:12px;color:var(--text2);font-weight:500;margin-bottom:3px}
-input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface);color:var(--text);font-family:inherit}
-input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(24,95,165,.13)}
-.si{width:52px!important;text-align:center;font-size:16px;font-weight:700}
-
-/* Alerts */
-.al{padding:9px 13px;border-radius:var(--rs);font-size:13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:7px}
-.ai{background:var(--blue-l);color:var(--blue-d);border:1px solid #B5D4F4}
-.aw{background:var(--amber-l);color:var(--amber);border:1px solid #FAC775}
-.ae{background:var(--red-l);color:var(--red);border:1px solid #F7C1C1}
-.as{background:var(--green-l);color:var(--green);border:1px solid #C0DD97}
-
-/* Match items */
-.mi{border:1px solid var(--border);border-radius:var(--rs);padding:11px 13px;margin-bottom:7px}
-.mi:hover{border-color:var(--border2)}
-.mh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px;gap:8px}
-.mt{font-size:14px;font-weight:700}
-.mvs{color:var(--text3);font-weight:400;margin:0 5px}
-.mm{font-size:12px;color:var(--text3);margin-bottom:7px}
-.mtags{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0}
-.sr{display:flex;align-items:center;gap:7px;margin-top:9px}
-.ss{font-size:18px;font-weight:700;color:var(--text3)}
-.ar{margin-top:9px}
-.ar label{font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:5px}
-.chips{display:flex;gap:5px;flex-wrap:wrap}
-.chip{padding:5px 12px;border-radius:999px;border:1px solid var(--border2);cursor:pointer;font-size:13px;background:var(--bg);color:var(--text2);transition:all .12s}
-.chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
-.bb{background:var(--bg);border-radius:var(--rs);padding:7px 11px;font-size:13px;margin-top:7px}
-.bb strong{color:var(--blue)}
-.ot{width:100%;border-collapse:collapse;font-size:13px;margin-top:7px}
-.ot th{text-align:left;padding:4px 6px;color:var(--text3);font-weight:500;border-bottom:1px solid var(--border)}
-.ot td{padding:5px 6px;border-bottom:1px solid var(--border)}
-.ot tr:last-child td{border-bottom:none}
-.sep{height:1px;background:var(--border);margin:10px 0}
-.ol{font-size:12px;color:var(--text3);margin-bottom:3px}
-.ln{font-size:12px;color:var(--text3);margin-top:5px;display:flex;align-items:center;gap:4px}
-.rs{font-size:15px;font-weight:700;color:var(--blue);margin-top:5px}
-.pl{font-size:13px;margin-top:3px;color:var(--text2)}
-
-/* Leaderboard */
-.lr{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border)}
-.lr:last-child{border-bottom:none}
-.lp{font-size:14px;font-weight:700;width:22px;text-align:center}
-.p1{color:#BA7517}.p2{color:#888780}.p3{color:#639922}
-.la{width:33px;height:33px;border-radius:50%;background:var(--purple-l);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--purple);flex-shrink:0}
-.ln2{flex:1;font-size:14px;font-weight:500}
-.le{font-size:12px;color:var(--text3)}
-.me-row{background:var(--blue-l);border-radius:var(--rs);padding:2px 4px}
-
-/* Login */
-.lw{max-width:380px;margin:50px auto 0}
-.ll{text-align:center;font-size:38px;margin-bottom:6px}
-.lt{text-align:center;font-size:19px;font-weight:700;margin-bottom:3px}
-.ls{text-align:center;font-size:13px;color:var(--text3);margin-bottom:18px}
-
-/* Rules */
-.ri{display:flex;gap:11px;align-items:flex-start;margin-bottom:15px}
-.ric{width:37px;height:37px;border-radius:var(--rs);background:var(--purple-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ric i{font-size:18px;color:var(--purple)}
-.rit{font-size:14px;font-weight:700;margin-bottom:2px}
-.rix{font-size:13px;color:var(--text2);line-height:1.6}
-
-/* User row */
-.ur{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
-.ur:last-child{border-bottom:none}
-.ui{display:flex;align-items:center;gap:9px}
-.empty{text-align:center;padding:26px 0;color:var(--text3);font-size:14px}
-.sp{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+header{background:#15803d;color:#fff;padding:.9rem 1.25rem;display:flex;align-items:center;gap:10px;}
+header .logo{font-size:21px;font-weight:600;letter-spacing:-.5px;}
+header .sub{font-size:13px;opacity:.75;margin-left:auto;}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto;}
+.tab-btn{padding:11px 16px;font-size:14px;font-family:var(--sans);font-weight:500;color:var(--text2);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:#15803d;border-bottom-color:#15803d;}
+main{max-width:720px;margin:0 auto;padding:1.25rem;}
+.section{display:none;}.section.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;}
+.card-title{font-size:15px;font-weight:600;margin-bottom:1rem;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{text-align:left;padding:8px 10px;color:var(--text2);font-weight:500;font-size:13px;border-bottom:1px solid var(--border);}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+.mono{font-family:var(--mono);font-size:13px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:500;}
+.b-green{background:var(--green-bg);color:var(--green);}
+.b-amber{background:var(--amber-bg);color:var(--amber);}
+.b-gray{background:var(--gray-bg);color:var(--gray);}
+.b-blue{background:var(--blue-bg);color:var(--blue);}
+.pts{font-family:var(--mono);font-weight:600;font-size:16px;text-align:center;}
+.pts.p3{color:var(--green);}.pts.p1{color:var(--amber);}.pts.p0{color:var(--text2);}
+.match-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;}
+.match-row:last-child{border-bottom:none;}
+.match-teams{flex:1;font-weight:500;}
+.match-score{font-family:var(--mono);min-width:52px;text-align:center;font-size:14px;}
+label.fl{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:4px;}
+input[type=text],input[type=number],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--card);color:var(--text);transition:border-color .15s;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#15803d;box-shadow:0 0 0 3px rgba(21,128,61,.1);}
+input[type=number]{-moz-appearance:textfield;}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
+button.btn{padding:8px 18px;border-radius:8px;border:1px solid var(--border);font-size:14px;font-family:var(--sans);font-weight:500;cursor:pointer;background:var(--card);color:var(--text);transition:background .15s;}
+button.btn:hover{background:var(--gray-bg);}
+button.btn.primary{background:#15803d;color:#fff;border-color:#15803d;}
+button.btn.primary:hover{background:#166534;}
+button.btn:disabled{opacity:.4;cursor:not-allowed;}
+.row{display:flex;gap:8px;align-items:flex-end;}.row>*{flex:1;}.row>button{flex:0 0 auto;}
+.info{background:var(--blue-bg);color:var(--blue);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1rem;}
+.warn{background:var(--amber-bg);color:var(--amber);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1rem;}
+.ok{color:var(--green);font-size:13px;margin-top:6px;}
+.err{color:var(--red);font-size:13px;margin-top:6px;}
+.loading{color:var(--text2);font-size:14px;padding:.75rem 0;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* 1/16 specific */
-.group-header{background:var(--purple-l);color:var(--purple);font-size:12px;font-weight:700;padding:5px 10px;border-radius:var(--rs);margin-bottom:8px;margin-top:4px}
-.bet-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);gap:8px}
-.bet-row:last-child{border-bottom:none}
-.bet-name{font-size:13px;font-weight:500;min-width:80px}
-.bet-score{font-size:13px;color:var(--blue);font-weight:700}
-.bet-pts{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--green-l);color:var(--green)}
-.bet-pts-0{background:var(--gray-l);color:var(--gray)}
-.result-final{font-size:15px;font-weight:700;color:var(--blue);padding:6px 0;border-top:1px solid var(--border);margin-top:6px}
-.match-block{margin-bottom:16px}
-.input-score{display:flex;align-items:center;gap:6px}
-.input-score input{width:44px;text-align:center;font-weight:700;font-size:15px;padding:5px}
-
-/* Punkty summary */
-.pts-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.pts-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:8px 12px;text-align:center;flex:1;min-width:80px}
-.pts-box .num{font-size:20px;font-weight:700;color:var(--blue)}
-.pts-box .lbl{font-size:11px;color:var(--text3)}
-
-@media(max-width:480px){
-  .fr{grid-template-columns:1fr}
-  .phase-tab{font-size:12px;padding:8px 4px}
-}
+/* config overlay */
+#cfg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;}
+#cfg-box{background:var(--card);border-radius:var(--radius);padding:1.5rem;max-width:400px;width:100%;}
+#cfg-box h2{font-size:18px;font-weight:600;margin-bottom:.4rem;}
+#cfg-box p{font-size:13px;color:var(--text2);margin-bottom:1rem;}
+.cfg-field{margin-bottom:10px;}
 </style>
 </head>
 <body>
-<div class="app">
-<div class="header">
-  <div class="h-left">
-    <span style="font-size:24px">⚽</span>
-    <div><h1>Mundial 2026 Typer</h1><small>Faza pucharowa</small></div>
+
+<!-- CONFIG OVERLAY -->
+<div id="cfg-overlay">
+  <div id="cfg-box">
+    <h2>⚽ Strzałka FIFA 2026</h2>
+    <p>Pierwsze uruchomienie – ustaw hasło administratora.</p>
+    <div class="cfg-field">
+      <label class="fl">Hasło administratora</label>
+      <input type="text" id="cfg-pass" placeholder="np. waldek123" maxlength="30" />
+    </div>
+    <button class="btn primary" onclick="saveConfig()" style="width:100%;margin-top:8px">Uruchom aplikację</button>
+    <p id="cfg-msg" class="err"></p>
   </div>
 </div>
 
-<!-- Główne zakładki faz -->
-<div class="phase-tabs">
-  <button class="phase-tab on" id="pt-16" onclick="showPhase('16')">⚔️ Faza 1/16</button>
-  <button class="phase-tab" id="pt-14" onclick="showPhase('14')">⚽ 1/4 finału</button>
-  <button class="phase-tab" id="pt-qf" onclick="showPhase('qf')">🏆 Półfinały+</button>
-</div>
-
-<!-- ════════════════════════════════════════════════ -->
-<!--  FAZA 1/16 — localStorage, bez logowania        -->
-<!-- ════════════════════════════════════════════════ -->
-<div id="phase-16">
+<header>
+  <span>⚽</span>
+  <span class="logo">Strzałka FIFA 2026</span>
+  <span class="sub" id="hdr-sub"></span>
+</header>
 
 <div class="tabs">
-  <button class="tab on" onclick="show16Tab('typy',this)"><i class="ti ti-ball-football"></i> Typy</button>
-  <button class="tab" onclick="show16Tab('tabela',this)"><i class="ti ti-trophy"></i> Tabela</button>
-  <button class="tab" onclick="show16Tab('wyniki',this)"><i class="ti ti-clipboard-check"></i> Wyniki (admin)</button>
-  <button class="tab" onclick="show16Tab('reg',this)"><i class="ti ti-book"></i> Regulamin</button>
+  <button class="tab-btn active" onclick="showTab('ranking')">🏆 Tabela</button>
+  <button class="tab-btn" onclick="showTab('mecze')">⚽ Mecze</button>
+  <button class="tab-btn" onclick="showTab('typy')">📋 Moje typy</button>
+  <button class="tab-btn" onclick="showTab('puchar')">🏆 Faza pucharna</button>
+  <button class="tab-btn" onclick="showTab('regulamin')">📜 Regulamin</button>
+  <button class="tab-btn" onclick="showTab('admin')">🔧 Admin</button>
 </div>
 
-<div id="tab16-typy">
-  <!-- Formularz dodania uczestnika -->
-  <div class="card" id="add-player-card">
-    <h2><i class="ti ti-user-plus" style="color:var(--blue)"></i> Dodaj swój typ</h2>
-    <div class="fr">
-      <div class="fg" style="margin:0"><label>Twój nick</label><input id="nick-input" placeholder="np. Marek"/></div>
+<main>
+
+<!-- MODAL TYPY -->
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;padding:1rem;overflow-y:auto" onclick="if(event.target===this)closeModal()">
+  <div style="background:var(--card);border-radius:var(--radius);max-width:600px;margin:2rem auto;padding:1.25rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div class="card-title" id="modal-title" style="margin-bottom:0">Typy</div>
+      <button class="btn" style="padding:4px 12px" onclick="closeModal()">✕</button>
     </div>
-    <div id="nick-err" class="al ae" style="display:none"></div>
-    <button class="btn bp" onclick="startTyping()"><i class="ti ti-arrow-right"></i> Przejdź do typowania</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- RANKING -->
+<div id="tab-ranking" class="section active">
+  <div class="card">
+    <div class="card-title">Ranking uczestników <span style="font-size:13px;font-weight:400;color:var(--text2)">(kliknij uczestnika, aby zobaczyć typy)</span></div>
+    <div id="ranking-body"><div class="loading"><span class="spinner"></span>Ładowanie...</div></div>
+  </div>
+</div>
+
+<!-- MECZE -->
+<div id="tab-mecze" class="section">
+  <div class="info">Wyniki wpisuje administrator. Brak możliwości ręcznej edycji wyników.</div>
+  <div class="card">
+    <div id="mecze-body"><div class="loading"><span class="spinner"></span>Ładowanie...</div></div>
+  </div>
+</div>
+
+<!-- TYPY -->
+<div id="tab-typy" class="section">
+  <div class="card" id="typy-login-card">
+    <div class="card-title">Moje typy</div>
+    <div style="margin-bottom:10px">
+      <label class="fl">Twoje imię / nick</label>
+      <input type="text" id="typ-nick" placeholder="np. Waldek" maxlength="30" style="margin-bottom:8px" />
+      <label class="fl">Hasło</label>
+      <input type="password" id="typ-haslo" placeholder="hasło od administratora" maxlength="30" />
+    </div>
+    <button class="btn primary" onclick="zalogujTypera()" style="width:100%">Zaloguj się</button>
+    <div id="typy-status" style="margin-top:8px"></div>
   </div>
 
-  <!-- Formularz typowania -->
-  <div id="typing-form" style="display:none">
+  <div id="typy-zalogowany" style="display:none">
+    <div class="card" style="padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-weight:500">👤 <span id="typy-logged-name"></span></span>
+      <button class="btn" style="padding:4px 12px;font-size:13px" onclick="wylogujTypera()">Wyloguj</button>
+    </div>
+    <div id="typy-kolejki">
+      <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+        <button class="btn" id="kbtn-1" onclick="pokazKolejke(1)">Kolejka 1</button>
+        <button class="btn" id="kbtn-2" onclick="pokazKolejke(2)">Kolejka 2</button>
+        <button class="btn" id="kbtn-3" onclick="pokazKolejke(3)">Kolejka 3</button>
+        <button class="btn" id="kbtn-4" onclick="pokazKolejke(4)">⚡ Faza pucharna</button>
+        <button class="btn" id="kbtn-5" onclick="pokazKolejke(5)">🏆 1/8 finału</button>
+      </div>
+      <div id="kolejka-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAZA PUCHARNA -->
+<div id="tab-puchar" class="section">
+  <div class="card">
+    <div class="card-title">🏆 Faza pucharowa – 1/32 finału</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Pary generowane automatycznie na podstawie wyników fazy grupowej. Wyniki po 90 minutach.</p>
+    <div id="puchar-body"><div class="loading"><span class="spinner"></span>Ładowanie...</div></div>
+  </div>
+  <div id="puchar-dalej" style="display:none">
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <h2 style="margin:0"><i class="ti ti-ball-football" style="color:var(--blue)"></i> Wpisujesz jako: <span id="typing-nick-label" style="color:var(--blue)"></span></h2>
-        <button class="btn bxs" onclick="cancelTyping()">Zmień nick</button>
-      </div>
-      <div id="matches-form"></div>
-      <div id="save-err" class="al ae" style="display:none"></div>
-      <button class="btn bp" style="width:100%;margin-top:6px" onclick="saveBets16()"><i class="ti ti-device-floppy"></i> Zapisz wszystkie typy</button>
+      <div class="card-title">Dalsza faza (1/16, ćwierćfinały, półfinały, finał)</div>
+      <div id="puchar-dalej-body"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- REGULAMIN -->
+<div id="tab-regulamin" class="section">
+  <div class="card">
+    <div class="card-title">⚽ Regulamin – faza pucharowa</div>
+
+    <div style="margin-bottom:1.25rem">
+      <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">1. Podstawa – wynik po 90 minutach</div>
+      <ul style="font-size:14px;line-height:1.9;padding-left:1.25rem;color:var(--text)">
+        <li>Wszystkie mecze typujemy na regulaminowy czas gry (90 minut wraz z doliczonym czasem).</li>
+        <li>Dogrywka i rzuty karne <strong>nie są brane pod uwagę</strong>.</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom:1.25rem">
+      <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">2. Punktacja</div>
+      <ul style="font-size:14px;line-height:1.9;padding-left:1.25rem;color:var(--text)">
+        <li>Punktacja pozostaje bez zmian.</li>
+        <li><strong>3 punkty</strong> za poprawne wytypowanie zwycięzcy lub remisu.</li>
+        <li>Punkty za dokładny typ i dokładny wynik naliczane są tak samo jak w fazie grupowej.</li>
+      </ul>
+    </div>
+
+    <div style="background:var(--gray-bg);border-radius:8px;padding:1rem">
+      <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">3. Rozstrzygnięcie remisu w klasyfikacji</div>
+      <p style="font-size:14px;line-height:1.8">Jeżeli po zakończeniu fazy pucharowej dwóch lub więcej uczestników będzie miało identyczną liczbę punktów oraz taką samą liczbę trafionych dokładnych typów i dokładnych wyników, o wyższym miejscu zadecyduje <strong>typ na mecz finałowy</strong>.</p>
+      <p style="font-size:14px;line-height:1.8;margin-top:8px">Wyżej sklasyfikowany zostanie uczestnik, którego typ na finał będzie <strong>bliższy rzeczywistemu wynikowi</strong> meczu.</p>
     </div>
   </div>
 
-  <!-- Lista typów uczestników -->
-  <div id="bets-list"></div>
-</div>
-
-<div id="tab16-tabela" style="display:none">
-  <div class="card">
-    <h2><i class="ti ti-trophy" style="color:var(--blue)"></i> Tabela wyników</h2>
-    <div id="leaderboard-16"></div>
+  <div class="card" style="background:var(--green-bg);border-color:var(--green)">
+    <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:6px">🔒 Ukrywanie typów</div>
+    <p style="font-size:14px;line-height:1.8;color:var(--text)">Typy każdego uczestnika są <strong>ukryte do momentu rozpoczęcia danego meczu</strong>. Po kickoffie typ staje się widoczny dla wszystkich – również administratora. Nikt nie może podejrzeć typów przed startem meczu.</p>
   </div>
 </div>
 
-<div id="tab16-wyniki" style="display:none">
+<!-- ADMIN -->
+<div id="tab-admin" class="section">
   <div class="card">
-    <h2><i class="ti ti-shield-check" style="color:var(--purple)"></i> Panel admina — wyniki 1/16</h2>
-    <div class="al aw"><i class="ti ti-alert-triangle"></i> Wpisuj wyniki dopiero po zakończeniu meczów.</div>
-    <div id="results-form-16"></div>
-    <button class="btn bp" style="margin-top:10px;width:100%" onclick="saveResults16()"><i class="ti ti-device-floppy"></i> Zapisz wyniki</button>
-  </div>
-</div>
-
-<div id="tab16-reg" style="display:none">
-  <div class="card">
-    <h2><i class="ti ti-book" style="color:var(--blue)"></i> Regulamin</h2>
-    <div class="ri"><div class="ric"><i class="ti ti-sort-ascending-numbers"></i></div><div><div class="rit">Kolejność typowania</div><div class="rix">Lider musi wrzucić typy najpóźniej 24h przed pierwszym meczem. Jeśli się spóźni, nie może skopiować dokładnych wyników od wicelidera.</div></div></div>
-    <div class="ri"><div class="ric"><i class="ti ti-ball-football"></i></div><div><div class="rit">Wynik po 90 minutach</div><div class="rix">Typujemy wynik po regulaminowym czasie gry. Dogrywka i rzuty karne nie liczą się. Przy remisie wskaż kto awansuje.</div></div></div>
-    <div class="ri"><div class="ric"><i class="ti ti-star"></i></div><div><div class="rit">Punktacja 1/16, 1/8, 1/4</div><div class="rix">3 pkt – dokładny wynik. 1 pkt – trafienie zwycięzcy lub remisu.</div></div></div>
-    <div class="ri"><div class="ric"><i class="ti ti-trophy"></i></div><div><div class="rit">Finał i mecz o 3. miejsce</div><div class="rix">5 pkt – dokładny wynik. 2 pkt – trafienie zwycięzcy lub remisu. Maks. 6 pkt z bonusem za awans.</div></div></div>
-    <div class="ri"><div class="ric"><i class="ti ti-plus"></i></div><div><div class="rit">Bonus za remis +1 pkt</div><div class="rix">Dokładny remis + trafiony awans = 4 pkt. Inny remis + trafiony awans = 2 pkt. Błędny awans → bonus przepada.</div></div></div>
-    <div class="ri"><div class="ric"><i class="ti ti-scale"></i></div><div><div class="rit">Remis w tabeli</div><div class="rix">Przy równej liczbie punktów wygrywa gracz z większą liczbą dokładnych wyników.</div></div></div>
-  </div>
-</div>
-
-</div><!-- /phase-16 -->
-
-
-<!-- ════════════════════════════════════════════════ -->
-<!--  FAZA 1/4 — localStorage, bez logowania          -->
-<!-- ════════════════════════════════════════════════ -->
-<div id="phase-14" style="display:none">
-
-<div class="tabs">
-  <button class="tab on" onclick="show14Tab('typy',this)"><i class="ti ti-ball-football"></i> Typy</button>
-  <button class="tab" onclick="show14Tab('tabela',this)"><i class="ti ti-trophy"></i> Tabela</button>
-  <button class="tab" onclick="show14Tab('wyniki',this)"><i class="ti ti-clipboard-check"></i> Wyniki (admin)</button>
-</div>
-
-<div id="tab14-typy">
-  <div class="card" id="add-player-card-14">
-    <h2><i class="ti ti-user-plus" style="color:var(--blue)"></i> Dodaj swój typ — 1/4 finału</h2>
-    <div class="fr">
-      <div class="fg" style="margin:0"><label>Twój nick</label><input id="nick-input-14" placeholder="np. Marek"/></div>
+    <div class="card-title">Panel administratora</div>
+    <div class="row" style="margin-bottom:4px">
+      <input type="text" id="admin-pass" placeholder="Hasło admina..." />
+      <button class="btn primary" onclick="verifyAdmin()">Zaloguj</button>
     </div>
-    <div id="nick-err-14" class="al ae" style="display:none"></div>
-    <button class="btn bp" onclick="startTyping14()"><i class="ti ti-arrow-right"></i> Przejdź do typowania</button>
+    <p id="admin-login-msg" class="err"></p>
   </div>
-  <div id="typing-form-14" style="display:none">
+
+  <div id="admin-panel" style="display:none">
+
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <h2 style="margin:0"><i class="ti ti-ball-football" style="color:var(--blue)"></i> Wpisujesz jako: <span id="typing-nick-label-14" style="color:var(--blue)"></span></h2>
-        <button class="btn bxs" onclick="cancelTyping14()">Zmień nick</button>
+      <div class="card-title">Dodaj uczestnika</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div><label class="fl">Imię / nick</label><input type="text" id="nowy-ucz" placeholder="np. Waldek" maxlength="30" /></div>
+        <div><label class="fl">Hasło uczestnika</label><input type="text" id="nowy-ucz-haslo" placeholder="np. waldek123" maxlength="30" /></div>
       </div>
-      <div id="matches-form-14"></div>
-      <div id="save-err-14" class="al ae" style="display:none"></div>
-      <button class="btn bp" style="width:100%;margin-top:6px" onclick="saveBets14()"><i class="ti ti-device-floppy"></i> Zapisz wszystkie typy</button>
+      <button class="btn primary" onclick="dodajUczestnika()">Dodaj uczestnika</button>
+      <p id="ucz-msg"></p>
     </div>
-  </div>
-  <div id="bets-list-14"></div>
-</div>
 
-<div id="tab14-tabela" style="display:none">
-  <div class="card">
-    <h2><i class="ti ti-trophy" style="color:var(--blue)"></i> Tabela wyników — 1/4</h2>
-    <div id="leaderboard-14"></div>
-  </div>
-</div>
-
-<div id="tab14-wyniki" style="display:none">
-  <div class="card">
-    <h2><i class="ti ti-shield-check" style="color:var(--purple)"></i> Panel admina — wyniki 1/4</h2>
-    <div class="al aw"><i class="ti ti-alert-triangle"></i> Wpisuj wyniki dopiero po zakończeniu meczów.</div>
-    <div id="results-form-14"></div>
-    <button class="btn bp" style="margin-top:10px;width:100%" onclick="saveResults14()"><i class="ti ti-device-floppy"></i> Zapisz wyniki</button>
-  </div>
-</div>
-
-</div><!-- /phase-14 -->
-
-
-<!-- ════════════════════════════════════════════════ -->
-<!--  PÓŁFINAŁY+ — GAS backend                        -->
-<!-- ════════════════════════════════════════════════ -->
-<div id="phase-qf" style="display:none">
-  <div id="qf-root"></div>
-</div>
-
-
-<script>
-// ══════════════════════════════════════════
-//  KONFIGURACJA GAS
-// ══════════════════════════════════════════
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWoKqY23evFiFgIzuLpwwadvssW_Z41IrxxbmWEKQ7TWhxdWOJo2Dro7GGb6e_4rcm/exec";
-
-// ══════════════════════════════════════════
-//  MECZE 1/16
-// ══════════════════════════════════════════
-const MATCHES_16 = [
-  {id:"m1",  home:"Polska",       away:"Arabia Saudyjska", date:"2026-06-29", group:"Para 1"},
-  {id:"m2",  home:"USA",          away:"Maroko",           date:"2026-06-29", group:"Para 2"},
-  {id:"m3",  home:"Niemcy",       away:"Słowenia",         date:"2026-06-30", group:"Para 3"},
-  {id:"m4",  home:"Brazylia",     away:"Meksyk",           date:"2026-06-30", group:"Para 4"},
-  {id:"m5",  home:"Francja",      away:"Kamerun",          date:"2026-07-01", group:"Para 5"},
-  {id:"m6",  home:"Hiszpania",    away:"Japonia",          date:"2026-07-01", group:"Para 6"},
-  {id:"m7",  home:"Argentyna",    away:"Chile",            date:"2026-07-02", group:"Para 7"},
-  {id:"m8",  home:"Anglia",       away:"Senegal",          date:"2026-07-02", group:"Para 8"},
-  {id:"m9",  home:"Portugalia",   away:"Urugwaj",          date:"2026-07-03", group:"Para 9"},
-  {id:"m10", home:"Belgia",       away:"Australia",        date:"2026-07-03", group:"Para 10"},
-  {id:"m11", home:"Holandia",     away:"Meksyk",           date:"2026-07-04", group:"Para 11"},
-  {id:"m12", home:"Szwajcaria",   away:"Nigeria",          date:"2026-07-04", group:"Para 12"},
-  {id:"m13", home:"Chorwacja",    away:"Ekwador",          date:"2026-07-05", group:"Para 13"},
-  {id:"m14", home:"Korea Pd.",    away:"Ghana",            date:"2026-07-05", group:"Para 14"},
-  {id:"m15", home:"Dania",        away:"Kolumbia",         date:"2026-07-06", group:"Para 15"},
-  {id:"m16", home:"Norwegia",     away:"Iran",             date:"2026-07-06", group:"Para 16"},
-];
-
-const STORAGE_KEY_16 = "mundial2026_16";
-
-function load16(){ try{ const s=localStorage.getItem(STORAGE_KEY_16); return s?JSON.parse(s):{players:{},results:{}}; }catch(e){ return {players:{},results:{}}; } }
-function save16(d){ try{ localStorage.setItem(STORAGE_KEY_16,JSON.stringify(d)); }catch(e){} }
-
-let D16 = load16();
-let currentNick = null;
-let currentPhase = "16";
-let current16Tab = "typy";
-
-// ── Phase switcher ────────────────────────────
-function showPhase(ph){
-  currentPhase = ph;
-  document.getElementById("phase-16").style.display = ph==="16" ? "" : "none";
-  document.getElementById("phase-14").style.display = ph==="14" ? "" : "none";
-  document.getElementById("phase-qf").style.display = ph==="qf" ? "" : "none";
-  document.getElementById("pt-16").classList.toggle("on", ph==="16");
-  document.getElementById("pt-14").classList.toggle("on", ph==="14");
-  document.getElementById("pt-qf").classList.toggle("on", ph==="qf");
-  if(ph==="14"){ renderBetsList14(); }
-  if(ph==="qf") renderQF();
-}
-
-// ── 1/16 tab switcher ─────────────────────────
-function show16Tab(tab, btn){
-  current16Tab = tab;
-  ["typy","tabela","wyniki","reg"].forEach(t=>{
-    document.getElementById("tab16-"+t).style.display = t===tab?"":"none";
-  });
-  document.querySelectorAll("#phase-16 .tabs .tab").forEach(b=>b.classList.remove("on"));
-  if(btn) btn.classList.add("on");
-  if(tab==="typy") renderBetsList();
-  if(tab==="tabela") renderLeaderboard16();
-  if(tab==="wyniki") renderResultsForm();
-}
-
-// ── Helpers ───────────────────────────────────
-function fmt(dt){ if(!dt)return""; return new Date(dt+"T12:00:00").toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric"}); }
-
-function matchStarted16(m){
-  return new Date(m.date+"T23:59:00").getTime() <= Date.now();
-}
-
-// Wyświetlanie formularza typowania
-function startTyping(){
-  const nick = document.getElementById("nick-input").value.trim();
-  const err = document.getElementById("nick-err");
-  if(!nick){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Podaj nick.'; return; }
-  err.style.display="none";
-  currentNick = nick;
-  document.getElementById("typing-nick-label").textContent = nick;
-  document.getElementById("add-player-card").style.display="none";
-  document.getElementById("typing-form").style.display="";
-  renderMatchesForm();
-}
-
-function cancelTyping(){
-  currentNick = null;
-  document.getElementById("add-player-card").style.display="";
-  document.getElementById("typing-form").style.display="none";
-}
-
-function renderMatchesForm(){
-  const existing = D16.players[currentNick] || {};
-  let html = "";
-  let lastGroup = "";
-  MATCHES_16.forEach(m=>{
-    if(m.group !== lastGroup){
-      html += `<div class="group-header">${m.group} — ${fmt(m.date)}</div>`;
-      lastGroup = m.group;
-    }
-    const bet = existing[m.id] || {};
-    const bh = bet.home!==undefined ? bet.home : "";
-    const ba = bet.away!==undefined ? bet.away : "";
-    const adv = bet.advance || "";
-    const showAdv = bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
-    html += `<div class="match-block">
-      <div style="font-size:13px;font-weight:600;margin-bottom:6px">${m.home} vs ${m.away}</div>
-      <div class="input-score">
-        <input class="si" id="fh-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onFC('${m.id}','${m.home}','${m.away}')"/>
-        <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
-        <input class="si" id="fa-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onFC('${m.id}','${m.home}','${m.away}')"/>
+    <div class="card">
+      <div class="card-title">Wpisz wynik meczu</div>
+      <div style="margin-bottom:8px">
+        <label class="fl">Mecz</label>
+        <select id="wynik-mecz"></select>
       </div>
-      <div id="fadv-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
-        <label>Kto awansuje?</label>
-        <div class="chips">
-          <span class="chip${adv==="home"?" on":""}" data-adv="home" onclick="selAdv16('${m.id}','home')">${m.home}</span>
-          <span class="chip${adv==="away"?" on":""}" data-adv="away" onclick="selAdv16('${m.id}','away')">${m.away}</span>
-        </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="flex:1"><label class="fl">Gole gosp.</label><input type="number" id="wynik-home" min="0" max="30" placeholder="0" /></div>
+        <span style="padding-top:20px;color:var(--text2)">:</span>
+        <div style="flex:1"><label class="fl">Gole gościa</label><input type="number" id="wynik-away" min="0" max="30" placeholder="0" /></div>
       </div>
-    </div>`;
-  });
-  document.getElementById("matches-form").innerHTML = html;
-}
+      <button class="btn primary" onclick="zapiszWynik()">Zapisz wynik</button>
+      <p id="wynik-msg"></p>
+    </div>
 
-window.onFC = function(mid, home, away){
-  const h = document.getElementById("fh-"+mid)?.value;
-  const a = document.getElementById("fa-"+mid)?.value;
-  const adv = document.getElementById("fadv-"+mid);
-  if(adv) adv.style.display = (h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
-};
+    <div class="card">
+      <div class="card-title">Uczestnicy i punkty</div>
+      <div id="admin-uczestnicy"><div class="loading">Ładowanie...</div></div>
+    </div>
 
-const localAdv16 = {};
-window.selAdv16 = function(mid, val){
-  localAdv16[mid] = val;
-  document.querySelectorAll("#fadv-"+mid+" .chip").forEach(c=>c.classList.toggle("on", c.dataset.adv===val));
-};
-
-function saveBets16(){
-  const bets = {};
-  let missing = false;
-  MATCHES_16.forEach(m=>{
-    const h = document.getElementById("fh-"+m.id)?.value;
-    const a = document.getElementById("fa-"+m.id)?.value;
-    if(h===""||a===""){missing=true;return;}
-    const ih=parseInt(h),ia=parseInt(a);
-    let adv = "";
-    if(ih===ia){ adv = localAdv16[m.id]||(D16.players[currentNick]||{})[m.id]?.advance||""; if(!adv){missing=true;return;} }
-    bets[m.id]={home:ih,away:ia,advance:adv};
-  });
-  const err = document.getElementById("save-err");
-  if(missing){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Wypełnij wszystkie typy (przy remisie wskaż awans).'; return; }
-  err.style.display="none";
-  D16.players[currentNick] = bets;
-  save16(D16);
-  cancelTyping();
-  renderBetsList();
-  const notice = document.createElement("div");
-  notice.className="al as";
-  notice.innerHTML=`<i class="ti ti-circle-check"></i> Typy zapisane dla <strong>${currentNick}</strong>!`;
-  document.getElementById("tab16-typy").prepend(notice);
-  setTimeout(()=>notice.remove(), 3000);
-}
-
-// ── Wyświetl typy ─────────────────────────────
-function calcPts16(bet, result){
-  if(!result||result.home===undefined) return null;
-  const rh=result.home,ra=result.away;
-  const bh=Number(bet.home),ba=Number(bet.away);
-  const exact=bh===rh&&ba===ra;
-  const isR=rh===ra;
-  let p=0;
-  if(exact){ p=3; if(isR&&bet.advance===result.advance) p++; }
-  else{ const w=rh>ra?"home":ra>rh?"away":"draw"; const bw=bh>ba?"home":ba>bh?"away":"draw"; if(w===bw){p=1;if(isR&&bet.advance===result.advance)p++;} }
-  return p;
-}
-
-function renderBetsList(){
-  const el = document.getElementById("bets-list");
-  const players = Object.keys(D16.players);
-  if(!players.length){ el.innerHTML=""; return; }
-
-  // Grupuj mecze wg grupy
-  const groups = {};
-  MATCHES_16.forEach(m=>{ if(!groups[m.group]) groups[m.group]=[]; groups[m.group].push(m); });
-
-  let html = "";
-  players.forEach(nick=>{
-    const bets = D16.players[nick];
-    let totalPts=0, totalExact=0;
-    MATCHES_16.forEach(m=>{ const b=bets[m.id]; const r=D16.results[m.id]; if(b&&r){ const p=calcPts16(b,r); if(p!==null){totalPts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away) totalExact++;} } });
-
-    html += `<div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <h2 style="margin:0"><div class="la" style="display:inline-flex;margin-right:8px">${nick.slice(0,2).toUpperCase()}</div>${nick}</h2>
-        <div style="text-align:right">
-          <span class="bpts">${totalPts} pkt</span>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px">${totalExact} dokładnych</div>
+    <div class="card">
+      <div class="card-title">Edytuj typy uczestnika</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px">
+          <label class="fl">Uczestnik</label>
+          <select id="admin-typ-nick" onchange="adminZaladujTypy()"></select>
         </div>
-      </div>`;
-
-    Object.keys(groups).forEach(grp=>{
-      html += `<div class="group-header">${grp}</div>`;
-      groups[grp].forEach(m=>{
-        const b = bets[m.id];
-        const r = D16.results[m.id];
-        const started = matchStarted16(m);
-        if(!b){ html+=`<div class="bet-row"><span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span><span style="font-size:12px;color:var(--text3)">brak</span></div>`; return; }
-        const pts = r ? calcPts16(b,r) : null;
-        const advS = b.advance ? ` (${b.advance==="home"?m.home:m.away})` : "";
-        const showBet = started || !Object.keys(D16.players).some(p=>p!==nick);
-        html += `<div class="bet-row">
-          <span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span>
-          <span class="bet-score">${showBet ? `${b.home}:${b.away}${advS}` : `<span style="color:var(--text3);font-size:11px">🔒 ukryty</span>`}</span>
-          ${pts!==null?`<span class="bet-pts${pts===0?" bet-pts-0":""}">${pts}p</span>`:`<span style="font-size:11px;color:var(--text3)">${r?"-":"—"}</span>`}
-        </div>`;
-      });
-    });
-    html += `<button class="btn bxs bd" style="margin-top:10px" onclick="deleteBets16('${nick}')"><i class="ti ti-trash"></i> Usuń typy ${nick}</button>`;
-    html += `</div>`;
-  });
-  el.innerHTML = html;
-}
-
-window.deleteBets16 = function(nick){
-  if(!confirm("Usunąć typy dla "+nick+"?")) return;
-  delete D16.players[nick];
-  save16(D16);
-  renderBetsList();
-};
-
-// ── Tabela ────────────────────────────────────
-function renderLeaderboard16(){
-  const el = document.getElementById("leaderboard-16");
-  const players = Object.keys(D16.players);
-  if(!players.length){ el.innerHTML='<div class="empty">Brak uczestników</div>'; return; }
-  const lb = players.map(nick=>{
-    let pts=0,exact=0;
-    MATCHES_16.forEach(m=>{ const b=D16.players[nick][m.id]; const r=D16.results[m.id]; if(b&&r){ const p=calcPts16(b,r); if(p!==null){pts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away)exact++;} } });
-    return {nick,pts,exact};
-  }).sort((a,b)=>b.pts!==a.pts?b.pts-a.pts:b.exact-a.exact);
-  el.innerHTML = lb.map((u,i)=>`<div class="lr">
-    <div class="lp ${i===0?"p1":i===1?"p2":i===2?"p3":""}">${i+1}</div>
-    <div class="la">${u.nick.slice(0,2).toUpperCase()}</div>
-    <div class="ln2">${u.nick}</div>
-    <div class="le">${u.exact} dokł.</div>
-    <span class="bpts">${u.pts} pkt</span>
-  </div>`).join("");
-}
-
-// ── Panel wyników (admin) ─────────────────────
-function renderResultsForm(){
-  const groups = {};
-  MATCHES_16.forEach(m=>{ if(!groups[m.group]) groups[m.group]=[]; groups[m.group].push(m); });
-  let html = "";
-  Object.keys(groups).forEach(grp=>{
-    html += `<div class="group-header">${grp}</div>`;
-    groups[grp].forEach(m=>{
-      const r = D16.results[m.id]||{};
-      const hasR = r.home!==undefined;
-      const showAdv = hasR && r.home===r.away;
-      html += `<div class="match-block">
-        <div style="font-size:13px;font-weight:600;margin-bottom:5px">${m.home} vs ${m.away} <span style="font-size:11px;color:var(--text3)">${fmt(m.date)}</span></div>
-        <div class="input-score">
-          <input class="si" id="rh-${m.id}" type="number" min="0" value="${hasR?r.home:""}" placeholder="0" oninput="onRC('${m.id}')"/>
-          <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
-          <input class="si" id="ra-${m.id}" type="number" min="0" value="${hasR?r.away:""}" placeholder="0" oninput="onRC('${m.id}')"/>
-        </div>
-        <div id="radv-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
-          <label>Kto awansuje?</label>
-          <select id="rv-${m.id}">
-            <option value="">— wybierz —</option>
-            <option value="home" ${r.advance==="home"?"selected":""}>${m.home}</option>
-            <option value="away" ${r.advance==="away"?"selected":""}>${m.away}</option>
+        <div style="flex:1;min-width:100px">
+          <label class="fl">Kolejka</label>
+          <select id="admin-typ-kolejka" onchange="adminZaladujTypy()">
+            <option value="1">Kolejka 1</option>
+            <option value="2">Kolejka 2</option>
+            <option value="3">Kolejka 3</option>
+            <option value="4">⚡ Faza pucharna</option>
           </select>
         </div>
-      </div>`;
-    });
-  });
-  document.getElementById("results-form-16").innerHTML = html;
-}
-
-window.onRC = function(mid){
-  const h=document.getElementById("rh-"+mid)?.value;
-  const a=document.getElementById("ra-"+mid)?.value;
-  const w=document.getElementById("radv-"+mid);
-  if(w) w.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
-};
-
-function saveResults16(){
-  MATCHES_16.forEach(m=>{
-    const h=document.getElementById("rh-"+m.id)?.value;
-    const a=document.getElementById("ra-"+m.id)?.value;
-    if(h===""||a==="") return;
-    const ih=parseInt(h),ia=parseInt(a);
-    const adv=ih===ia?(document.getElementById("rv-"+m.id)?.value||""):"";
-    D16.results[m.id]={home:ih,away:ia,advance:adv};
-  });
-  save16(D16);
-  renderBetsList();
-  const notice=document.createElement("div");
-  notice.className="al as";
-  notice.innerHTML='<i class="ti ti-circle-check"></i> Wyniki zapisane!';
-  document.getElementById("tab16-wyniki").prepend(notice);
-  setTimeout(()=>notice.remove(),3000);
-}
-
-// Init 1/16
-renderBetsList();
-
-
-// ══════════════════════════════════════════════
-//  FAZA 1/4 — localStorage
-// ══════════════════════════════════════════════
-const MATCHES_14 = [
-  {id:"q1", home:"Francja",   away:"Maroko",    date:"2026-07-09", group:"Para 1", time:"22:00"},
-  {id:"q2", home:"Hiszpania", away:"Belgia",     date:"2026-07-10", group:"Para 2", time:"21:00"},
-  {id:"q3", home:"Norwegia",  away:"Anglia",     date:"2026-07-11", group:"Para 3", time:"23:00"},
-  {id:"q4", home:"Argentyna", away:"Szwajcaria", date:"2026-07-12", group:"Para 4", time:"03:00"},
-];
-
-const STORAGE_KEY_14 = "mundial2026_14";
-function load14(){ try{ const s=localStorage.getItem(STORAGE_KEY_14); return s?JSON.parse(s):{players:{},results:{}}; }catch(e){ return {players:{},results:{}}; } }
-function save14(d){ try{ localStorage.setItem(STORAGE_KEY_14,JSON.stringify(d)); }catch(e){} }
-
-let D14 = load14();
-let currentNick14 = null;
-
-function matchStarted14(m){
-  // mecz zaczął się gdy data+godzina minęła
-  const [y,mo,d] = m.date.split("-").map(Number);
-  const [h,mi] = m.time.split(":").map(Number);
-  return new Date(y, mo-1, d, h, mi).getTime() <= Date.now();
-}
-
-function show14Tab(tab, btn){
-  ["typy","tabela","wyniki"].forEach(t=>{
-    document.getElementById("tab14-"+t).style.display = t===tab?"":"none";
-  });
-  document.querySelectorAll("#phase-14 .tabs .tab").forEach(b=>b.classList.remove("on"));
-  if(btn) btn.classList.add("on");
-  if(tab==="typy") renderBetsList14();
-  if(tab==="tabela") renderLeaderboard14();
-  if(tab==="wyniki") renderResultsForm14();
-}
-
-function startTyping14(){
-  const nick = document.getElementById("nick-input-14").value.trim();
-  const err = document.getElementById("nick-err-14");
-  if(!nick){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Podaj nick.'; return; }
-  err.style.display="none";
-  currentNick14 = nick;
-  document.getElementById("typing-nick-label-14").textContent = nick;
-  document.getElementById("add-player-card-14").style.display="none";
-  document.getElementById("typing-form-14").style.display="";
-  renderMatchesForm14();
-}
-
-function cancelTyping14(){
-  currentNick14 = null;
-  document.getElementById("add-player-card-14").style.display="";
-  document.getElementById("typing-form-14").style.display="none";
-}
-
-function renderMatchesForm14(){
-  const existing = D14.players[currentNick14] || {};
-  let html = "";
-  MATCHES_14.forEach(m=>{
-    const bet = existing[m.id] || {};
-    const bh = bet.home!==undefined ? bet.home : "";
-    const ba = bet.away!==undefined ? bet.away : "";
-    const adv = bet.advance || "";
-    const showAdv = bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
-    html += `<div class="match-block">
-      <div class="group-header">${m.group} — ${fmt(m.date)}, godz. ${m.time}</div>
-      <div style="font-size:13px;font-weight:600;margin-bottom:6px">${m.home} vs ${m.away}</div>
-      <div class="input-score">
-        <input class="si" id="fh14-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onFC14('${m.id}')"/>
-        <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
-        <input class="si" id="fa14-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onFC14('${m.id}')"/>
       </div>
-      <div id="fadv14-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
-        <label>Kto awansuje?</label>
-        <div class="chips">
-          <span class="chip${adv==="home"?" on":""}" data-adv="home" onclick="selAdv14('${m.id}','home')">${m.home}</span>
-          <span class="chip${adv==="away"?" on":""}" data-adv="away" onclick="selAdv14('${m.id}','away')">${m.away}</span>
+      <div id="admin-typ-status"></div>
+      <div id="admin-typ-akcje" style="display:none;margin-bottom:10px">
+        <button class="btn" style="background:var(--amber-bg);color:var(--amber);border-color:var(--amber);margin-right:8px" onclick="adminOdblokuj()">🔓 Odblokuj uczestnika</button>
+        <button class="btn primary" onclick="adminEdytujTypy()">✏️ Edytuj typy (admin)</button>
+      </div>
+      <div id="admin-typ-form" style="display:none">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:8px">Wklej nowe typy – zastąpią poprzednie.</p>
+        <textarea id="admin-typy-paste" rows="10" style="width:100%;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="CZE-RPA 2:1&#10;SUI-BOS 2:0&#10;..."></textarea>
+        <div id="admin-typy-preview" style="margin-top:8px"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" onclick="adminParsujTypy()">Sprawdź</button>
+          <button class="btn primary" id="btn-admin-zapisz" onclick="adminZapiszTypy()" style="display:none">Zapisz typy admina</button>
+          <button class="btn" onclick="document.getElementById('admin-typ-form').style.display='none'">Anuluj</button>
         </div>
+        <p id="admin-typ-msg" style="margin-top:6px;font-size:13px"></p>
       </div>
-    </div>`;
-  });
-  document.getElementById("matches-form-14").innerHTML = html;
-}
-
-window.onFC14 = function(mid){
-  const h = document.getElementById("fh14-"+mid)?.value;
-  const a = document.getElementById("fa14-"+mid)?.value;
-  const adv = document.getElementById("fadv14-"+mid);
-  if(adv) adv.style.display = (h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
-};
-
-const localAdv14 = {};
-window.selAdv14 = function(mid, val){
-  localAdv14[mid] = val;
-  document.querySelectorAll("#fadv14-"+mid+" .chip").forEach(c=>c.classList.toggle("on", c.dataset.adv===val));
-};
-
-function saveBets14(){
-  const bets = {};
-  let missing = false;
-  MATCHES_14.forEach(m=>{
-    const h = document.getElementById("fh14-"+m.id)?.value;
-    const a = document.getElementById("fa14-"+m.id)?.value;
-    if(h===""||a===""){missing=true;return;}
-    const ih=parseInt(h),ia=parseInt(a);
-    let adv = "";
-    if(ih===ia){ adv = localAdv14[m.id]||(D14.players[currentNick14]||{})[m.id]?.advance||""; if(!adv){missing=true;return;} }
-    bets[m.id]={home:ih,away:ia,advance:adv};
-  });
-  const err = document.getElementById("save-err-14");
-  if(missing){ err.style.display=""; err.innerHTML='<i class="ti ti-alert-circle"></i> Wypełnij wszystkie typy (przy remisie wskaż awans).'; return; }
-  err.style.display="none";
-  D14.players[currentNick14] = bets;
-  save14(D14);
-  cancelTyping14();
-  renderBetsList14();
-  const notice = document.createElement("div");
-  notice.className="al as";
-  notice.innerHTML=`<i class="ti ti-circle-check"></i> Typy zapisane dla <strong>${currentNick14}</strong>!`;
-  document.getElementById("tab14-typy").prepend(notice);
-  setTimeout(()=>notice.remove(), 3000);
-}
-
-function calcPts14(bet, result){
-  if(!result||result.home===undefined) return null;
-  const rh=result.home,ra=result.away;
-  const bh=Number(bet.home),ba=Number(bet.away);
-  const exact=bh===rh&&ba===ra;
-  const isR=rh===ra;
-  let p=0;
-  if(exact){ p=3; if(isR&&bet.advance===result.advance) p++; }
-  else{ const w=rh>ra?"home":ra>rh?"away":"draw"; const bw=bh>ba?"home":ba>bh?"away":"draw"; if(w===bw){p=1;if(isR&&bet.advance===result.advance)p++;} }
-  return p;
-}
-
-function renderBetsList14(){
-  const el = document.getElementById("bets-list-14");
-  if(!el) return;
-  const players = Object.keys(D14.players);
-  if(!players.length){ el.innerHTML=""; return; }
-  let html = "";
-  players.forEach(nick=>{
-    const bets = D14.players[nick];
-    let totalPts=0, totalExact=0;
-    MATCHES_14.forEach(m=>{ const b=bets[m.id]; const r=D14.results[m.id]; if(b&&r){ const p=calcPts14(b,r); if(p!==null){totalPts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away) totalExact++;} } });
-    html += `<div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <h2 style="margin:0"><div class="la" style="display:inline-flex;margin-right:8px">${nick.slice(0,2).toUpperCase()}</div>${nick}</h2>
-        <div style="text-align:right">
-          <span class="bpts">${totalPts} pkt</span>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px">${totalExact} dokładnych</div>
-        </div>
-      </div>`;
-    MATCHES_14.forEach(m=>{
-      const b = bets[m.id];
-      const r = D14.results[m.id];
-      const started = matchStarted14(m);
-      if(!b){ html+=`<div class="bet-row"><span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span><span style="font-size:12px;color:var(--text3)">brak</span></div>`; return; }
-      const pts = r ? calcPts14(b,r) : null;
-      const advS = b.advance ? ` (${b.advance==="home"?m.home:m.away})` : "";
-      const showBet = started;
-      html += `<div class="bet-row">
-        <span class="bet-name" style="font-size:12px">${m.home} vs ${m.away}</span>
-        <span class="bet-score">${showBet ? `${b.home}:${b.away}${advS}` : `<span style="color:var(--text3);font-size:11px">🔒 ukryty</span>`}</span>
-        ${pts!==null?`<span class="bet-pts${pts===0?" bet-pts-0":""}">${pts}p</span>`:`<span style="font-size:11px;color:var(--text3)">${r?"-":"—"}</span>`}
-      </div>`;
-    });
-    html += `<button class="btn bxs bd" style="margin-top:10px" onclick="deleteBets14('${nick}')"><i class="ti ti-trash"></i> Usuń typy ${nick}</button>`;
-    html += `</div>`;
-  });
-  el.innerHTML = html;
-}
-
-window.deleteBets14 = function(nick){
-  if(!confirm("Usunąć typy dla "+nick+"?")) return;
-  delete D14.players[nick];
-  save14(D14);
-  renderBetsList14();
-};
-
-function renderLeaderboard14(){
-  const el = document.getElementById("leaderboard-14");
-  if(!el) return;
-  const players = Object.keys(D14.players);
-  if(!players.length){ el.innerHTML='<div class="empty">Brak uczestników</div>'; return; }
-  const lb = players.map(nick=>{
-    let pts=0,exact=0;
-    MATCHES_14.forEach(m=>{ const b=D14.players[nick][m.id]; const r=D14.results[m.id]; if(b&&r){ const p=calcPts14(b,r); if(p!==null){pts+=p; if(Number(b.home)===r.home&&Number(b.away)===r.away)exact++;} } });
-    return {nick,pts,exact};
-  }).sort((a,b)=>b.pts!==a.pts?b.pts-a.pts:b.exact-a.exact);
-  el.innerHTML = lb.map((u,i)=>`<div class="lr">
-    <div class="lp ${i===0?"p1":i===1?"p2":i===2?"p3":""}">${i+1}</div>
-    <div class="la">${u.nick.slice(0,2).toUpperCase()}</div>
-    <div class="ln2">${u.nick}</div>
-    <div class="le">${u.exact} dokł.</div>
-    <span class="bpts">${u.pts} pkt</span>
-  </div>`).join("");
-}
-
-function renderResultsForm14(){
-  const el = document.getElementById("results-form-14");
-  if(!el) return;
-  let html = "";
-  MATCHES_14.forEach(m=>{
-    const r = D14.results[m.id]||{};
-    const hasR = r.home!==undefined;
-    const showAdv = hasR && r.home===r.away;
-    html += `<div class="match-block">
-      <div class="group-header">${m.group} — ${fmt(m.date)}, godz. ${m.time}</div>
-      <div style="font-size:13px;font-weight:600;margin-bottom:5px">${m.home} vs ${m.away}</div>
-      <div class="input-score">
-        <input class="si" id="rh14-${m.id}" type="number" min="0" value="${hasR?r.home:""}" placeholder="0" oninput="onRC14('${m.id}')"/>
-        <span style="font-size:16px;color:var(--text3);font-weight:700">:</span>
-        <input class="si" id="ra14-${m.id}" type="number" min="0" value="${hasR?r.away:""}" placeholder="0" oninput="onRC14('${m.id}')"/>
-      </div>
-      <div id="radv14-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
-        <label>Kto awansuje?</label>
-        <select id="rv14-${m.id}">
-          <option value="">— wybierz —</option>
-          <option value="home" ${r.advance==="home"?"selected":""}>${m.home}</option>
-          <option value="away" ${r.advance==="away"?"selected":""}>${m.away}</option>
-        </select>
-      </div>
-    </div>`;
-  });
-  el.innerHTML = html;
-}
-
-window.onRC14 = function(mid){
-  const h=document.getElementById("rh14-"+mid)?.value;
-  const a=document.getElementById("ra14-"+mid)?.value;
-  const w=document.getElementById("radv14-"+mid);
-  if(w) w.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none";
-};
-
-function saveResults14(){
-  MATCHES_14.forEach(m=>{
-    const h=document.getElementById("rh14-"+m.id)?.value;
-    const a=document.getElementById("ra14-"+m.id)?.value;
-    if(h===""||a==="") return;
-    const ih=parseInt(h),ia=parseInt(a);
-    const adv=ih===ia?(document.getElementById("rv14-"+m.id)?.value||""):"";
-    D14.results[m.id]={home:ih,away:ia,advance:adv};
-  });
-  save14(D14);
-  renderBetsList14();
-  const notice=document.createElement("div");
-  notice.className="al as";
-  notice.innerHTML='<i class="ti ti-circle-check"></i> Wyniki zapisane!';
-  document.getElementById("tab14-wyniki").prepend(notice);
-  setTimeout(()=>notice.remove(),3000);
-}
-
-// ══════════════════════════════════════════════
-//  PÓŁFINAŁY+ — GAS
-// ══════════════════════════════════════════════
-
-const QF_MATCHES = [
-  {qfId:"qf1", home:"Francja",   away:"Maroko",    datetime:"2026-07-09T20:00:00", label:"Para 1"},
-  {qfId:"qf2", home:"Hiszpania", away:"Belgia",     datetime:"2026-07-10T19:00:00", label:"Para 2"},
-  {qfId:"qf3", home:"Norwegia",  away:"Anglia",     datetime:"2026-07-11T21:00:00", label:"Para 3"},
-  {qfId:"qf4", home:"Argentyna", away:"Szwajcaria", datetime:"2026-07-12T01:00:00", label:"Para 4"},
-];
-
-let QFS = {
-  session: null,
-  matches: [], bets: {}, leaderboard: [], users: [],
-  tab: "qf", localAdv: {}
-};
-
-// JSONP
-let cbIdx = 0;
-function gasApi(action, data={}){
-  return new Promise((resolve,reject)=>{
-    const cbName = "_gcb"+(++cbIdx);
-    const timer = setTimeout(()=>{ delete window[cbName]; reject(new Error("Timeout")); },15000);
-    window[cbName] = function(r){ clearTimeout(timer); delete window[cbName]; const s=document.getElementById("_js_"+cbIdx); if(s)s.remove(); resolve(r); };
-    const params = new URLSearchParams({action, data:JSON.stringify(data), callback:cbName});
-    const sc = document.createElement("script");
-    sc.id="_js_"+cbIdx;
-    sc.src=SCRIPT_URL+"?"+params.toString();
-    sc.onerror=()=>{ clearTimeout(timer); delete window[cbName]; sc.remove(); reject(new Error("Błąd połączenia")); };
-    document.head.appendChild(sc);
-  });
-}
-
-function qfMatchStarted(m){ return m.datetime?new Date(m.datetime).getTime()<=Date.now():false; }
-
-function calcPtsQF(bet,match){
-  if(!match.result) return null;
-  const {home:rh,away:ra}=match.result;
-  const bh=Number(bet.home),ba=Number(bet.away);
-  const isFin=match.type==="final"||match.type==="third";
-  const exact=bh===rh&&ba===ra;
-  const isR=rh===ra;
-  let p=0;
-  if(exact){ p=isFin?5:3; if(isR&&bet.advance===match.result.advance)p++; }
-  else{ const w=rh>ra?"home":ra>rh?"away":"draw"; const bw=bh>ba?"home":ba>bh?"away":"draw"; if(w===bw){p=isFin?2:1;if(isR&&bet.advance===match.result.advance)p++;} }
-  return p;
-}
-
-function fmtDT(dt){ if(!dt)return""; return new Date(dt).toLocaleString("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
-function showQFErr(el,msg){ el.style.display=""; el.innerHTML=`<i class="ti ti-alert-circle"></i> ${msg}`; }
-
-async function loadQFData(){
-  const base = QFS.session?.isAdmin ? {isAdmin:true} : {userId:QFS.session?.userId};
-  try{
-    const [mR,bR,lR] = await Promise.all([gasApi("getMatches",base),gasApi("getBetsForUser",base),gasApi("getLeaderboard")]);
-    if(mR.ok) QFS.matches=mR.matches||[];
-    if(bR.ok) QFS.bets=bR.bets||{};
-    if(lR.ok) QFS.leaderboard=lR.leaderboard||[];
-    if(QFS.session?.isAdmin){ const uR=await gasApi("getUsers",{adminPass:QFS.session.adminPass}); if(uR.ok) QFS.users=uR.users||[]; }
-  }catch(e){ console.warn("GAS load error:",e); }
-}
-
-function renderQF(){
-  const root = document.getElementById("qf-root");
-  if(!QFS.session){ root.innerHTML=renderQFLogin(); bindQFLogin(); return; }
-  if(QFS.session.isAdmin){ root.innerHTML=renderQFAdmin(); bindQFAdmin(); return; }
-  root.innerHTML=renderQFUser(); 
-}
-
-// LOGIN
-function renderQFLogin(){
-  return `<div class="lw">
-    <div class="ll">🏆</div>
-    <div class="lt">Ćwierćfinały — logowanie</div>
-    <div class="ls">Zaloguj się, aby typować wyniki ćwierćfinałów</div>
-    <div class="card">
-      <div class="fg"><label>Nick</label><input id="qli-n" placeholder="np. Marek" autocomplete="username"/></div>
-      <div class="fg"><label>Hasło</label><input id="qli-p" type="password" placeholder="••••••••"/></div>
-      <div id="qli-e" class="al ae" style="display:none"></div>
-      <button class="btn bp" id="qli-btn" style="width:100%"><i class="ti ti-login"></i> Zaloguj się</button>
-      <p style="text-align:center;font-size:12px;color:var(--text3);margin-top:10px">Admin → nick <strong>admin</strong> + hasło admina</p>
+      <div id="admin-typ-podglad"></div>
     </div>
-  </div>`;
+
+  </div>
+</div>
+
+</main>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxWoKqY23evFiFgIzuLpwwadvssW_Z41IrxxbmWEKQ7TWhxdWOJo2Dro7GGb6e_4rcm/exec';
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let allMecze = [], allUczestnicy = [], allWyniki = {}, allTypy = {};
+let adminVerified = false;
+let typNick = '', typZablokowane = false, parsedTypy = {};
+let cfg = null;
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+function loadConfig() {
+  try { const r = localStorage.getItem('strzalka_cfg2'); if(r) cfg = JSON.parse(r); } catch(e){}
+}
+function saveConfig() {
+  const pass = document.getElementById('cfg-pass').value.trim();
+  if (!pass) { document.getElementById('cfg-msg').textContent='Wpisz hasło.'; return; }
+  cfg = { adminPass: pass };
+  localStorage.setItem('strzalka_cfg2', JSON.stringify(cfg));
+  document.getElementById('cfg-overlay').style.display = 'none';
+  initApp();
 }
 
-function bindQFLogin(){
-  document.getElementById("qli-p")?.addEventListener("keydown",e=>{ if(e.key==="Enter") doQFLogin(); });
-  document.getElementById("qli-btn")?.addEventListener("click", doQFLogin);
+// ─── API CALLS ────────────────────────────────────────────────────────────────
+// API przez JSONP – jedyna metoda która działa z Apps Script bez serwera
+function apicall(params) {
+  return new Promise((resolve, reject) => {
+    const id = 'gs' + Date.now() + (Math.random()*1e6|0);
+    let done = false;
+
+    const cleanup = () => {
+      done = true;
+      try { delete window[id]; } catch(e){}
+      const s = document.getElementById(id);
+      if (s) s.parentNode.removeChild(s);
+    };
+
+    window[id] = (data) => {
+      if (done) return;
+      cleanup();
+      resolve(data);
+    };
+
+    setTimeout(() => {
+      if (done) return;
+      cleanup();
+      reject(new Error('Timeout'));
+    }, 30000);
+
+    const url = API + '?' + new URLSearchParams({...params, callback: id});
+    const s = document.createElement('script');
+    s.id = id;
+    s.async = true;
+    s.src = url;
+    s.onerror = () => {
+      if (done) return;
+      // Przy błędzie spróbuj jeszcze raz przez 3 sekundy
+      setTimeout(() => {
+        if (done) return;
+        const s2 = document.createElement('script');
+        s2.async = true;
+        s2.src = url + '&_t=' + Date.now();
+        s2.onerror = () => { cleanup(); reject(new Error('Load failed')); };
+        document.head.appendChild(s2);
+      }, 3000);
+    };
+    document.head.appendChild(s);
+  });
 }
 
-async function doQFLogin(){
-  const nick=document.getElementById("qli-n").value.trim();
-  const pass=document.getElementById("qli-p").value;
-  const errEl=document.getElementById("qli-e");
-  const btn=document.getElementById("qli-btn");
-  if(!nick){showQFErr(errEl,"Podaj nick.");return;}
-  btn.disabled=true; btn.innerHTML='<span class="sp"></span> Logowanie...';
-  try{
-    const r=await gasApi("login",{name:nick,pass});
-    if(!r.ok){showQFErr(errEl,r.error);btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Zaloguj się';return;}
-    QFS.session=r.isAdmin?{isAdmin:true,adminPass:pass}:{isAdmin:false,userId:r.userId,userName:r.userName};
-    sessionStorage.setItem("m26q_sess",JSON.stringify(QFS.session));
-    await loadQFData();
-    renderQF();
-  }catch(e){
-    showQFErr(errEl,e.message);
-    btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Zaloguj się';
+async function apiGet(action) {
+  return apicall({action});
+}
+
+async function apiPost(data) {
+  // Dziel setTypy na małe kawałki (max 6 typów = ~600 znaków URL)
+  if (data.action === 'setTypy') {
+    const typy = data.typy;
+    const mecze = Object.keys(typy);
+    // Sprawdź czy już zapisane
+    try {
+      const check = await apicall({action: 'checkTypy', payload: JSON.stringify({
+        action: 'checkTypy', nick: data.nick, kolejka: data.kolejka
+      })});
+      if (check && check.exists) return {ok: false, error: 'Typy kolejki ' + data.kolejka + ' już zapisane'};
+    } catch(e) {}
+    // Zapisuj po 6 mecze
+    for (let i = 0; i < mecze.length; i += 6) {
+      const partial = {};
+      mecze.slice(i, i+6).forEach(k => partial[k] = typy[k]);
+      try {
+        await apicall({action: 'setTypy', payload: JSON.stringify({
+          action: 'setTypy', nick: data.nick, typy: partial,
+          kolejka: data.kolejka, partial: i > 0
+        })});
+      } catch(e) { return {ok: false, error: e.message}; }
+    }
+    return {ok: true};
+  }
+  return apicall({action: data.action, payload: JSON.stringify(data)});
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+async function initApp() {
+  // inicjalizuj arkusze + mecze (jednorazowo)
+  await apiGet('init');
+  await loadAll();
+  renderAll();
+  // odświeżaj co 30 sekund
+  setInterval(async () => { await loadAll(); renderAll(); }, 30000);
+}
+
+async function loadAll() {
+  try {
+    const [mecze, uczestnicy, wyniki, typy] = await Promise.all([
+      apiGet('getMecze'),
+      apiGet('getUczestnicy'),
+      apiGet('getWyniki'),
+      apiGet('getTypy'),
+    ]);
+    allMecze = mecze || [];
+    allUczestnicy = (uczestnicy || []).map(u => ({...u, haslo: u.haslo||''}));
+    // wyniki: {mecz_id: {home, away}}
+    allWyniki = {};
+    (wyniki||[]).forEach(w => { allWyniki[w.mecz_id] = { home: Number(w.home), away: Number(w.away) }; });
+    // typy: {nick: {mecz_id: {home, away}}}
+    allTypy = {};
+    (typy||[]).forEach(t => {
+      if (!allTypy[t.nick]) allTypy[t.nick] = {};
+      allTypy[t.nick][t.mecz_id] = { home: Number(t.home), away: Number(t.away), awans: t.awans||null };
+    });
+    document.getElementById('hdr-sub').textContent = allUczestnicy.length + ' graczy';
+  } catch(e) { console.error(e); }
+}
+
+function renderAll() {
+  renderRanking();
+  renderMecze();
+  renderWynikSelect();
+  if (adminVerified) { renderAdminUczestnicy(); renderAdminNickSelect(); }
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  const names = ['ranking','mecze','typy','puchar','regulamin','admin'];
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', names[i]===name));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name==='puchar') renderPuchar();
+}
+
+// ─── RANKING ──────────────────────────────────────────────────────────────────
+function czyMeczPucharowy(mid) {
+  const nr = parseInt(String(mid).replace('m',''));
+  return nr >= 73;
+}
+
+function czyFinał(mid) {
+  // m101=mecz o 3. miejsce, m102=finał (przykładowe ID – admin doda)
+  const nr = parseInt(String(mid).replace('m',''));
+  return nr >= 101;
+}
+
+function sprawdzAwans(awansTyp, homeTeam, awayTeam, awansReal) {
+  if (!awansTyp || !awansReal) return false;
+  const a = normKod(awansTyp);
+  const r = normKod(awansReal);
+  // sprawdź po nazwie lub skrócie
+  const homeKody = kodujDruzyne(homeTeam);
+  const awayKody = kodujDruzyne(awayTeam);
+  const realKody = kodujDruzyne(awansReal);
+  return a === r || homeKody.includes(a) && realKody.some(k=>homeKody.includes(k)) ||
+         awayKody.includes(a) && realKody.some(k=>awayKody.includes(k)) ||
+         realKody.includes(a);
+}
+
+function obliczPktMecz(t, w, mid, mecz) {
+  if (!t || !w) return {pkt:0, typ:'—'};
+  const puchar = czyMeczPucharowy(mid);
+  const final_ = czyFinał(mid);
+  const pkt3 = final_ ? 5 : 3;
+  const pkt1 = final_ ? 2 : 1;
+
+  const dokladny = t.home===w.home && t.away===w.away;
+  const tw = t.home>t.away?1:t.home<t.away?-1:0;
+  const ww = w.home>w.away?1:w.home<w.away?-1:0;
+  const trafionyWynik = tw===ww;
+  const remis = ww===0;
+
+  if (dokladny) {
+    let bonus = 0;
+    if (puchar && remis && t.awans && w.awans) {
+      bonus = sprawdzAwans(t.awans, mecz?.home||'', mecz?.away||'', w.awans) ? 1 : 0;
+    }
+    return {pkt: pkt3+bonus, typ: dokladny?'+'+pkt3+(bonus?'+1':''):'+'+(pkt3+bonus)};
+  }
+  if (trafionyWynik) {
+    let bonus = 0;
+    if (puchar && remis && t.awans && w.awans) {
+      bonus = sprawdzAwans(t.awans, mecz?.home||'', mecz?.away||'', w.awans) ? 1 : 0;
+    }
+    return {pkt: pkt1+bonus, typ: '+'+(pkt1+bonus)};
+  }
+  return {pkt:0, typ:'0'};
+}
+
+function obliczPkt(nick) {
+  const typy = allTypy[nick] || {};
+  let pkt=0, t3=0, t1=0;
+  for (const [mid, w] of Object.entries(allWyniki)) {
+    const t = typy[mid];
+    if (!t) continue;
+    const mecz = allMecze.find(m=>m.id===mid);
+    const {pkt:p} = obliczPktMecz(t, w, mid, mecz);
+    pkt += p;
+    if (t.home===w.home && t.away===w.away) t3++;
+    else {
+      const tw=t.home>t.away?1:t.home<t.away?-1:0;
+      const ww=w.home>w.away?1:w.home<w.away?-1:0;
+      if (tw===ww) t1++;
+    }
+  }
+  return {pkt, t3, t1};
+}
+
+function renderRanking() {
+  const c = document.getElementById('ranking-body');
+  if (!allUczestnicy.length) { c.innerHTML='<div class="loading">Brak uczestników.</div>'; return; }
+  const rows = allUczestnicy.map(u => ({name:u.name, ...obliczPkt(u.name)})).sort((a,b)=>b.pkt-a.pkt);
+  const medals = ['🥇','🥈','🥉'];
+  let html = '<table><thead><tr><th>#</th><th>Uczestnik</th><th style="text-align:center">Pkt</th><th style="text-align:center">Trafienia</th></tr></thead><tbody>';
+  rows.forEach((r,i) => {
+    const pc = r.pkt>0?(r.t3>0?'p3':'p1'):'p0';
+    const maTypy = allTypy[r.name] && Object.keys(allTypy[r.name]).length > 0;
+    html += `<tr style="cursor:${maTypy?'pointer':'default'}" onclick="${maTypy?`pokazTypyModal('${r.name.replace(/'/g,"\'")}')`:''}" ${maTypy?'title="Kliknij, aby zobaczyć typy"':''}>
+      <td style="font-size:18px;width:36px">${medals[i]||(i+1)+'.'}</td>
+      <td style="font-weight:500">${esc(r.name)}${maTypy?'<span style="font-size:11px;color:var(--blue);margin-left:6px">📋</span>':''}</td>
+      <td class="pts ${pc}">${r.pkt}</td>
+      <td style="text-align:center;font-size:12px;color:var(--text2)">
+        <span style="color:var(--green)">✓×${r.t3}</span>
+        <span style="color:var(--amber);margin-left:4px">~×${r.t1}</span>
+      </td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  c.innerHTML = html;
+}
+
+function pokazTypyModal(nick) {
+  const typy = allTypy[nick] || {};
+  document.getElementById('modal-title').textContent = '📋 Typy: ' + nick;
+  let totalPkt = 0;
+  let html = '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+  allMecze.forEach(m => {
+    const t = typy[m.id], w = allWyniki[m.id];
+    if (!t) return; // pomiń mecze bez typów
+    const started = meczRozpoczety(m.date);
+    let pts = '—', col = '';
+    if (t && w && started) {
+      const {pkt:p} = obliczPktMecz(t, w, m.id, m);
+      pts = p>0 ? '+'+p : '0';
+      col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
+      totalPkt += p;
+    }
+    const awansInfo = t && t.awans ? ` (→${t.awans})` : '';
+    const typCell = started ? `${t.home}:${t.away}${awansInfo}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty</span>';
+    html += `<tr>
+      <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
+      <td class="mono" style="text-align:center">${typCell}</td>
+      <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
+      <td class="mono" style="text-align:center;font-weight:600;${col}">${started?pts:'—'}</td>
+    </tr>`;
+  });
+  html += `</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600;font-size:15px">Razem: <span style="color:var(--green)">${totalPkt} pkt</span></div>`;
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ─── MECZE ────────────────────────────────────────────────────────────────────
+function renderMecze() {
+  const c = document.getElementById('mecze-body');
+  if (!allMecze.length) { c.innerHTML='<div class="loading">Ładowanie meczów...</div>'; return; }
+  // grupuj po grupie
+  const grupy = {};
+  allMecze.forEach(m => { if(!grupy[m.grupa]) grupy[m.grupa]=[]; grupy[m.grupa].push(m); });
+  let html = '';
+  for (const [gr, mecze] of Object.entries(grupy)) {
+    html += `<div style="font-size:12px;font-weight:600;color:var(--text2);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.5px">Grupa ${gr}</div>`;
+    for (const m of mecze) {
+      const w = allWyniki[m.id];
+      const score = w ? `<span style="color:var(--text);font-weight:600">${w.home}:${w.away}</span>` : '<span style="color:var(--text2)">—:—</span>';
+      const badge = w ? '<span class="badge b-green">Koniec</span>' : '<span class="badge b-gray">Nadchodzi</span>';
+      html += `<div class="match-row">
+        <div class="match-teams">${esc(m.home)} – ${esc(m.away)}</div>
+        <div class="match-score mono">${score}</div>
+        ${badge}
+        ${m.date?`<span style="font-size:11px;color:var(--text2);margin-left:4px">${m.date}</span>`:''}
+      </div>`;
+    }
+  }
+  c.innerHTML = html;
+}
+
+// ─── TYPY ─────────────────────────────────────────────────────────────────────
+let loggedNick = null; // zalogowany uczestnik
+
+async function zalogujTypera() {
+  const nick = document.getElementById('typ-nick').value.trim();
+  const haslo = document.getElementById('typ-haslo').value.trim();
+  const statusEl = document.getElementById('typy-status');
+  if (!nick || !haslo) { statusEl.innerHTML='<p class="err">Wpisz nick i hasło.</p>'; return; }
+  const ucz = allUczestnicy.find(u => u.name === nick);
+  if (!ucz) { statusEl.innerHTML=`<p class="err">Nie znaleziono uczestnika "${esc(nick)}".</p>`; return; }
+  if (String(ucz.haslo) !== haslo) { statusEl.innerHTML='<p class="err">Błędne hasło.</p>'; return; }
+  loggedNick = nick;
+  typNick = nick;
+  document.getElementById('typy-login-card').style.display = 'none';
+  document.getElementById('typy-zalogowany').style.display = 'block';
+  document.getElementById('typy-logged-name').textContent = nick;
+  statusEl.innerHTML = '';
+  pokazKolejke(1);
+}
+
+function wylogujTypera() {
+  loggedNick = null;
+  typNick = '';
+  document.getElementById('typy-login-card').style.display = 'block';
+  document.getElementById('typy-zalogowany').style.display = 'none';
+  document.getElementById('typ-nick').value = '';
+  document.getElementById('typ-haslo').value = '';
+}
+
+// Kolejka 1: m01-m24, Kolejka 2: m25-m48, Kolejka 3: m49-m72
+function meczeDlaKolejki(k) {
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,999]};
+  const [od, do_] = zakresy[k] || [1,24];
+  return allMecze.filter(m => {
+    const nr = parseInt(m.id.replace('m',''));
+    return nr >= od && nr <= do_;
+  });
+}
+
+function maTypyDlaKolejki(nick, k) {
+  const typy = allTypy[nick] || {};
+  const mecze = meczeDlaKolejki(k);
+  return mecze.some(m => typy[m.id] !== undefined);
+}
+
+function labelKolejki(k) {
+  if (k===4) return '⚡ Faza pucharna';
+  if (k===5) return '🏆 1/8 finału';
+  return 'Kolejka '+k;
+}
+
+async function zaladujTypy() {
+  typNick = document.getElementById('typ-nick').value.trim();
+  const statusEl = document.getElementById('typy-status');
+  if (!typNick) { statusEl.innerHTML='<p class="err">Wpisz nick.</p>'; return; }
+  const istnieje = allUczestnicy.some(u => u.name===typNick);
+  if (!istnieje) {
+    statusEl.innerHTML=`<p class="err">Nie znaleziono uczestnika "${esc(typNick)}". Poproś administratora o dodanie Cię do gry.</p>`;
+    document.getElementById('typy-kolejki').style.display='none';
+    return;
+  }
+  statusEl.innerHTML='';
+  document.getElementById('typy-kolejki').style.display='block';
+  // pokaż kolejkę 1 domyślnie lub pierwszą niezapisaną
+  let domyslna = 1;
+  for (let k=1; k<=5; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
+  pokazKolejke(domyslna);
+}
+
+let aktywnaKolejka = 1;
+
+function pokazKolejke(k) {
+  aktywnaKolejka = k;
+  // zaktualizuj przyciski
+  for (let i=1; i<=5; i++) {
+    const btn = document.getElementById('kbtn-'+i);
+    if (!btn) continue;
+    const maTypy = maTypyDlaKolejki(typNick, i);
+    btn.className = 'btn' + (i===k?' primary':'');
+    btn.textContent = labelKolejki(i) + (maTypy?' ✓':'');
+  }
+  const content = document.getElementById('kolejka-content');
+  const maTypy = maTypyDlaKolejki(typNick, k);
+  const mecze = meczeDlaKolejki(k);
+  const typy = allTypy[typNick] || {};
+
+  if (maTypy) {
+    // pokaż zapisane typy z wynikami
+    let html = `<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="card-title" style="margin-bottom:0">${labelKolejki(k)} – zapisane typy 🔒</div>
+    </div>`;
+    html += '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+    let totalPkt = 0;
+    mecze.forEach(m => {
+      const t = typy[m.id], w = allWyniki[m.id];
+      const started = meczRozpoczety(m.date);
+      const widoczny = started || (loggedNick && loggedNick === typNick);
+      let pts='—', col='';
+      if (t && w && started) {
+        const {pkt:p, typ:tp} = obliczPktMecz(t, w, m.id, m);
+        pts = p>0 ? '+'+p : '0';
+        col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
+        totalPkt += p;
+      }
+      const awansInfo = t && t.awans ? ` <span style="font-size:11px;color:var(--blue)">(→${t.awans})</span>` : '';
+      const typCell = t ? (widoczny ? `${t.home}:${t.away}${awansInfo}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty</span>') : '—';
+      html+=`<tr>
+        <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
+        <td class="mono" style="text-align:center">${typCell}</td>
+        <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
+        <td class="mono" style="text-align:center;font-weight:600;${col}">${started&&t&&w?pts:'—'}</td>
+      </tr>`;
+    });
+    html+=`</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600">${labelKolejki(k)}: <span style="color:var(--green)">${totalPkt} pkt</span></div></div>`;
+    content.innerHTML = html;
+  } else {
+    // pokaż formularz wklejania
+    content.innerHTML = `<div class="card">
+      <div class="card-title">Kolejka ${k} – wpisz typy</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:10px">
+        Wklej typy w formacie <code style="background:var(--gray-bg);padding:1px 6px;border-radius:4px;font-family:var(--mono)">KOD-KOD wynik:wynik</code> – po jednym meczu na linię.
+      </p>
+      <textarea id="typy-paste" rows="${k===4?'8':'12'}" style="width:100%;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="${k===4?'m73 2:1\nm74 1:0\n...':'CZE-RPA 2:1\nSUI-BOS 2:0\n...'}"></textarea>
+      <div id="typy-preview" style="margin-top:12px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" onclick="parsujTypy()">Sprawdź typy</button>
+        <button class="btn primary" id="btn-zapisz-typy" onclick="zapiszTypy()" style="display:none">Zapisz i zablokuj 🔒</button>
+      </div>
+      <p id="typy-msg" style="margin-top:8px"></p>
+    </div>`;
   }
 }
 
-function doQFLogout(){ QFS={session:null,matches:[],bets:{},leaderboard:[],users:[],tab:"qf",localAdv:{}}; sessionStorage.removeItem("m26q_sess"); renderQF(); }
-window.doQFLogout=doQFLogout;
-
-// ── Admin ──────────────────────────────────────
-function typeInfoQF(t){ return t==="final"?{cls:"bf",lbl:"Finał"}:t==="third"?{cls:"bt",lbl:"3. miejsce"}:{cls:"bs",lbl:"Ćwierćfinał"}; }
-
-function renderQFAdmin(){
-  const tabs=[{id:"qf",i:"ti-tournament",l:"Pary"},{id:"results",i:"ti-clipboard-check",l:"Wyniki"},{id:"users",i:"ti-users",l:"Uczestnicy"},{id:"lb",i:"ti-trophy",l:"Tabela"}];
-  return `<div class="header" style="margin-bottom:10px">
-    <div class="h-left"><span style="font-size:20px">🏆</span><div><h1>Ćwierćfinały</h1><small>Panel admina</small></div></div>
-    <div class="h-right"><span class="badge ba"><i class="ti ti-shield-check"></i> Admin</span><button class="btn bsm" onclick="doQFLogout()"><i class="ti ti-logout"></i> Wyloguj</button></div>
-  </div>
-  <div class="tabs">${tabs.map(t=>`<button class="tab${QFS.tab===t.id?" on":""}" onclick="setQFTab('${t.id}')"><i class="ti ${t.i}"></i> ${t.l}</button>`).join("")}</div>
-  <div id="qf-admin-content">${renderQFAdminTab()}</div>`;
+function normKod(s) {
+  return s.trim().toUpperCase()
+    .replace(/Ś/g,'S').replace(/Ź/g,'Z').replace(/Ż/g,'Z')
+    .replace(/Ń/g,'N').replace(/Ó/g,'O').replace(/Ą/g,'A')
+    .replace(/Ę/g,'E').replace(/Ć/g,'C').replace(/Ł/g,'L');
 }
 
-function renderQFAdminTab(){
-  if(QFS.tab==="qf") return renderQFPairs();
-  if(QFS.tab==="results") return renderQFResults();
-  if(QFS.tab==="users") return renderQFUsers();
-  return renderQFLB(true);
+// Aliasy: angielskie/alternatywne skróty → polskie kody z bazy
+const ALIASY = {
+  // Grupa A
+  'MEX':'MEK', 'RSA':'RPA', 'KOR':'KOR', 'CZE':'CZE',
+  // Grupa B
+  'CAN':'CAN', 'BIH':'BOS', 'BOS':'BOS', 'QAT':'KAT', 'SUI':'SUI', 'SWI':'SUI',
+  // Grupa C
+  'BRA':'BRA', 'MAR':'MAR', 'HAI':'HAI', 'SCO':'SZK', 'SZO':'SZK',
+  // Grupa D
+  'USA':'USA', 'PAR':'PAR', 'AUS':'AUS', 'TUR':'TUR',
+  // Grupa E
+  'GER':'NIE', 'NED':'HOL', 'HOL':'HOL', 'EKW':'EKW', 'ECU':'EKW',
+  'CUW':'CUR', 'CUR':'CUR', 'CIV':'WKS', 'WKS':'WKS',
+  // Grupa F
+  'NED':'HOL', 'JPN':'JAP', 'JAP':'JAP', 'SWE':'SZW', 'TUN':'TUN',
+  // Grupa G
+  'BEL':'BEL', 'EGY':'EGP', 'EGP':'EGP', 'IRN':'IRN', 'NZL':'NEW',
+  'NEWZ':'NEWZ', 'NEW':'NEWZ', 'NZL':'NEWZ',
+  // Grupa H
+  'ESP':'HIS', 'HIS':'HIS', 'HISZ':'HIS', 'KSA':'ARB', 'ARB':'ARB',
+  'URU':'URU', 'CPV':'CAB', 'RZP':'CAB', 'CAB':'CAB',
+  // Grupa I
+  'FRA':'FRA', 'SEN':'SEN', 'IRQ':'IRK', 'IRK':'IRK', 'NOR':'NOR',
+  // Grupa J
+  'ARG':'ARG', 'ALG':'ALG', 'AUT':'AUT', 'JOR':'JOR',
+  // Grupa K
+  'POR':'POR', 'COD':'DRK', 'DRK':'DRK', 'UZB':'UZB', 'COL':'KOL', 'KOL':'KOL',
+  // Grupa L
+  'ENG':'ANG', 'ANG':'ANG', 'CRO':'CHR', 'CHR':'CHR', 'GHA':'GHA', 'PAN':'PAN',
+};
+
+function rozwijAlias(k) {
+  const n = normKod(k);
+  return ALIASY[n] || n;
 }
 
-function renderQFPairs(){
-  const rows=QF_MATCHES.map(qf=>{
-    const m=QFS.matches.find(x=>x.home===qf.home&&x.away===qf.away);
-    const added=!!m; const st=m?qfMatchStarted(m):false;
-    return `<div class="mi">
-      <div class="mh">
-        <span class="mt">${qf.home}<span class="mvs">vs</span>${qf.away}</span>
-        <div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge ${added?(st?"bst":"bo"):"" }">${added?(st?"Trwa/po":"Przed"):"Nie dodano"}</span></div>
-      </div>
-      <div class="mm">${fmtDT(qf.datetime)}</div>
-      ${m&&m.result?`<div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>`:""}
-      <div style="margin-top:8px">
-        ${!added?`<button class="btn bp bsm" onclick="aQFAdd('${qf.qfId}')"><i class="ti ti-circle-plus"></i> Dodaj do typowania</button>`
-                :`<button class="btn bxs bd" onclick="aQFDel('${m.id}')"><i class="ti ti-trash"></i> Usuń</button>`}
-      </div>
-    </div>`;
-  }).join("");
-  return `<div class="card"><h2><i class="ti ti-tournament" style="color:var(--blue)"></i> Pary ćwierćfinałów</h2>
-    <div class="al ai" style="margin-bottom:10px"><i class="ti ti-info-circle"></i> Typy uczestników są ukryte do czasu startu meczu.</div>
-    ${rows}</div>`;
+function kodujDruzyne(name) {
+  const n = normKod(name);
+  return [n.substring(0,3), n.substring(0,4), n.replace(/\s/g,'').substring(0,3), n.replace(/\s/g,'').substring(0,4)];
 }
 
-function renderQFResults(){
-  const avail=QFS.matches.filter(m=>qfMatchStarted(m)&&!m.result);
-  const done=QFS.matches.filter(m=>m.result);
-  const avHtml=!avail.length?'<div class="empty">Brak meczów do uzupełnienia</div>':avail.map(m=>`
-    <div class="mi">
-      <div class="mh"><span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span><span class="badge bst">Trwa/po</span></div>
-      <div class="sr">
-        <input class="si" id="rh-${m.id}" type="number" min="0" placeholder="0" oninput="chkQRR('${m.id}')"/>
-        <span class="ss">:</span>
-        <input class="si" id="ra-${m.id}" type="number" min="0" placeholder="0" oninput="chkQRR('${m.id}')"/>
-      </div>
-      <div id="rw-${m.id}" style="display:none" class="ar">
-        <label>Kto awansuje (przy remisie)?</label>
-        <select id="rv-${m.id}"><option value="">— wybierz —</option><option value="home">${m.home}</option><option value="away">${m.away}</option></select>
-      </div>
-      <button class="btn bp bsm" style="margin-top:9px" onclick="aQFSetRes('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz</button>
-    </div>`).join("");
-  const doneHtml=!done.length?'<div class="empty">Brak wpisanych wyników</div>':done.map(m=>`
-    <div class="mi">
-      <div class="mt">${m.home}<span class="mvs">vs</span>${m.away}</div>
-      <div class="rs">${m.result.home}:${m.result.away}${m.result.advance?" (awans: "+(m.result.advance==="home"?m.home:m.away)+")":""}</div>
-      <button class="btn bxs bd" style="margin-top:7px" onclick="aQFClrRes('${m.id}')"><i class="ti ti-refresh"></i> Cofnij</button>
-    </div>`).join("");
-  return `<div class="card"><h2><i class="ti ti-edit" style="color:var(--blue)"></i> Wpisz wyniki</h2>${avHtml}</div>
-    <div class="card"><h2><i class="ti ti-circle-check" style="color:var(--green)"></i> Wpisane</h2>${doneHtml}</div>`;
-}
+function parsujLinie(lines, meczePuli) {
+  const matched=[], unmatched=[];
+  const wynik = {};
+  for (const line of lines) {
+    // obsługuje format mID wynik:wynik np. m73 2:1 (awans: Kanada)
+    const reMid = /^(m\d+)\s+(\d+)[:\-](\d+)(?:\s*\(awans:\s*([^)]+)\))?$/i;
+    const mMid = line.match(reMid);
+    if (mMid) {
+      const found = meczePuli.find(mc => mc.id.toLowerCase() === mMid[1].toLowerCase());
+      if (found) {
+        const awansMid = mMid[4] ? mMid[4].trim() : null;
+        wynik[found.id] = {home:parseInt(mMid[2]), away:parseInt(mMid[3]), awans:awansMid};
+        matched.push({line, mecz:found.home+' – '+found.away, gh:parseInt(mMid[2]), ga:parseInt(mMid[3]), awans:awansMid});
+      } else {
+        unmatched.push({line, reason:'nie znaleziono meczu '+mMid[1]});
+      }
+      continue;
+    }
+    // obsługuje separatory: vs, VS, -, –, przestrzeń
+    // obsługuje awans: KOD-KOD 1:1 (awans: Kanada) lub (awans: CAN)
+    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s*(?:vs\.?|VS\.?|–|-)\s*([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)(?:\s*\(?awans[:\s]+([^)\n]+?)\)?)?$/i;
+    const m = line.match(re);
+    if (!m) { unmatched.push({line, reason:'niepoprawny format'}); continue; }
+    const kH = rozwijAlias(m[1]);
+    const kA = rozwijAlias(m[2]);
+    const gh=parseInt(m[3]), ga=parseInt(m[4]);
+    const awans = m[5] ? m[5].trim() : null;
 
-function renderQFUsers(){
-  const list=!QFS.users.length?'<div class="empty">Brak uczestników</div>':QFS.users.map(u=>`
-    <div class="ur"><div class="ui"><div class="la">${u.name.slice(0,2).toUpperCase()}</div><span style="font-size:14px;font-weight:500">${u.name}</span></div>
-    <button class="btn bxs bd" onclick="aQFDelUser('${u.id}')"><i class="ti ti-trash"></i> Usuń</button></div>`).join("");
-  return `<div class="card"><h2><i class="ti ti-user-plus" style="color:var(--blue)"></i> Dodaj uczestnika</h2>
-    <div class="fr">
-      <div class="fg" style="margin:0"><label>Nick</label><input id="qu-n" placeholder="np. Marek"/></div>
-      <div class="fg" style="margin:0"><label>Hasło</label><input id="qu-p" type="password" placeholder="••••••"/></div>
-    </div>
-    <div id="qu-e" class="al ae" style="display:none"></div>
-    <button class="btn bp" id="qu-add"><i class="ti ti-user-plus"></i> Dodaj</button>
-  </div>
-  <div class="card"><h2><i class="ti ti-users" style="color:var(--blue)"></i> Uczestnicy (${QFS.users.length})</h2>${list}</div>`;
-}
-
-function renderQFLB(isAdmin){
-  if(!QFS.leaderboard.length) return `<div class="card"><div class="empty">Brak uczestników</div></div>`;
-  const myId=isAdmin?null:QFS.session?.userId;
-  return `<div class="card"><h2><i class="ti ti-trophy" style="color:var(--blue)"></i> Tabela</h2>
-    ${QFS.leaderboard.map((u,i)=>`<div class="lr${u.id===myId?" me-row":""}">
-      <div class="lp ${i===0?"p1":i===1?"p2":i===2?"p3":""}">${i+1}</div>
-      <div class="la">${u.name.slice(0,2).toUpperCase()}</div>
-      <div class="ln2">${u.name}${u.id===myId?` <span class="badge bu">Ty</span>`:""}</div>
-      <div class="le">${u.exact} dokł.</div>
-      <span class="bpts">${u.pts} pkt</span>
-    </div>`).join("")}
-  </div>`;
-}
-
-window.setQFTab=async function(t){ QFS.tab=t; await loadQFData(); renderQF(); };
-window.chkQRR=(mid)=>{ const h=document.getElementById("rh-"+mid)?.value,a=document.getElementById("ra-"+mid)?.value,w=document.getElementById("rw-"+mid); if(w)w.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none"; };
-window.aQFAdd=async(qfId)=>{ const qf=QF_MATCHES.find(q=>q.qfId===qfId); if(!qf)return; const r=await gasApi("addMatch",{adminPass:QFS.session.adminPass,home:qf.home,away:qf.away,datetime:qf.datetime,type:"normal"}); if(!r.ok){alert(r.error);return;} await loadQFData();renderQF(); };
-window.aQFDel=async(id)=>{ if(!confirm("Usunąć mecz?"))return; await gasApi("deleteMatch",{adminPass:QFS.session.adminPass,matchId:id}); await loadQFData();renderQF(); };
-window.aQFSetRes=async(mid)=>{ const rh=document.getElementById("rh-"+mid)?.value,ra=document.getElementById("ra-"+mid)?.value; if(rh===""||ra===""){alert("Podaj wynik.");return;} const ih=parseInt(rh),ia=parseInt(ra); let adv=""; if(ih===ia){adv=document.getElementById("rv-"+mid)?.value||"";if(!adv){alert("Podaj kto awansuje.");return;}} const r=await gasApi("setResult",{adminPass:QFS.session.adminPass,matchId:mid,resultHome:ih,resultAway:ia,resultAdvance:adv}); if(!r.ok){alert(r.error);return;} await loadQFData();renderQF(); };
-window.aQFClrRes=async(mid)=>{ if(!confirm("Cofnąć wynik?"))return; await gasApi("clearResult",{adminPass:QFS.session.adminPass,matchId:mid}); await loadQFData();renderQF(); };
-window.aQFDelUser=async(id)=>{ if(!confirm("Usunąć uczestnika?"))return; await gasApi("deleteUser",{adminPass:QFS.session.adminPass,userId:id}); await loadQFData();renderQF(); };
-
-function bindQFAdmin(){
-  document.getElementById("qu-add")?.addEventListener("click",async()=>{
-    const n=document.getElementById("qu-n").value.trim(),p=document.getElementById("qu-p").value;
-    const e=document.getElementById("qu-e"); if(!n||!p){showQFErr(e,"Podaj nick i hasło.");return;}
-    const btn=document.getElementById("qu-add"); btn.disabled=true;
-    const r=await gasApi("addUser",{adminPass:QFS.session.adminPass,name:n,pass:p});
-    btn.disabled=false; if(!r.ok){showQFErr(e,r.error);return;}
-    await loadQFData();renderQF();
-  });
-}
-
-// ── User ──────────────────────────────────────
-function renderQFUser(){
-  const uid=QFS.session.userId;
-  const tabs=[{id:"qf",i:"ti-tournament",l:"Ćwierćfinały"},{id:"lb",i:"ti-trophy",l:"Tabela"},{id:"rules",i:"ti-book",l:"Regulamin"}];
-  const content=QFS.tab==="qf"?renderQFUserBets(uid):QFS.tab==="lb"?renderQFLB(false):renderQFRules();
-  return `<div class="header" style="margin-bottom:10px">
-    <div class="h-left"><span style="font-size:20px">🏆</span><div><h1>Ćwierćfinały</h1><small>Witaj, ${QFS.session.userName}!</small></div></div>
-    <div class="h-right"><span class="badge bu"><i class="ti ti-user"></i> Gracz</span><button class="btn bsm" onclick="doQFLogout()"><i class="ti ti-logout"></i> Wyloguj</button></div>
-  </div>
-  <div class="tabs">${tabs.map(t=>`<button class="tab${QFS.tab===t.id?" on":""}" onclick="setQFTab('${t.id}')"><i class="ti ${t.i}"></i> ${t.l}</button>`).join("")}</div>
-  ${content}`;
-}
-
-function renderQFUserBets(uid){
-  const html=QF_MATCHES.map(qf=>{
-    const m=QFS.matches.find(x=>x.home===qf.home&&x.away===qf.away);
-    const dtStr=fmtDT(qf.datetime);
-    if(!m) return `<div class="mi" style="opacity:.55">
-      <div class="mh"><span class="mt">${qf.home}<span class="mvs">vs</span>${qf.away}</span><div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge bst">Niedostępny</span></div></div>
-      <div class="mm">${dtStr}</div>
-      <div class="ln"><i class="ti ti-lock" style="font-size:12px"></i> Admin jeszcze nie otworzył tej pary</div>
-    </div>`;
-    const st=qfMatchStarted(m);
-    const mb=QFS.bets[m.id]||{};
-    const my=mb[uid];
-    const ladv=QFS.localAdv[m.id]||my?.advance||"";
-    const bh=my?my.home:"",ba=my?my.away:"";
-    const showAdv=bh!==""&&ba!==""&&parseInt(bh)===parseInt(ba);
-    let body="";
-    if(!st){
-      body=`<div class="sr">
-        <input class="si" id="bh-${m.id}" type="number" min="0" value="${bh}" placeholder="0" oninput="onQSC('${m.id}')"/>
-        <span class="ss">:</span>
-        <input class="si" id="ba-${m.id}" type="number" min="0" value="${ba}" placeholder="0" oninput="onQSC('${m.id}')"/>
-        <button class="btn bp bsm" onclick="saveQFBet('${m.id}')"><i class="ti ti-device-floppy"></i> Zapisz</button>
-      </div>
-      <div id="adv-${m.id}" class="ar" style="${showAdv?"":"display:none"}">
-        <label>Kto awansuje (przy remisie)?</label>
-        <div class="chips">
-          <span class="chip${ladv==="home"?" on":""}" data-adv="home" onclick="selQFAdv('${m.id}','home')">${m.home}</span>
-          <span class="chip${ladv==="away"?" on":""}" data-adv="away" onclick="selQFAdv('${m.id}','away')">${m.away}</span>
-        </div>
-      </div>
-      ${my?`<div class="ln"><i class="ti ti-lock" style="font-size:12px"></i> Typ zapisany — ukryty do startu meczu</div>`:""}`;
+    // szukaj po kodzie bazy
+    let found = meczePuli.find(mc => mc.kod && normKod(mc.kod) === kH+'-'+kA);
+    // szukaj po nazwie drużyny
+    if (!found) {
+      found = meczePuli.find(mc => {
+        const hk = kodujDruzyne(mc.home);
+        const ak = kodujDruzyne(mc.away);
+        return hk.includes(kH) && ak.includes(kA);
+      });
+    }
+    if (found) {
+      wynik[found.id] = {home:gh, away:ga, awans: awans||null};
+      matched.push({line, mecz:found.home+' – '+found.away, gh, ga, awans});
     } else {
-      if(my){
-        const advS=my.advance?` (awans: ${my.advance==="home"?m.home:m.away})`:"";
-        body=`<div class="bb">Twój typ: <strong>${my.home}:${my.away}${advS}</strong></div>`;
-        if(m.result){ const pts=calcPtsQF(my,m); const advR=m.result.advance?` (awans: ${m.result.advance==="home"?m.home:m.away})`:""; body+=`<div class="rs">${m.result.home}:${m.result.away}${advR}</div><div class="pl">→ <strong style="color:var(--blue)">${pts} pkt</strong></div>`; }
-        else body+=`<div class="ln"><i class="ti ti-clock" style="font-size:12px"></i> Czekamy na wynik od admina</div>`;
-      } else body=`<div class="al aw"><i class="ti ti-alert-triangle"></i> Mecz rozpoczęty — nie można dodać typu.</div>`;
+      unmatched.push({line, reason:'nie znaleziono ('+kH+'-'+kA+')'});
     }
-    let othersHtml="";
-    if(st){
-      const others=Object.entries(mb).filter(([id])=>id!==uid);
-      if(others.length){ const rows=others.map(([oid,b])=>{ const uName=QFS.leaderboard.find(u=>u.id===oid)?.name||"?"; const advS=b.advance?` (${b.advance==="home"?m.home:m.away})`:""; const pts=m.result?calcPtsQF(b,m):null; return `<tr><td>${uName}</td><td><strong>${b.home}:${b.away}</strong>${advS}</td><td>${pts!==null?`<span class="bpts">${pts}p</span>`:""}</td></tr>`; }).join(""); othersHtml=`<div class="sep"></div><div class="ol"><i class="ti ti-users" style="font-size:12px;vertical-align:-1px"></i> Typy innych</div><table class="ot"><thead><tr><th>Nick</th><th>Typ</th><th>Pkt</th></tr></thead><tbody>${rows}</tbody></table>`; }
+  }
+  return {matched, unmatched, wynik};
+}
+
+// Parsuje datę meczu np. "18.06 16:00" jako 2026
+function meczRozpoczety(dateStr) {
+  if (!dateStr) return false;
+  try {
+    // format ISO: 2026-06-11T20:00:00.000Z
+    if (String(dateStr).includes('T') || String(dateStr).includes('-202')) {
+      return new Date() >= new Date(dateStr);
     }
-    return `<div class="mi">
-      <div class="mh"><span class="mt">${m.home}<span class="mvs">vs</span>${m.away}</span><div class="mtags"><span class="badge bs">${qf.label}</span><span class="badge ${st?"bst":"bo"}">${st?"Trwa/po":"Przed"}</span></div></div>
-      <div class="mm">${dtStr}</div>
-      ${body}${othersHtml}
+    // format DD.MM HH:MM
+    const parts = String(dateStr).match(/(\d+)\.(\d+)\s+(\d+):(\d+)/);
+    if (!parts) return false;
+    const d = new Date(2026, parseInt(parts[2])-1, parseInt(parts[1]), parseInt(parts[3]), parseInt(parts[4]));
+    return new Date() >= d;
+  } catch(e) { return false; }
+}
+
+function renderParsResult(matched, unmatched, previewId) {
+  let html='';
+  if (matched.length) {
+    html += `<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:var(--green);margin-bottom:6px">✓ Dopasowano ${matched.length} meczów</div>`;
+    html += '<table style="font-size:13px"><thead><tr><th>Wpisano</th><th>Mecz</th><th style="text-align:center">Typ</th></tr></thead><tbody>';
+    matched.forEach(r => {
+      html+=`<tr><td class="mono" style="color:var(--text2)">${esc(r.line)}</td><td>${esc(r.mecz)}</td><td class="mono" style="text-align:center;font-weight:600">${r.gh}:${r.ga}</td></tr>`;
+    });
+    html+='</tbody></table></div>';
+  }
+  if (unmatched.length) {
+    html += `<div><div style="font-size:13px;font-weight:500;color:var(--amber);margin-bottom:6px">⚠ Nie dopasowano ${unmatched.length} linii</div>`;
+    html += '<table style="font-size:13px"><thead><tr><th>Linia</th><th>Powód</th></tr></thead><tbody>';
+    unmatched.forEach(r => {
+      html+=`<tr><td class="mono">${esc(r.line)}</td><td style="color:var(--text2)">${r.reason}</td></tr>`;
+    });
+    html+='</tbody></table></div>';
+  }
+  document.getElementById(previewId).innerHTML = html;
+}
+
+function parsujTypy() {
+  const text = document.getElementById('typy-paste').value;
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
+  const meczePuli = meczeDlaKolejki(aktywnaKolejka);
+  const {matched, unmatched, wynik} = parsujLinie(lines, meczePuli);
+  parsedTypy = wynik;
+  renderParsResult(matched, unmatched, 'typy-preview');
+  document.getElementById('btn-zapisz-typy').style.display = matched.length?'inline-block':'none';
+  document.getElementById('typy-msg').textContent='';
+}
+
+async function zapiszTypy() {
+  if (!typNick || !Object.keys(parsedTypy).length) return;
+  const btn = document.getElementById('btn-zapisz-typy');
+  btn.disabled=true; btn.textContent='Zapisywanie...';
+  try {
+    const res = await apiPost({action:'setTypy', nick:typNick, typy:parsedTypy, kolejka:aktywnaKolejka});
+    if (res.ok) {
+      document.getElementById('typy-msg').className='ok';
+      document.getElementById('typy-msg').textContent='Zapisano! Typy zablokowane. 🔒';
+      await loadAll();
+      setTimeout(()=>pokazKolejke(aktywnaKolejka), 800);
+    } else {
+      document.getElementById('typy-msg').className='err';
+      document.getElementById('typy-msg').textContent=res.error||'Błąd zapisu.';
+      btn.disabled=false; btn.textContent='Zapisz i zablokuj 🔒';
+    }
+  } catch(e) {
+    document.getElementById('typy-msg').className='err';
+    document.getElementById('typy-msg').textContent='Błąd: '+e.message;
+    btn.disabled=false; btn.textContent='Zapisz i zablokuj 🔒';
+  }
+}
+
+// ─── ADMIN ────────────────────────────────────────────────────────────────────
+function verifyAdmin() {
+  const pass = document.getElementById('admin-pass').value;
+  if (!cfg || pass!==cfg.adminPass) {
+    document.getElementById('admin-login-msg').textContent='Błędne hasło.';
+    return;
+  }
+  adminVerified=true;
+  document.getElementById('admin-panel').style.display='block';
+  document.getElementById('admin-login-msg').textContent='';
+  renderAdminUczestnicy();
+  renderWynikSelect();
+}
+
+async function dodajUczestnika() {
+  const name=document.getElementById('nowy-ucz').value.trim();
+  const haslo=document.getElementById('nowy-ucz-haslo').value.trim();
+  const msg=document.getElementById('ucz-msg');
+  if (!name) { msg.className='err'; msg.textContent='Wpisz imię.'; return; }
+  if (!haslo) { msg.className='err'; msg.textContent='Wpisz hasło dla uczestnika.'; return; }
+  if (allUczestnicy.some(u=>u.name===name)) { msg.className='err'; msg.textContent='Uczestnik już istnieje.'; return; }
+  msg.textContent='Dodawanie...';
+  try {
+    await apiPost({action:'addUczestnik', name, haslo});
+    document.getElementById('nowy-ucz').value='';
+    document.getElementById('nowy-ucz-haslo').value='';
+    msg.className='ok'; msg.textContent=`Dodano: ${name} (hasło: ${haslo})`;
+    await loadAll(); renderAll();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+function renderWynikSelect() {
+  const sel=document.getElementById('wynik-mecz');
+  if (!sel) return;
+  const cur=sel.value;
+  sel.innerHTML=allMecze.map(m=>`<option value="${m.id}">${esc(m.home)} – ${esc(m.away)} (${m.date||''})</option>`).join('');
+  if (cur) sel.value=cur;
+}
+
+async function zapiszWynik() {
+  const mid=document.getElementById('wynik-mecz').value;
+  const home=parseInt(document.getElementById('wynik-home').value);
+  const away=parseInt(document.getElementById('wynik-away').value);
+  const msg=document.getElementById('wynik-msg');
+  if (!mid) { msg.className='err'; msg.textContent='Wybierz mecz.'; return; }
+  if (isNaN(home)||isNaN(away)) { msg.className='err'; msg.textContent='Wpisz wynik.'; return; }
+  msg.textContent='Zapisywanie...';
+  try {
+    await apiPost({action:'setWynik', mecz_id:mid, home, away});
+    msg.className='ok'; msg.textContent=`Zapisano: ${home}:${away}`;
+    await loadAll(); renderAll();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+function renderAdminUczestnicy() {
+  const c=document.getElementById('admin-uczestnicy');
+  if (!c) return;
+  if (!allUczestnicy.length) { c.innerHTML='<div class="loading">Brak uczestników.</div>'; return; }
+  const rows=allUczestnicy.map(u=>({name:u.name,haslo:u.haslo||'—',...obliczPkt(u.name)})).sort((a,b)=>b.pkt-a.pkt);
+  let html='<div id="admin-ucz-msg" style="margin-bottom:8px"></div>';
+  html+='<table><thead><tr><th>#</th><th>Uczestnik</th><th>Hasło</th><th style="text-align:center">Pkt</th><th style="text-align:center">Akcje</th></tr></thead><tbody>';
+  rows.forEach((r,i)=>{
+    html+=`<tr id="ucz-row-${i}">
+      <td style="font-size:16px">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</td>
+      <td style="font-weight:500"><span id="ucz-name-${i}">${esc(r.name)}</span></td>
+      <td style="font-size:13px;font-family:var(--mono)"><span id="ucz-haslo-${i}">${esc(r.haslo)}</span></td>
+      <td class="pts ${r.pkt>0?(r.t3>0?'p3':'p1'):'p0'}">${r.pkt}</td>
+      <td style="text-align:center;white-space:nowrap">
+        <button class="btn" style="padding:4px 10px;font-size:12px;margin-right:4px" title="Zmień nick" onclick="edytujUczestnika(${i},'${esc(r.name)}')">✏️</button>
+        <button class="btn" style="padding:4px 10px;font-size:12px;margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue)" title="Zmień hasło" onclick="zmienHaslo(${i},'${esc(r.name)}')">🔑</button>
+        <button class="btn" style="padding:4px 10px;font-size:12px;background:var(--red-bg);color:var(--red);border-color:var(--red)" title="Usuń" onclick="usunUczestnika('${esc(r.name)}')">🗑️</button>
+      </td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+
+function zmienHaslo(i, name) {
+  const span = document.getElementById('ucz-haslo-'+i);
+  span.innerHTML = `<input type="text" id="edit-haslo-${i}" value="" style="width:100px;padding:3px 6px;font-size:13px" placeholder="nowe hasło" />
+    <button class="btn primary" style="padding:3px 8px;font-size:12px;margin-left:4px" onclick="zapiszHaslo(${i},'${esc(name)}')">Zapisz</button>
+    <button class="btn" style="padding:3px 8px;font-size:12px;margin-left:2px" onclick="renderAdminUczestnicy()">✕</button>`;
+}
+
+async function zapiszHaslo(i, name) {
+  const newHaslo = document.getElementById('edit-haslo-'+i).value.trim();
+  const msg = document.getElementById('admin-ucz-msg');
+  if (!newHaslo) { msg.className='err'; msg.textContent='Wpisz nowe hasło.'; return; }
+  try {
+    await apiPost({action:'setHaslo', name, haslo:newHaslo});
+    msg.className='ok'; msg.textContent=`Hasło zmienione dla: ${name}`;
+    await loadAll(); renderAll();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+function edytujUczestnika(i, oldName) {
+  const span = document.getElementById('ucz-name-'+i);
+  const row  = document.getElementById('ucz-row-'+i);
+  // zamień na input
+  span.innerHTML = `<input type="text" id="edit-name-${i}" value="${esc(oldName)}" style="width:120px;padding:4px 8px;font-size:13px" />
+    <button class="btn primary" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="zapiszNazwe(${i},'${esc(oldName)}')">Zapisz</button>
+    <button class="btn" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="renderAdminUczestnicy()">Anuluj</button>`;
+}
+
+async function zapiszNazwe(i, oldName) {
+  const newName = document.getElementById('edit-name-'+i).value.trim();
+  const msg = document.getElementById('admin-ucz-msg');
+  if (!newName) { msg.className='err'; msg.textContent='Wpisz nową nazwę.'; return; }
+  if (newName===oldName) { renderAdminUczestnicy(); return; }
+  if (allUczestnicy.some(u=>u.name===newName)) { msg.className='err'; msg.textContent='Taka nazwa już istnieje.'; return; }
+  msg.className=''; msg.textContent='Zapisywanie...';
+  try {
+    await apiPost({action:'renameUczestnik', oldName, newName});
+    msg.className='ok'; msg.textContent='Zmieniono nazwę.';
+    await loadAll(); renderAll();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+async function usunUczestnika(name) {
+  if (!confirm(`Usunąć uczestnika "${name}" wraz ze wszystkimi typami?`)) return;
+  const msg = document.getElementById('admin-ucz-msg');
+  msg.className=''; msg.textContent='Usuwanie...';
+  try {
+    await apiPost({action:'deleteUczestnik', name});
+    msg.className='ok'; msg.textContent='Usunięto: '+name;
+    await loadAll(); renderAll();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+
+// ─── FAZA PUCHARNA ────────────────────────────────────────────────────────────
+
+// Pary 1/32 finału FIFA 2026 (rzeczywiste)
+const KLUCZ_PAR = [
+  {home:'Rep. Płd. Afryki', away:'Kanada',              data:'28.06 21:00', mecz:'m73'},
+  {home:'Brazylia',          away:'Japonia',              data:'29.06 19:00', mecz:'m74'},
+  {home:'Niemcy',            away:'Paragwaj',             data:'29.06 22:30', mecz:'m75'},
+  {home:'Holandia',          away:'Maroko',               data:'30.06 03:00', mecz:'m76'},
+  {home:'W. Kości Słon.',    away:'Norwegia',             data:'30.06 19:00', mecz:'m77'},
+  {home:'Francja',           away:'Szwecja',              data:'30.06 23:00', mecz:'m78'},
+  {home:'Meksyk',            away:'Ekwador',              data:'01.07 03:00', mecz:'m79'},
+  {home:'Anglia',            away:'DR Konga',             data:'01.07 18:00', mecz:'m80'},
+  {home:'Belgia',            away:'Senegal',              data:'01.07 22:00', mecz:'m81'},
+  {home:'USA',               away:'Bośnia i Herceg.',     data:'02.07 02:00', mecz:'m82'},
+  {home:'Hiszpania',         away:'Austria',              data:'02.07 21:00', mecz:'m83'},
+  {home:'Portugalia',        away:'Chorwacja',            data:'03.07 01:00', mecz:'m84'},
+  {home:'Szwajcaria',        away:'Algieria',             data:'03.07 05:00', mecz:'m85'},
+  {home:'Australia',         away:'Egipt',                data:'03.07 20:00', mecz:'m86'},
+  {home:'Argentyna',         away:'Rep. Ziel. Przylądka', data:'04.07 00:00', mecz:'m87'},
+  {home:'Kolumbia',          away:'Ghana',                data:'04.07 03:30', mecz:'m88'},
+];
+
+function obliczTabelaGrupy(grupa) {
+  const meczeGr = allMecze.filter(m => m.grupa === grupa);
+  const druzyny = {};
+  meczeGr.forEach(m => {
+    if (!druzyny[m.home]) druzyny[m.home] = {name:m.home, pkt:0, bramki:0, stracone:0, bilans:0, mecze:0, wygrane:0, remisy:0};
+    if (!druzyny[m.away]) druzyny[m.away] = {name:m.away, pkt:0, bramki:0, stracone:0, bilans:0, mecze:0, wygrane:0, remisy:0};
+  });
+  meczeGr.forEach(m => {
+    const w = allWyniki[m.id];
+    if (!w) return;
+    const h = druzyny[m.home], a = druzyny[m.away];
+    h.mecze++; a.mecze++;
+    h.bramki += w.home; h.stracone += w.away;
+    a.bramki += w.away; a.stracone += w.home;
+    if (w.home > w.away) { h.pkt+=3; h.wygrane++; }
+    else if (w.home < w.away) { a.pkt+=3; a.wygrane++; }
+    else { h.pkt+=1; a.pkt+=1; h.remisy++; a.remisy++; }
+  });
+  Object.values(druzyny).forEach(d => d.bilans = d.bramki - d.stracone);
+  return Object.values(druzyny).sort((a,b) => b.pkt-a.pkt || b.bilans-a.bilans || b.bramki-a.bramki);
+}
+
+function pobierzPozycje() {
+  const grupy = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+  const poz = {};
+  const trzecie = [];
+  grupy.forEach(g => {
+    const tab = obliczTabelaGrupy(g);
+    if (tab[0]) poz[g+'1'] = tab[0];
+    if (tab[1]) poz[g+'2'] = tab[1];
+    if (tab[2]) {
+      const d = {...tab[2], grupa:g};
+      poz[g+'3'] = d;
+      trzecie.push(d);
+    }
+    if (tab[3]) poz[g+'4'] = tab[3];
+  });
+  // Sortuj 3. miejsca i przydziel 8 najlepszych
+  trzecie.sort((a,b) => b.pkt-a.pkt || b.bilans-a.bilans || b.bramki-a.bramki);
+  const top8 = trzecie.slice(0,8);
+  poz['_top8trzecie'] = top8;
+  return poz;
+}
+
+function rozwijPozycje(klucz, poz) {
+  if (!klucz.startsWith('BEST3')) return poz[klucz];
+  // Przydziel najlepsze 3. miejsca do par
+  const top8 = poz['_top8trzecie'] || [];
+  // uproszczone: zwróć kolejne 3. miejsce z puli
+  const idx = parseInt(klucz.replace('BEST3_','').length % top8.length);
+  return top8[idx] || null;
+}
+
+function renderPuchar() {
+  const c = document.getElementById('puchar-body');
+  // Pokaż tabelki grupowe + pary 1/32
+  const grupy = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+  const wynikow = allMecze.filter(m => parseInt(m.id.replace('m','')) <= 72 && allWyniki[m.id]).length;
+
+  let html = '';
+
+  // Pary 1/32
+  html += '<div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">1/32 finału</div>';
+  html += '<div style="display:grid;gap:8px;margin-bottom:1.5rem">';
+  KLUCZ_PAR.forEach(par => {
+    const mecz = allMecze.find(m => m.id === par.mecz);
+    const w = allWyniki[par.mecz];
+    const score = w ? `<span style="font-family:var(--mono);font-weight:700;font-size:15px">${w.home}:${w.away}</span>` : '<span style="color:var(--text2);font-size:13px">—:—</span>';
+    const badge = w ? '<span class="badge b-green" style="font-size:11px">Koniec</span>' : '<span class="badge b-gray" style="font-size:11px">Nadchodzi</span>';
+    html += `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card)">
+      <span style="font-size:11px;color:var(--text2);min-width:70px">${par.data}</span>
+      <div style="flex:1;font-weight:500;font-size:13px">${esc(par.home)}</div>
+      <div style="text-align:center;min-width:52px">${score}</div>
+      <div style="flex:1;font-weight:500;font-size:13px;text-align:right">${esc(par.away)}</div>
+      ${badge}
     </div>`;
-  }).join("");
-  return `<div class="card"><h2><i class="ti ti-tournament" style="color:var(--blue)"></i> Ćwierćfinały</h2>${html}</div>`;
+  });
+  html += '</div>';
+
+  // Tabelki grupowe
+  html += `<div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Tabele grupowe (${wynikow}/72)</div>`;
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">';
+  grupy.forEach(g => {
+    const tab = obliczTabelaGrupy(g);
+    html += `<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <div style="background:var(--gray-bg);padding:5px 10px;font-weight:600;font-size:12px">Grupa ${g}</div>
+      <table style="width:100%;font-size:12px"><thead><tr>
+        <th style="padding:4px 8px">Drużyna</th>
+        <th style="text-align:center;padding:4px 3px">M</th>
+        <th style="text-align:center;padding:4px 3px">Pkt</th>
+        <th style="text-align:center;padding:4px 3px">Br</th>
+      </tr></thead><tbody>`;
+    tab.forEach((d,i) => {
+      const bg = i<2 ? 'background:rgba(21,128,61,.07)' : '';
+      html += `<tr style="${bg}">
+        <td style="padding:4px 8px;font-weight:${i<2?'500':'400'}">${i===0?'🥇':i===1?'🥈':i===2?'🔸':'  '} ${esc(d.name)}</td>
+        <td style="text-align:center;padding:4px 3px">${d.mecze}</td>
+        <td style="text-align:center;padding:4px 3px;font-weight:600">${d.pkt}</td>
+        <td style="text-align:center;padding:4px 3px;font-family:var(--mono);font-size:11px">${d.bramki}:${d.stracone}</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+  });
+  html += '</div>';
+  c.innerHTML = html;
 }
 
-function renderQFRules(){
-  return `<div class="card"><h2><i class="ti ti-book" style="color:var(--blue)"></i> Regulamin</h2>
-    <div class="ri"><div class="ric"><i class="ti ti-ball-football"></i></div><div><div class="rit">Wynik po 90 minutach</div><div class="rix">Typujemy wynik po regulaminowym czasie gry. Dogrywka i rzuty karne nie liczą się.</div></div></div>
-    <div class="ri"><div class="ric"><i class="ti ti-star"></i></div><div><div class="rit">Punktacja — Ćwierćfinał</div><div class="rix">3 pkt – dokładny wynik. 1 pkt – trafienie zwycięzcy lub remisu. +1 pkt bonus za trafiony awans przy remisie.</div></div></div>
-    <div class="ri"><div class="ric"><i class="ti ti-lock"></i></div><div><div class="rit">Ukrywanie typów</div><div class="rix">Typy są niewidoczne dla innych uczestników aż do momentu startu meczu.</div></div></div>
-  </div>`;
+// ─── ADMIN TYPY ──────────────────────────────────────────────────────────────
+let adminParsedTypy = {};
+
+function adminZaladujTypy() {
+  const nick = document.getElementById('admin-typ-nick').value;
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  const statusEl = document.getElementById('admin-typ-status');
+  const akcjeEl = document.getElementById('admin-typ-akcje');
+  const formEl = document.getElementById('admin-typ-form');
+  const podgladEl = document.getElementById('admin-typ-podglad');
+  if (!nick) { statusEl.innerHTML=''; akcjeEl.style.display='none'; formEl.style.display='none'; podgladEl.innerHTML=''; return; }
+  const maTypy = maTypyDlaKolejki(nick, k);
+  akcjeEl.style.display = 'block';
+  formEl.style.display = 'none';
+  adminParsedTypy = {};
+  document.getElementById('admin-typy-preview').innerHTML='';
+  document.getElementById('btn-admin-zapisz').style.display='none';
+  if (maTypy) {
+    statusEl.innerHTML=`<div class="badge b-green" style="margin-bottom:8px">✓ Kolejka ${k} – typy zapisane</div>`;
+    renderAdminTypyPodglad(nick, k);
+  } else {
+    statusEl.innerHTML=`<div class="badge b-gray" style="margin-bottom:8px">Kolejka ${k} – brak typów</div>`;
+    podgladEl.innerHTML='';
+  }
 }
 
-window.onQSC=function(mid){ const h=document.getElementById("bh-"+mid)?.value,a=document.getElementById("ba-"+mid)?.value,adv=document.getElementById("adv-"+mid); if(adv)adv.style.display=(h!==""&&a!==""&&parseInt(h)===parseInt(a))?"":"none"; };
-window.selQFAdv=function(mid,val){ QFS.localAdv[mid]=val; document.querySelectorAll("#adv-"+mid+" .chip").forEach(c=>c.classList.toggle("on",c.dataset.adv===val)); };
-window.saveQFBet=async function(mid){ const m=QFS.matches.find(x=>x.id===mid); if(!m||qfMatchStarted(m)){alert("Mecz już się rozpoczął.");return;} const h=parseInt(document.getElementById("bh-"+mid)?.value),a=parseInt(document.getElementById("ba-"+mid)?.value); if(isNaN(h)||isNaN(a)||h<0||a<0){alert("Podaj prawidłowe liczby.");return;} let adv=""; if(h===a){adv=QFS.localAdv[mid]||"";if(!adv){alert("Przy remisie wskaż kto awansuje.");return;}} const r=await gasApi("saveBet",{userId:QFS.session.userId,matchId:mid,home:h,away:a,advance:adv}); if(!r.ok){alert(r.error);return;} await loadQFData();renderQF(); };
+function renderAdminTypyPodglad(nick, k) {
+  const typy = allTypy[nick] || {};
+  const mecze = meczeDlaKolejki(k);
+  const podgladEl = document.getElementById('admin-typ-podglad');
+  let html='<table style="margin-top:10px"><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+  mecze.forEach(m => {
+    const t=typy[m.id], w=allWyniki[m.id];
+    const started = meczRozpoczety(m.date);
+    let pts='—', col='';
+    if (t && w && started) {
+      const {pkt:p} = obliczPktMecz(t, w, m.id, m);
+      pts = p>0?'+'+p:'0';
+      col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
+    }
+    // Admin widzi typy zawsze (bo musi móc je edytować)
+    html+=`<tr>
+      <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
+      <td class="mono" style="text-align:center">${t?t.home+':'+t.away:'—'}</td>
+      <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
+      <td class="mono" style="text-align:center;font-weight:600;${col}">${started?pts:'—'}</td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  podgladEl.innerHTML=html;
+}
 
-// ── Init QF ───────────────────────────────────
-(async()=>{
-  const saved=sessionStorage.getItem("m26q_sess");
-  if(saved){ try{ QFS.session=JSON.parse(saved); await loadQFData(); }catch(e){ QFS.session=null; } }
-})();
+async function adminOdblokuj() {
+  const nick = document.getElementById('admin-typ-nick').value;
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  if (!nick) return;
+  if (!confirm(`Odblokować typy kolejki ${k} dla "${nick}"? Uczestnik będzie mógł je ponownie wpisać.`)) return;
+  const msg = document.getElementById('admin-typ-msg');
+  msg.textContent='Odblokowywanie...';
+  try {
+    await apicall({action:'deleteTypyKolejka', payload: JSON.stringify({action:'deleteTypyKolejka', nick, kolejka:k})});
+    msg.className='ok'; msg.textContent='Odblokowano. Uczestnik może teraz wpisać typy.';
+    await loadAll(); adminZaladujTypy();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+function adminEdytujTypy() {
+  document.getElementById('admin-typ-form').style.display='block';
+  document.getElementById('admin-typy-paste').value='';
+  document.getElementById('admin-typy-preview').innerHTML='';
+  document.getElementById('btn-admin-zapisz').style.display='none';
+}
+
+function adminParsujTypy() {
+  const text = document.getElementById('admin-typy-paste').value;
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  const meczePuli = meczeDlaKolejki(k);
+  const {matched, unmatched, wynik} = parsujLinie(lines, meczePuli);
+  adminParsedTypy = wynik;
+  renderParsResult(matched, unmatched, 'admin-typy-preview');
+  document.getElementById('btn-admin-zapisz').style.display = matched.length?'inline-block':'none';
+}
+
+async function adminZapiszTypy() {
+  const nick = document.getElementById('admin-typ-nick').value;
+  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
+  if (!nick || !Object.keys(adminParsedTypy).length) return;
+  const msg = document.getElementById('admin-typ-msg');
+  msg.textContent='Zapisywanie...';
+  try {
+    // usuń stare typy
+    await apicall({action:'deleteTypyKolejka', payload: JSON.stringify({action:'deleteTypyKolejka', nick, kolejka:k})});
+    // zapisz nowe – admin używa partial:true żeby ominąć sprawdzanie duplikatów
+    const typy = adminParsedTypy;
+    const mecze = Object.keys(typy);
+    for (let i = 0; i < mecze.length; i += 6) {
+      const partial = {};
+      mecze.slice(i, i+6).forEach(key => partial[key] = typy[key]);
+      await apicall({action:'setTypy', payload: JSON.stringify({
+        action:'setTypy', nick, typy:partial, kolejka:k, partial:true
+      })});
+    }
+    msg.className='ok'; msg.textContent='Typy admina zapisane.';
+    document.getElementById('admin-typ-form').style.display='none';
+    await loadAll(); adminZaladujTypy();
+  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
+}
+
+function renderAdminNickSelect() {
+  const sel = document.getElementById('admin-typ-nick');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— wybierz —</option>' +
+    allUczestnicy.map(u=>`<option value="${esc(u.name)}">${esc(u.name)}</option>`).join('');
+}
+
+// ─── UTIL ─────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── START ────────────────────────────────────────────────────────────────────
+loadConfig();
+if (cfg) {
+  document.getElementById('cfg-overlay').style.display='none';
+  initApp();
+}
 </script>
 </body>
 </html>
