@@ -77,7 +77,6 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 </head>
 <body>
 
-<!-- CONFIG OVERLAY -->
 <div id="cfg-overlay">
   <div id="cfg-box">
     <h2>⚽ Strzałka FIFA 2026</h2>
@@ -108,7 +107,6 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 
 <main>
 
-<!-- MODAL TYPY -->
 <div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;padding:1rem;overflow-y:auto" onclick="if(event.target===this)closeModal()">
   <div style="background:var(--card);border-radius:var(--radius);max-width:600px;margin:2rem auto;padding:1.25rem">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
@@ -119,7 +117,6 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
-<!-- RANKING -->
 <div id="tab-ranking" class="section active">
   <div class="card">
     <div class="card-title">Ranking uczestników <span style="font-size:13px;font-weight:400;color:var(--text2)">(kliknij uczestnika, aby zobaczyć typy)</span></div>
@@ -127,7 +124,6 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
-<!-- MECZE -->
 <div id="tab-mecze" class="section">
   <div class="info">Wyniki wpisuje administrator. Brak możliwości ręcznej edycji wyników.</div>
   <div class="card">
@@ -135,7 +131,6 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
-<!-- TYPY -->
 <div id="tab-typy" class="section">
   <div class="card" id="typy-login-card">
     <div class="card-title">Moje typy</div>
@@ -161,14 +156,13 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
         <button class="btn" id="kbtn-3" onclick="pokazKolejke(3)">Kolejka 3</button>
         <button class="btn" id="kbtn-4" onclick="pokazKolejke(4)">⚡ Faza pucharna</button>
         <button class="btn" id="kbtn-5" onclick="pokazKolejke(5)">🏆 1/8 finału</button>
-        <button class="btn" id="kbtn-6" onclick="pokazKolejke(5)">🏆 1/4 finału</button>
+        <button class="btn" id="kbtn-6" onclick="pokazKolejke(6)">🏆 1/4 finału</button>
       </div>
       <div id="kolejka-content"></div>
     </div>
   </div>
 </div>
 
-<!-- FAZA PUCHARNA -->
 <div id="tab-puchar" class="section">
   <div class="card">
     <div class="card-title">🏆 Faza pucharowa – 1/32 finału</div>
@@ -184,7 +178,6 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
 </div>
 
 
-<!-- REGULAMIN -->
 <div id="tab-regulamin" class="section">
   <div class="card">
     <div class="card-title">⚽ Regulamin – faza pucharowa</div>
@@ -219,7 +212,6 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
   </div>
 </div>
 
-<!-- ADMIN -->
 <div id="tab-admin" class="section">
   <div class="card">
     <div class="card-title">Panel administratora</div>
@@ -326,7 +318,6 @@ function saveConfig() {
 }
 
 // ─── API CALLS ────────────────────────────────────────────────────────────────
-// API przez JSONP – jedyna metoda która działa z Apps Script bez serwera
 function apicall(params) {
   return new Promise((resolve, reject) => {
     const id = 'gs' + Date.now() + (Math.random()*1e6|0);
@@ -358,7 +349,6 @@ function apicall(params) {
     s.src = url;
     s.onerror = () => {
       if (done) return;
-      // Przy błędzie spróbuj jeszcze raz przez 3 sekundy
       setTimeout(() => {
         if (done) return;
         const s2 = document.createElement('script');
@@ -377,18 +367,15 @@ async function apiGet(action) {
 }
 
 async function apiPost(data) {
-  // Dziel setTypy na małe kawałki (max 6 typów = ~600 znaków URL)
   if (data.action === 'setTypy') {
     const typy = data.typy;
     const mecze = Object.keys(typy);
-    // Sprawdź czy już zapisane
     try {
       const check = await apicall({action: 'checkTypy', payload: JSON.stringify({
         action: 'checkTypy', nick: data.nick, kolejka: data.kolejka
       })});
       if (check && check.exists) return {ok: false, error: 'Typy kolejki ' + data.kolejka + ' już zapisane'};
     } catch(e) {}
-    // Zapisuj po 6 mecze
     for (let i = 0; i < mecze.length; i += 6) {
       const partial = {};
       mecze.slice(i, i+6).forEach(k => partial[k] = typy[k]);
@@ -406,11 +393,9 @@ async function apiPost(data) {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 async function initApp() {
-  // inicjalizuj arkusze + mecze (jednorazowo)
   await apiGet('init');
   await loadAll();
   renderAll();
-  // odświeżaj co 30 sekund
   setInterval(async () => { await loadAll(); renderAll(); }, 30000);
 }
 
@@ -424,10 +409,8 @@ async function loadAll() {
     ]);
     allMecze = mecze || [];
     allUczestnicy = (uczestnicy || []).map(u => ({...u, haslo: u.haslo||''}));
-    // wyniki: {mecz_id: {home, away}}
     allWyniki = {};
     (wyniki||[]).forEach(w => { allWyniki[w.mecz_id] = { home: Number(w.home), away: Number(w.away) }; });
-    // typy: {nick: {mecz_id: {home, away}}}
     allTypy = {};
     (typy||[]).forEach(t => {
       if (!allTypy[t.nick]) allTypy[t.nick] = {};
@@ -460,7 +443,6 @@ function czyMeczPucharowy(mid) {
 }
 
 function czyFinał(mid) {
-  // m101=mecz o 3. miejsce, m102=finał (przykładowe ID – admin doda)
   const nr = parseInt(String(mid).replace('m',''));
   return nr >= 101;
 }
@@ -469,7 +451,6 @@ function sprawdzAwans(awansTyp, homeTeam, awayTeam, awansReal) {
   if (!awansTyp || !awansReal) return false;
   const a = normKod(awansTyp);
   const r = normKod(awansReal);
-  // sprawdź po nazwie lub skrócie
   const homeKody = kodujDruzyne(homeTeam);
   const awayKody = kodujDruzyne(awayTeam);
   const realKody = kodujDruzyne(awansReal);
@@ -557,7 +538,7 @@ function pokazTypyModal(nick) {
   let html = '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
   allMecze.forEach(m => {
     const t = typy[m.id], w = allWyniki[m.id];
-    if (!t) return; // pomiń mecze bez typów
+    if (!t) return;
     const started = meczRozpoczety(m.date);
     let pts = '—', col = '';
     if (t && w && started) {
@@ -590,7 +571,6 @@ function closeModal() {
 function renderMecze() {
   const c = document.getElementById('mecze-body');
   if (!allMecze.length) { c.innerHTML='<div class="loading">Ładowanie meczów...</div>'; return; }
-  // grupuj po grupie
   const grupy = {};
   allMecze.forEach(m => { if(!grupy[m.grupa]) grupy[m.grupa]=[]; grupy[m.grupa].push(m); });
   let html = '';
@@ -612,7 +592,7 @@ function renderMecze() {
 }
 
 // ─── TYPY ─────────────────────────────────────────────────────────────────────
-let loggedNick = null; // zalogowany uczestnik
+let loggedNick = null;
 
 async function zalogujTypera() {
   const nick = document.getElementById('typ-nick').value.trim();
@@ -640,9 +620,8 @@ function wylogujTypera() {
   document.getElementById('typ-haslo').value = '';
 }
 
-// Kolejka 1: m01-m24, Kolejka 2: m25-m48, Kolejka 3: m49-m72
 function meczeDlaKolejki(k) {
-  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,999]};
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,96], 6: [97,999]};
   const [od, do_] = zakresy[k] || [1,24];
   return allMecze.filter(m => {
     const nr = parseInt(m.id.replace('m',''));
@@ -659,6 +638,7 @@ function maTypyDlaKolejki(nick, k) {
 function labelKolejki(k) {
   if (k===4) return '⚡ Faza pucharna';
   if (k===5) return '🏆 1/8 finału';
+  if (k===6) return '🏆 1/4 finału';
   return 'Kolejka '+k;
 }
 
@@ -674,9 +654,8 @@ async function zaladujTypy() {
   }
   statusEl.innerHTML='';
   document.getElementById('typy-kolejki').style.display='block';
-  // pokaż kolejkę 1 domyślnie lub pierwszą niezapisaną
   let domyslna = 1;
-  for (let k=1; k<=5; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
+  for (let k=1; k<=6; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
   pokazKolejke(domyslna);
 }
 
@@ -684,620 +663,80 @@ let aktywnaKolejka = 1;
 
 function pokazKolejke(k) {
   aktywnaKolejka = k;
-  // zaktualizuj przyciski
-  for (let i=1; i<=5; i++) {
+  for (let i=1; i<=6; i++) {
     const btn = document.getElementById('kbtn-'+i);
     if (!btn) continue;
-    const maTypy = maTypyDlaKolejki(typNick, i);
-    btn.className = 'btn' + (i===k?' primary':'');
-    btn.textContent = labelKolejki(i) + (maTypy?' ✓':'');
+    btn.className = (i===k) ? 'btn primary' : 'btn';
   }
+  
   const content = document.getElementById('kolejka-content');
-  const maTypy = maTypyDlaKolejki(typNick, k);
   const mecze = meczeDlaKolejki(k);
+  if (!mecze.length) { content.innerHTML = '<div class="loading">Brak meczów w tej kolejce.</div>'; return; }
+  
+  const zapisać_istnieje = maTypyDlaKolejki(typNick, k);
   const typy = allTypy[typNick] || {};
-
-  if (maTypy) {
-    // pokaż zapisane typy z wynikami
-    let html = `<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div class="card-title" style="margin-bottom:0">${labelKolejki(k)} – zapisane typy 🔒</div>
-    </div>`;
-    html += '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
-    let totalPkt = 0;
+  
+  let html = `<div class="card"><div class="card-title">${labelKolejki(k)}</div>`;
+  if (zapisać_istnieje) {
+    html += '<p class="ok">✓ Twoje typy dla tej kolejki zostały już zapisane.</p><table style="margin-top:10px">';
     mecze.forEach(m => {
-      const t = typy[m.id], w = allWyniki[m.id];
-      const started = meczRozpoczety(m.date);
-      const widoczny = started || (loggedNick && loggedNick === typNick);
-      let pts='—', col='';
-      if (t && w && started) {
-        const {pkt:p, typ:tp} = obliczPktMecz(t, w, m.id, m);
-        pts = p>0 ? '+'+p : '0';
-        col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
-        totalPkt += p;
-      }
-      const awansInfo = t && t.awans ? ` <span style="font-size:11px;color:var(--blue)">(→${t.awans})</span>` : '';
-      const typCell = t ? (widoczny ? `${t.home}:${t.away}${awansInfo}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty</span>') : '—';
-      html+=`<tr>
-        <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
-        <td class="mono" style="text-align:center">${typCell}</td>
-        <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
-        <td class="mono" style="text-align:center;font-weight:600;${col}">${started&&t&&w?pts:'—'}</td>
-      </tr>`;
+      const t = typy[m.id] || {home:'-', away:'-'};
+      html += `<tr><td>${esc(m.home)} - ${esc(m.away)}</td><td class="mono" style="text-align:right;font-weight:600">${t.home}:${t.away}</td></tr>`;
     });
-    html+=`</tbody></table><div style="text-align:right;margin-top:10px;font-weight:600">${labelKolejki(k)}: <span style="color:var(--green)">${totalPkt} pkt</span></div></div>`;
+    html += '</table></div>';
     content.innerHTML = html;
-  } else {
-    // pokaż formularz wklejania
-    content.innerHTML = `<div class="card">
-      <div class="card-title">Kolejka ${k} – wpisz typy</div>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:10px">
-        Wklej typy w formacie <code style="background:var(--gray-bg);padding:1px 6px;border-radius:4px;font-family:var(--mono)">KOD-KOD wynik:wynik</code> – po jednym meczu na linię.
-      </p>
-      <textarea id="typy-paste" rows="${k===4?'8':'12'}" style="width:100%;font-family:var(--mono);font-size:13px;line-height:1.8;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="${k===4?'m73 2:1\nm74 1:0\n...':'CZE-RPA 2:1\nSUI-BOS 2:0\n...'}"></textarea>
-      <div id="typy-preview" style="margin-top:12px"></div>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button class="btn" onclick="parsujTypy()">Sprawdź typy</button>
-        <button class="btn primary" id="btn-zapisz-typy" onclick="zapiszTypy()" style="display:none">Zapisz i zablokuj 🔒</button>
-      </div>
-      <p id="typy-msg" style="margin-top:8px"></p>
-    </div>`;
-  }
-}
-
-function normKod(s) {
-  return s.trim().toUpperCase()
-    .replace(/Ś/g,'S').replace(/Ź/g,'Z').replace(/Ż/g,'Z')
-    .replace(/Ń/g,'N').replace(/Ó/g,'O').replace(/Ą/g,'A')
-    .replace(/Ę/g,'E').replace(/Ć/g,'C').replace(/Ł/g,'L');
-}
-
-// Aliasy: angielskie/alternatywne skróty → polskie kody z bazy
-const ALIASY = {
-  // Grupa A
-  'MEX':'MEK', 'RSA':'RPA', 'KOR':'KOR', 'CZE':'CZE',
-  // Grupa B
-  'CAN':'CAN', 'BIH':'BOS', 'BOS':'BOS', 'QAT':'KAT', 'SUI':'SUI', 'SWI':'SUI',
-  // Grupa C
-  'BRA':'BRA', 'MAR':'MAR', 'HAI':'HAI', 'SCO':'SZK', 'SZO':'SZK',
-  // Grupa D
-  'USA':'USA', 'PAR':'PAR', 'AUS':'AUS', 'TUR':'TUR',
-  // Grupa E
-  'GER':'NIE', 'NED':'HOL', 'HOL':'HOL', 'EKW':'EKW', 'ECU':'EKW',
-  'CUW':'CUR', 'CUR':'CUR', 'CIV':'WKS', 'WKS':'WKS',
-  // Grupa F
-  'NED':'HOL', 'JPN':'JAP', 'JAP':'JAP', 'SWE':'SZW', 'TUN':'TUN',
-  // Grupa G
-  'BEL':'BEL', 'EGY':'EGP', 'EGP':'EGP', 'IRN':'IRN', 'NZL':'NEW',
-  'NEWZ':'NEWZ', 'NEW':'NEWZ', 'NZL':'NEWZ',
-  // Grupa H
-  'ESP':'HIS', 'HIS':'HIS', 'HISZ':'HIS', 'KSA':'ARB', 'ARB':'ARB',
-  'URU':'URU', 'CPV':'CAB', 'RZP':'CAB', 'CAB':'CAB',
-  // Grupa I
-  'FRA':'FRA', 'SEN':'SEN', 'IRQ':'IRK', 'IRK':'IRK', 'NOR':'NOR',
-  // Grupa J
-  'ARG':'ARG', 'ALG':'ALG', 'AUT':'AUT', 'JOR':'JOR',
-  // Grupa K
-  'POR':'POR', 'COD':'DRK', 'DRK':'DRK', 'UZB':'UZB', 'COL':'KOL', 'KOL':'KOL',
-  // Grupa L
-  'ENG':'ANG', 'ANG':'ANG', 'CRO':'CHR', 'CHR':'CHR', 'GHA':'GHA', 'PAN':'PAN',
-};
-
-function rozwijAlias(k) {
-  const n = normKod(k);
-  return ALIASY[n] || n;
-}
-
-function kodujDruzyne(name) {
-  const n = normKod(name);
-  return [n.substring(0,3), n.substring(0,4), n.replace(/\s/g,'').substring(0,3), n.replace(/\s/g,'').substring(0,4)];
-}
-
-function parsujLinie(lines, meczePuli) {
-  const matched=[], unmatched=[];
-  const wynik = {};
-  for (const line of lines) {
-    // obsługuje format mID wynik:wynik np. m73 2:1 (awans: Kanada)
-    const reMid = /^(m\d+)\s+(\d+)[:\-](\d+)(?:\s*\(awans:\s*([^)]+)\))?$/i;
-    const mMid = line.match(reMid);
-    if (mMid) {
-      const found = meczePuli.find(mc => mc.id.toLowerCase() === mMid[1].toLowerCase());
-      if (found) {
-        const awansMid = mMid[4] ? mMid[4].trim() : null;
-        wynik[found.id] = {home:parseInt(mMid[2]), away:parseInt(mMid[3]), awans:awansMid};
-        matched.push({line, mecz:found.home+' – '+found.away, gh:parseInt(mMid[2]), ga:parseInt(mMid[3]), awans:awansMid});
-      } else {
-        unmatched.push({line, reason:'nie znaleziono meczu '+mMid[1]});
-      }
-      continue;
-    }
-    // obsługuje separatory: vs, VS, -, –, przestrzeń
-    // obsługuje awans: KOD-KOD 1:1 (awans: Kanada) lub (awans: CAN)
-    const re = /^([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s*(?:vs\.?|VS\.?|–|-)\s*([A-ZĄĆĘŁŃÓŚŹŻ]{2,6})\s+(\d+)[:\-](\d+)(?:\s*\(?awans[:\s]+([^)\n]+?)\)?)?$/i;
-    const m = line.match(re);
-    if (!m) { unmatched.push({line, reason:'niepoprawny format'}); continue; }
-    const kH = rozwijAlias(m[1]);
-    const kA = rozwijAlias(m[2]);
-    const gh=parseInt(m[3]), ga=parseInt(m[4]);
-    const awans = m[5] ? m[5].trim() : null;
-
-    // szukaj po kodzie bazy
-    let found = meczePuli.find(mc => mc.kod && normKod(mc.kod) === kH+'-'+kA);
-    // szukaj po nazwie drużyny
-    if (!found) {
-      found = meczePuli.find(mc => {
-        const hk = kodujDruzyne(mc.home);
-        const ak = kodujDruzyne(mc.away);
-        return hk.includes(kH) && ak.includes(kA);
-      });
-    }
-    if (found) {
-      wynik[found.id] = {home:gh, away:ga, awans: awans||null};
-      matched.push({line, mecz:found.home+' – '+found.away, gh, ga, awans});
-    } else {
-      unmatched.push({line, reason:'nie znaleziono ('+kH+'-'+kA+')'});
-    }
-  }
-  return {matched, unmatched, wynik};
-}
-
-// Parsuje datę meczu np. "18.06 16:00" jako 2026
-function meczRozpoczety(dateStr) {
-  if (!dateStr) return false;
-  try {
-    // format ISO: 2026-06-11T20:00:00.000Z
-    if (String(dateStr).includes('T') || String(dateStr).includes('-202')) {
-      return new Date() >= new Date(dateStr);
-    }
-    // format DD.MM HH:MM
-    const parts = String(dateStr).match(/(\d+)\.(\d+)\s+(\d+):(\d+)/);
-    if (!parts) return false;
-    const d = new Date(2026, parseInt(parts[2])-1, parseInt(parts[1]), parseInt(parts[3]), parseInt(parts[4]));
-    return new Date() >= d;
-  } catch(e) { return false; }
-}
-
-function renderParsResult(matched, unmatched, previewId) {
-  let html='';
-  if (matched.length) {
-    html += `<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:var(--green);margin-bottom:6px">✓ Dopasowano ${matched.length} meczów</div>`;
-    html += '<table style="font-size:13px"><thead><tr><th>Wpisano</th><th>Mecz</th><th style="text-align:center">Typ</th></tr></thead><tbody>';
-    matched.forEach(r => {
-      html+=`<tr><td class="mono" style="color:var(--text2)">${esc(r.line)}</td><td>${esc(r.mecz)}</td><td class="mono" style="text-align:center;font-weight:600">${r.gh}:${r.ga}</td></tr>`;
-    });
-    html+='</tbody></table></div>';
-  }
-  if (unmatched.length) {
-    html += `<div><div style="font-size:13px;font-weight:500;color:var(--amber);margin-bottom:6px">⚠ Nie dopasowano ${unmatched.length} linii</div>`;
-    html += '<table style="font-size:13px"><thead><tr><th>Linia</th><th>Powód</th></tr></thead><tbody>';
-    unmatched.forEach(r => {
-      html+=`<tr><td class="mono">${esc(r.line)}</td><td style="color:var(--text2)">${r.reason}</td></tr>`;
-    });
-    html+='</tbody></table></div>';
-  }
-  document.getElementById(previewId).innerHTML = html;
-}
-
-function parsujTypy() {
-  const text = document.getElementById('typy-paste').value;
-  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
-  const meczePuli = meczeDlaKolejki(aktywnaKolejka);
-  const {matched, unmatched, wynik} = parsujLinie(lines, meczePuli);
-  parsedTypy = wynik;
-  renderParsResult(matched, unmatched, 'typy-preview');
-  document.getElementById('btn-zapisz-typy').style.display = matched.length?'inline-block':'none';
-  document.getElementById('typy-msg').textContent='';
-}
-
-async function zapiszTypy() {
-  if (!typNick || !Object.keys(parsedTypy).length) return;
-  const btn = document.getElementById('btn-zapisz-typy');
-  btn.disabled=true; btn.textContent='Zapisywanie...';
-  try {
-    const res = await apiPost({action:'setTypy', nick:typNick, typy:parsedTypy, kolejka:aktywnaKolejka});
-    if (res.ok) {
-      document.getElementById('typy-msg').className='ok';
-      document.getElementById('typy-msg').textContent='Zapisano! Typy zablokowane. 🔒';
-      await loadAll();
-      setTimeout(()=>pokazKolejke(aktywnaKolejka), 800);
-    } else {
-      document.getElementById('typy-msg').className='err';
-      document.getElementById('typy-msg').textContent=res.error||'Błąd zapisu.';
-      btn.disabled=false; btn.textContent='Zapisz i zablokuj 🔒';
-    }
-  } catch(e) {
-    document.getElementById('typy-msg').className='err';
-    document.getElementById('typy-msg').textContent='Błąd: '+e.message;
-    btn.disabled=false; btn.textContent='Zapisz i zablokuj 🔒';
-  }
-}
-
-// ─── ADMIN ────────────────────────────────────────────────────────────────────
-function verifyAdmin() {
-  const pass = document.getElementById('admin-pass').value;
-  if (!cfg || pass!==cfg.adminPass) {
-    document.getElementById('admin-login-msg').textContent='Błędne hasło.';
     return;
   }
-  adminVerified=true;
-  document.getElementById('admin-panel').style.display='block';
-  document.getElementById('admin-login-msg').textContent='';
-  renderAdminUczestnicy();
-  renderWynikSelect();
-}
-
-async function dodajUczestnika() {
-  const name=document.getElementById('nowy-ucz').value.trim();
-  const haslo=document.getElementById('nowy-ucz-haslo').value.trim();
-  const msg=document.getElementById('ucz-msg');
-  if (!name) { msg.className='err'; msg.textContent='Wpisz imię.'; return; }
-  if (!haslo) { msg.className='err'; msg.textContent='Wpisz hasło dla uczestnika.'; return; }
-  if (allUczestnicy.some(u=>u.name===name)) { msg.className='err'; msg.textContent='Uczestnik już istnieje.'; return; }
-  msg.textContent='Dodawanie...';
-  try {
-    await apiPost({action:'addUczestnik', name, haslo});
-    document.getElementById('nowy-ucz').value='';
-    document.getElementById('nowy-ucz-haslo').value='';
-    msg.className='ok'; msg.textContent=`Dodano: ${name} (hasło: ${haslo})`;
-    await loadAll(); renderAll();
-  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
-}
-
-function renderWynikSelect() {
-  const sel=document.getElementById('wynik-mecz');
-  if (!sel) return;
-  const cur=sel.value;
-  sel.innerHTML=allMecze.map(m=>`<option value="${m.id}">${esc(m.home)} – ${esc(m.away)} (${m.date||''})</option>`).join('');
-  if (cur) sel.value=cur;
-}
-
-async function zapiszWynik() {
-  const mid=document.getElementById('wynik-mecz').value;
-  const home=parseInt(document.getElementById('wynik-home').value);
-  const away=parseInt(document.getElementById('wynik-away').value);
-  const msg=document.getElementById('wynik-msg');
-  if (!mid) { msg.className='err'; msg.textContent='Wybierz mecz.'; return; }
-  if (isNaN(home)||isNaN(away)) { msg.className='err'; msg.textContent='Wpisz wynik.'; return; }
-  msg.textContent='Zapisywanie...';
-  try {
-    await apiPost({action:'setWynik', mecz_id:mid, home, away});
-    msg.className='ok'; msg.textContent=`Zapisano: ${home}:${away}`;
-    await loadAll(); renderAll();
-  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
-}
-
-function renderAdminUczestnicy() {
-  const c=document.getElementById('admin-uczestnicy');
-  if (!c) return;
-  if (!allUczestnicy.length) { c.innerHTML='<div class="loading">Brak uczestników.</div>'; return; }
-  const rows=allUczestnicy.map(u=>({name:u.name,haslo:u.haslo||'—',...obliczPkt(u.name)})).sort((a,b)=>b.pkt-a.pkt);
-  let html='<div id="admin-ucz-msg" style="margin-bottom:8px"></div>';
-  html+='<table><thead><tr><th>#</th><th>Uczestnik</th><th>Hasło</th><th style="text-align:center">Pkt</th><th style="text-align:center">Akcje</th></tr></thead><tbody>';
-  rows.forEach((r,i)=>{
-    html+=`<tr id="ucz-row-${i}">
-      <td style="font-size:16px">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</td>
-      <td style="font-weight:500"><span id="ucz-name-${i}">${esc(r.name)}</span></td>
-      <td style="font-size:13px;font-family:var(--mono)"><span id="ucz-haslo-${i}">${esc(r.haslo)}</span></td>
-      <td class="pts ${r.pkt>0?(r.t3>0?'p3':'p1'):'p0'}">${r.pkt}</td>
-      <td style="text-align:center;white-space:nowrap">
-        <button class="btn" style="padding:4px 10px;font-size:12px;margin-right:4px" title="Zmień nick" onclick="edytujUczestnika(${i},'${esc(r.name)}')">✏️</button>
-        <button class="btn" style="padding:4px 10px;font-size:12px;margin-right:4px;background:var(--blue-bg);color:var(--blue);border-color:var(--blue)" title="Zmień hasło" onclick="zmienHaslo(${i},'${esc(r.name)}')">🔑</button>
-        <button class="btn" style="padding:4px 10px;font-size:12px;background:var(--red-bg);color:var(--red);border-color:var(--red)" title="Usuń" onclick="usunUczestnika('${esc(r.name)}')">🗑️</button>
-      </td>
-    </tr>`;
-  });
-  html+='</tbody></table>';
-  c.innerHTML=html;
-}
-
-function zmienHaslo(i, name) {
-  const span = document.getElementById('ucz-haslo-'+i);
-  span.innerHTML = `<input type="text" id="edit-haslo-${i}" value="" style="width:100px;padding:3px 6px;font-size:13px" placeholder="nowe hasło" />
-    <button class="btn primary" style="padding:3px 8px;font-size:12px;margin-left:4px" onclick="zapiszHaslo(${i},'${esc(name)}')">Zapisz</button>
-    <button class="btn" style="padding:3px 8px;font-size:12px;margin-left:2px" onclick="renderAdminUczestnicy()">✕</button>`;
-}
-
-async function zapiszHaslo(i, name) {
-  const newHaslo = document.getElementById('edit-haslo-'+i).value.trim();
-  const msg = document.getElementById('admin-ucz-msg');
-  if (!newHaslo) { msg.className='err'; msg.textContent='Wpisz nowe hasło.'; return; }
-  try {
-    await apiPost({action:'setHaslo', name, haslo:newHaslo});
-    msg.className='ok'; msg.textContent=`Hasło zmienione dla: ${name}`;
-    await loadAll(); renderAll();
-  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
-}
-
-function edytujUczestnika(i, oldName) {
-  const span = document.getElementById('ucz-name-'+i);
-  const row  = document.getElementById('ucz-row-'+i);
-  // zamień na input
-  span.innerHTML = `<input type="text" id="edit-name-${i}" value="${esc(oldName)}" style="width:120px;padding:4px 8px;font-size:13px" />
-    <button class="btn primary" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="zapiszNazwe(${i},'${esc(oldName)}')">Zapisz</button>
-    <button class="btn" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="renderAdminUczestnicy()">Anuluj</button>`;
-}
-
-async function zapiszNazwe(i, oldName) {
-  const newName = document.getElementById('edit-name-'+i).value.trim();
-  const msg = document.getElementById('admin-ucz-msg');
-  if (!newName) { msg.className='err'; msg.textContent='Wpisz nową nazwę.'; return; }
-  if (newName===oldName) { renderAdminUczestnicy(); return; }
-  if (allUczestnicy.some(u=>u.name===newName)) { msg.className='err'; msg.textContent='Taka nazwa już istnieje.'; return; }
-  msg.className=''; msg.textContent='Zapisywanie...';
-  try {
-    await apiPost({action:'renameUczestnik', oldName, newName});
-    msg.className='ok'; msg.textContent='Zmieniono nazwę.';
-    await loadAll(); renderAll();
-  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
-}
-
-async function usunUczestnika(name) {
-  if (!confirm(`Usunąć uczestnika "${name}" wraz ze wszystkimi typami?`)) return;
-  const msg = document.getElementById('admin-ucz-msg');
-  msg.className=''; msg.textContent='Usuwanie...';
-  try {
-    await apiPost({action:'deleteUczestnik', name});
-    msg.className='ok'; msg.textContent='Usunięto: '+name;
-    await loadAll(); renderAll();
-  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
-}
-
-
-// ─── FAZA PUCHARNA ────────────────────────────────────────────────────────────
-
-// Pary 1/32 finału FIFA 2026 (rzeczywiste)
-const KLUCZ_PAR = [
-  {home:'Rep. Płd. Afryki', away:'Kanada',              data:'28.06 21:00', mecz:'m73'},
-  {home:'Brazylia',          away:'Japonia',              data:'29.06 19:00', mecz:'m74'},
-  {home:'Niemcy',            away:'Paragwaj',             data:'29.06 22:30', mecz:'m75'},
-  {home:'Holandia',          away:'Maroko',               data:'30.06 03:00', mecz:'m76'},
-  {home:'W. Kości Słon.',    away:'Norwegia',             data:'30.06 19:00', mecz:'m77'},
-  {home:'Francja',           away:'Szwecja',              data:'30.06 23:00', mecz:'m78'},
-  {home:'Meksyk',            away:'Ekwador',              data:'01.07 03:00', mecz:'m79'},
-  {home:'Anglia',            away:'DR Konga',             data:'01.07 18:00', mecz:'m80'},
-  {home:'Belgia',            away:'Senegal',              data:'01.07 22:00', mecz:'m81'},
-  {home:'USA',               away:'Bośnia i Herceg.',     data:'02.07 02:00', mecz:'m82'},
-  {home:'Hiszpania',         away:'Austria',              data:'02.07 21:00', mecz:'m83'},
-  {home:'Portugalia',        away:'Chorwacja',            data:'03.07 01:00', mecz:'m84'},
-  {home:'Szwajcaria',        away:'Algieria',             data:'03.07 05:00', mecz:'m85'},
-  {home:'Australia',         away:'Egipt',                data:'03.07 20:00', mecz:'m86'},
-  {home:'Argentyna',         away:'Rep. Ziel. Przylądka', data:'04.07 00:00', mecz:'m87'},
-  {home:'Kolumbia',          away:'Ghana',                data:'04.07 03:30', mecz:'m88'},
-];
-
-function obliczTabelaGrupy(grupa) {
-  const meczeGr = allMecze.filter(m => m.grupa === grupa);
-  const druzyny = {};
-  meczeGr.forEach(m => {
-    if (!druzyny[m.home]) druzyny[m.home] = {name:m.home, pkt:0, bramki:0, stracone:0, bilans:0, mecze:0, wygrane:0, remisy:0};
-    if (!druzyny[m.away]) druzyny[m.away] = {name:m.away, pkt:0, bramki:0, stracone:0, bilans:0, mecze:0, wygrane:0, remisy:0};
-  });
-  meczeGr.forEach(m => {
-    const w = allWyniki[m.id];
-    if (!w) return;
-    const h = druzyny[m.home], a = druzyny[m.away];
-    h.mecze++; a.mecze++;
-    h.bramki += w.home; h.stracone += w.away;
-    a.bramki += w.away; a.stracone += w.home;
-    if (w.home > w.away) { h.pkt+=3; h.wygrane++; }
-    else if (w.home < w.away) { a.pkt+=3; a.wygrane++; }
-    else { h.pkt+=1; a.pkt+=1; h.remisy++; a.remisy++; }
-  });
-  Object.values(druzyny).forEach(d => d.bilans = d.bramki - d.stracone);
-  return Object.values(druzyny).sort((a,b) => b.pkt-a.pkt || b.bilans-a.bilans || b.bramki-a.bramki);
-}
-
-function pobierzPozycje() {
-  const grupy = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-  const poz = {};
-  const trzecie = [];
-  grupy.forEach(g => {
-    const tab = obliczTabelaGrupy(g);
-    if (tab[0]) poz[g+'1'] = tab[0];
-    if (tab[1]) poz[g+'2'] = tab[1];
-    if (tab[2]) {
-      const d = {...tab[2], grupa:g};
-      poz[g+'3'] = d;
-      trzecie.push(d);
-    }
-    if (tab[3]) poz[g+'4'] = tab[3];
-  });
-  // Sortuj 3. miejsca i przydziel 8 najlepszych
-  trzecie.sort((a,b) => b.pkt-a.pkt || b.bilans-a.bilans || b.bramki-a.bramki);
-  const top8 = trzecie.slice(0,8);
-  poz['_top8trzecie'] = top8;
-  return poz;
-}
-
-function rozwijPozycje(klucz, poz) {
-  if (!klucz.startsWith('BEST3')) return poz[klucz];
-  // Przydziel najlepsze 3. miejsca do par
-  const top8 = poz['_top8trzecie'] || [];
-  // uproszczone: zwróć kolejne 3. miejsce z puli
-  const idx = parseInt(klucz.replace('BEST3_','').length % top8.length);
-  return top8[idx] || null;
-}
-
-function renderPuchar() {
-  const c = document.getElementById('puchar-body');
-  // Pokaż tabelki grupowe + pary 1/32
-  const grupy = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-  const wynikow = allMecze.filter(m => parseInt(m.id.replace('m','')) <= 72 && allWyniki[m.id]).length;
-
-  let html = '';
-
-  // Pary 1/32
-  html += '<div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">1/32 finału</div>';
-  html += '<div style="display:grid;gap:8px;margin-bottom:1.5rem">';
-  KLUCZ_PAR.forEach(par => {
-    const mecz = allMecze.find(m => m.id === par.mecz);
-    const w = allWyniki[par.mecz];
-    const score = w ? `<span style="font-family:var(--mono);font-weight:700;font-size:15px">${w.home}:${w.away}</span>` : '<span style="color:var(--text2);font-size:13px">—:—</span>';
-    const badge = w ? '<span class="badge b-green" style="font-size:11px">Koniec</span>' : '<span class="badge b-gray" style="font-size:11px">Nadchodzi</span>';
-    html += `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card)">
-      <span style="font-size:11px;color:var(--text2);min-width:70px">${par.data}</span>
-      <div style="flex:1;font-weight:500;font-size:13px">${esc(par.home)}</div>
-      <div style="text-align:center;min-width:52px">${score}</div>
-      <div style="flex:1;font-weight:500;font-size:13px;text-align:right">${esc(par.away)}</div>
-      ${badge}
+  
+  // formularz do wprowadzania typów
+  html += '<form id="form-typy" onsubmit="zapiszTypyUczestnika(event)">';
+  mecze.forEach(m => {
+    html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:14px;font-weight:500">${esc(m.home)} - ${esc(m.away)}</span>
+      <div style="display:flex;align-items:center;gap:4px">
+        <input type="number" name="m_${m.id}_home" min="0" max="20" required style="width:45px;text-align:center;padding:4px" />
+        <span>:</span>
+        <input type="number" name="m_${m.id}_away" min="0" max="20" required style="width:45px;text-align:center;padding:4px" />
+      </div>
     </div>`;
   });
-  html += '</div>';
-
-  // Tabelki grupowe
-  html += `<div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Tabele grupowe (${wynikow}/72)</div>`;
-  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">';
-  grupy.forEach(g => {
-    const tab = obliczTabelaGrupy(g);
-    html += `<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
-      <div style="background:var(--gray-bg);padding:5px 10px;font-weight:600;font-size:12px">Grupa ${g}</div>
-      <table style="width:100%;font-size:12px"><thead><tr>
-        <th style="padding:4px 8px">Drużyna</th>
-        <th style="text-align:center;padding:4px 3px">M</th>
-        <th style="text-align:center;padding:4px 3px">Pkt</th>
-        <th style="text-align:center;padding:4px 3px">Br</th>
-      </tr></thead><tbody>`;
-    tab.forEach((d,i) => {
-      const bg = i<2 ? 'background:rgba(21,128,61,.07)' : '';
-      html += `<tr style="${bg}">
-        <td style="padding:4px 8px;font-weight:${i<2?'500':'400'}">${i===0?'🥇':i===1?'🥈':i===2?'🔸':'  '} ${esc(d.name)}</td>
-        <td style="text-align:center;padding:4px 3px">${d.mecze}</td>
-        <td style="text-align:center;padding:4px 3px;font-weight:600">${d.pkt}</td>
-        <td style="text-align:center;padding:4px 3px;font-family:var(--mono);font-size:11px">${d.bramki}:${d.stracone}</td>
-      </tr>`;
-    });
-    html += '</tbody></table></div>';
-  });
-  html += '</div>';
-  c.innerHTML = html;
+  html += '<button type="submit" class="btn primary" style="width:100%;margin-top:15px">Zapisz moje typy</button></form><p id="typy-save-msg" style="margin-top:8px"></p></div>';
+  content.innerHTML = html;
 }
 
-// ─── ADMIN TYPY ──────────────────────────────────────────────────────────────
-let adminParsedTypy = {};
-
-function adminZaladujTypy() {
-  const nick = document.getElementById('admin-typ-nick').value;
-  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
-  const statusEl = document.getElementById('admin-typ-status');
-  const akcjeEl = document.getElementById('admin-typ-akcje');
-  const formEl = document.getElementById('admin-typ-form');
-  const podgladEl = document.getElementById('admin-typ-podglad');
-  if (!nick) { statusEl.innerHTML=''; akcjeEl.style.display='none'; formEl.style.display='none'; podgladEl.innerHTML=''; return; }
-  const maTypy = maTypyDlaKolejki(nick, k);
-  akcjeEl.style.display = 'block';
-  formEl.style.display = 'none';
-  adminParsedTypy = {};
-  document.getElementById('admin-typy-preview').innerHTML='';
-  document.getElementById('btn-admin-zapisz').style.display='none';
-  if (maTypy) {
-    statusEl.innerHTML=`<div class="badge b-green" style="margin-bottom:8px">✓ Kolejka ${k} – typy zapisane</div>`;
-    renderAdminTypyPodglad(nick, k);
-  } else {
-    statusEl.innerHTML=`<div class="badge b-gray" style="margin-bottom:8px">Kolejka ${k} – brak typów</div>`;
-    podgladEl.innerHTML='';
+async function zapiszTypyUczestnika(e) {
+  e.preventDefault();
+  const msg = document.getElementById('typy-save-msg');
+  msg.innerHTML = '<span class="spinner"></span> Zapisywanie...';
+  
+  const formData = new FormData(e.target);
+  const typy = {};
+  for (let [key, val] of formData.entries()) {
+    if (key.startsWith('m_')) {
+      const parts = key.split('_');
+      const mid = parts[1];
+      const type = parts[2]; // home lub away
+      if (!typy[mid]) typy[mid] = {};
+      typy[mid][type] = Number(val);
+    }
   }
-}
-
-function renderAdminTypyPodglad(nick, k) {
-  const typy = allTypy[nick] || {};
-  const mecze = meczeDlaKolejki(k);
-  const podgladEl = document.getElementById('admin-typ-podglad');
-  let html='<table style="margin-top:10px"><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
-  mecze.forEach(m => {
-    const t=typy[m.id], w=allWyniki[m.id];
-    const started = meczRozpoczety(m.date);
-    let pts='—', col='';
-    if (t && w && started) {
-      const {pkt:p} = obliczPktMecz(t, w, m.id, m);
-      pts = p>0?'+'+p:'0';
-      col = p>=3?'color:var(--green)':p>0?'color:var(--amber)':'color:var(--text2)';
-    }
-    // Admin widzi typy zawsze (bo musi móc je edytować)
-    html+=`<tr>
-      <td style="font-size:13px">${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
-      <td class="mono" style="text-align:center">${t?t.home+':'+t.away:'—'}</td>
-      <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
-      <td class="mono" style="text-align:center;font-weight:600;${col}">${started?pts:'—'}</td>
-    </tr>`;
-  });
-  html+='</tbody></table>';
-  podgladEl.innerHTML=html;
-}
-
-async function adminOdblokuj() {
-  const nick = document.getElementById('admin-typ-nick').value;
-  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
-  if (!nick) return;
-  if (!confirm(`Odblokować typy kolejki ${k} dla "${nick}"? Uczestnik będzie mógł je ponownie wpisać.`)) return;
-  const msg = document.getElementById('admin-typ-msg');
-  msg.textContent='Odblokowywanie...';
+  
   try {
-    await apicall({action:'deleteTypyKolejka', payload: JSON.stringify({action:'deleteTypyKolejka', nick, kolejka:k})});
-    msg.className='ok'; msg.textContent='Odblokowano. Uczestnik może teraz wpisać typy.';
-    await loadAll(); adminZaladujTypy();
-  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
-}
-
-function adminEdytujTypy() {
-  document.getElementById('admin-typ-form').style.display='block';
-  document.getElementById('admin-typy-paste').value='';
-  document.getElementById('admin-typy-preview').innerHTML='';
-  document.getElementById('btn-admin-zapisz').style.display='none';
-}
-
-function adminParsujTypy() {
-  const text = document.getElementById('admin-typy-paste').value;
-  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
-  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
-  const meczePuli = meczeDlaKolejki(k);
-  const {matched, unmatched, wynik} = parsujLinie(lines, meczePuli);
-  adminParsedTypy = wynik;
-  renderParsResult(matched, unmatched, 'admin-typy-preview');
-  document.getElementById('btn-admin-zapisz').style.display = matched.length?'inline-block':'none';
-}
-
-async function adminZapiszTypy() {
-  const nick = document.getElementById('admin-typ-nick').value;
-  const k = parseInt(document.getElementById('admin-typ-kolejka').value);
-  if (!nick || !Object.keys(adminParsedTypy).length) return;
-  const msg = document.getElementById('admin-typ-msg');
-  msg.textContent='Zapisywanie...';
-  try {
-    // usuń stare typy
-    await apicall({action:'deleteTypyKolejka', payload: JSON.stringify({action:'deleteTypyKolejka', nick, kolejka:k})});
-    // zapisz nowe – admin używa partial:true żeby ominąć sprawdzanie duplikatów
-    const typy = adminParsedTypy;
-    const mecze = Object.keys(typy);
-    for (let i = 0; i < mecze.length; i += 6) {
-      const partial = {};
-      mecze.slice(i, i+6).forEach(key => partial[key] = typy[key]);
-      await apicall({action:'setTypy', payload: JSON.stringify({
-        action:'setTypy', nick, typy:partial, kolejka:k, partial:true
-      })});
+    const res = await apiPost({
+      action: 'setTypy',
+      nick: typNick,
+      kolejka: aktywnaKolejka,
+      typy: typy
+    });
+    if (res.ok) {
+      msg.className = 'ok';
+      msg.textContent = 'Typy zostały pomyślnie zapisane!';
+      await loadAll();
+      renderAll();
+      pokazKolejke(aktywnaKolejka);
+    } else {
+      msg.className = 'err';
+      msg.textContent = 'Błąd: ' + (res.error || 'Nieznany błąd');
     }
-    msg.className='ok'; msg.textContent='Typy admina zapisane.';
-    document.getElementById('admin-typ-form').style.display='none';
-    await loadAll(); adminZaladujTypy();
-  } catch(e) { msg.className='err'; msg.textContent='Błąd: '+e.message; }
-}
-
-function renderAdminNickSelect() {
-  const sel = document.getElementById('admin-typ-nick');
-  if (!sel) return;
-  sel.innerHTML = '<option value="">— wybierz —</option>' +
-    allUczestnicy.map(u=>`<option value="${esc(u.name)}">${esc(u.name)}</option>`).join('');
-}
-
-// ─── UTIL ─────────────────────────────────────────────────────────────────────
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ─── START ────────────────────────────────────────────────────────────────────
-loadConfig();
-if (cfg) {
-  document.getElementById('cfg-overlay').style.display='none';
-  initApp();
-}
-</script>
-</body>
-</html>
+  } catch(err) {
+    msg.
