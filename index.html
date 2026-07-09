@@ -1,1 +1,544 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strzałka ⚽ FIFA 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600&family=JetBrains+Mono:wght=400;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --green:#16a34a; --green-bg:#dcfce7;
+  --amber:#d97706; --amber-bg:#fef3c7;
+  --red:#dc2626;   --red-bg:#fee2e2;
+  --blue:#2563eb;  --blue-bg:#dbeafe;
+  --gray:#6b7280;  --gray-bg:#f3f4f6;
+  --border:#e5e7eb; --text:#111827; --text2:#6b7280;
+  --bg:#f9fafb; --card:#ffffff;
+  --radius:10px;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+header{background:#15803d;color:#fff;padding:.9rem 1.25rem;display:flex;align-items:center;gap:10px;}
+header .logo{font-size:21px;font-weight:600;letter-spacing:-.5px;}
+header .sub{font-size:13px;opacity:.75;margin-left:auto;}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto;}
+.tab-btn{padding:11px 16px;font-size:14px;font-family:var(--sans);font-weight:500;color:var(--text2);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:#15803d;border-bottom-color:#15803d;}
+main{max-width:720px;margin:0 auto;padding:1.25rem;}
+.section{display:none;}.section.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;}
+.card-title{font-size:15px;font-weight:600;margin-bottom:1rem;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{text-align:left;padding:8px 10px;color:var(--text2);font-weight:500;font-size:13px;border-bottom:1px solid var(--border);}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+.mono{font-family:var(--mono);font-size:13px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:500;}
+.b-green{background:var(--green-bg);color:var(--green);}
+.b-amber{background:var(--amber-bg);color:var(--amber);}
+.b-gray{background:var(--gray-bg);color:var(--gray);}
+.pts{font-family:var(--mono);font-weight:600;font-size:16px;text-align:center;}
+.pts.p3{color:var(--green);}.pts.p1{color:var(--amber);}.pts.p0{color:var(--text2);}
+.match-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;}
+.match-row:last-child{border-bottom:none;}
+.match-teams{flex:1;font-weight:500;}
+.match-score{font-family:var(--mono);min-width:52px;text-align:center;font-size:14px;}
+label.fl{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:4px;}
+input[type=text],input[type=number],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--card);color:var(--text);transition:border-color .15s;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#15803d;box-shadow:0 0 0 3px rgba(21,128,61,.1);}
+button.btn{padding:8px 18px;border-radius:8px;border:1px solid var(--border);font-size:14px;font-family:var(--sans);font-weight:500;cursor:pointer;background:var(--card);color:var(--text);transition:background .15s;}
+button.btn:hover{background:var(--gray-bg);}
+button.btn.primary{background:#15803d;color:#fff;border-color:#15803d;}
+button.btn.primary:hover{background:#166534;}
+.row{display:flex;gap:8px;align-items:flex-end;}.row>*{flex:1;}.row>button{flex:0 0 auto;}
+.info{background:var(--blue-bg);color:var(--blue);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1rem;}
+.ok{color:var(--green);font-size:13px;margin-top:6px;}
+.err{color:var(--red);font-size:13px;margin-top:6px;}
+.loading{color:var(--text2);font-size:14px;padding:.75rem 0;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#cfg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;}
+#cfg-box{background:var(--card);border-radius:var(--radius);padding:1.5rem;max-width:400px;width:100%;box-shadow:0 10px 25px -5px rgba(0,0,0,0.3);}
+#cfg-box h2{font-size:18px;font-weight:600;margin-bottom:.4rem;}
+#cfg-box p{font-size:13px;color:var(--text2);margin-bottom:1rem;}
+</style>
+</head>
+<body>
 
+<div id="cfg-overlay" style="display:none;">
+  <div id="cfg-box">
+    <h2>⚽ Strzałka FIFA 2026</h2>
+    <p>Pierwsze uruchomienie – ustaw hasło administratora.</p>
+    <div style="margin-bottom:10px;">
+      <label class="fl">Hasło administratora</label>
+      <input type="text" id="cfg-pass" placeholder="np. waldek123" maxlength="30" />
+    </div>
+    <button class="btn primary" onclick="saveConfig()" style="width:100%;margin-top:8px">Uruchom aplikację</button>
+    <p id="cfg-msg" class="err"></p>
+  </div>
+</div>
+
+<header>
+  <span>⚽</span>
+  <span class="logo">Strzałka FIFA 2026</span>
+  <span class="sub" id="hdr-sub"></span>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('ranking')">🏆 Tabela</button>
+  <button class="tab-btn" onclick="showTab('mecze')">⚽ Mecze</button>
+  <button class="tab-btn" onclick="showTab('typy')">📋 Moje typy</button>
+  <button class="tab-btn" onclick="showTab('puchar')">🏆 Faza pucharna</button>
+  <button class="tab-btn" onclick="showTab('regulamin')">📜 Regulamin</button>
+  <button class="tab-btn" onclick="showTab('admin')">🔧 Admin</button>
+</div>
+
+<main>
+
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;padding:1rem;overflow-y:auto" onclick="if(event.target===this)closeModal()">
+  <div style="background:var(--card);border-radius:var(--radius);max-width:600px;margin:2rem auto;padding:1.25rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div class="card-title" id="modal-title" style="margin-bottom:0">Typy</div>
+      <button class="btn" style="padding:4px 12px" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div id="tab-ranking" class="section active">
+  <div class="card">
+    <div class="card-title">Ranking uczestników <span style="font-size:13px;font-weight:400;color:var(--text2)">(kliknij uczestnika, aby zobaczyć typy)</span></div>
+    <div id="ranking-body"><div class="loading"><span class="spinner"></span>Ładowanie tabeli...</div></div>
+  </div>
+</div>
+
+<div id="tab-mecze" class="section">
+  <div class="card">
+    <div id="mecze-body"><div class="loading"><span class="spinner"></span>Ładowanie meczów...</div></div>
+  </div>
+</div>
+
+<div id="tab-typy" class="section">
+  <div class="card" id="typy-login-card">
+    <div class="card-title">Moje typy</div>
+    <div style="margin-bottom:10px">
+      <label class="fl">Twoje imię / nick</label>
+      <input type="text" id="typ-nick" placeholder="np. Waldek" maxlength="30" style="margin-bottom:8px" />
+      <label class="fl">Hasło</label>
+      <input type="password" id="typ-haslo" placeholder="hasło od administratora" maxlength="30" />
+    </div>
+    <button class="btn primary" onclick="zalogujTypera()" style="width:100%">Zaloguj się</button>
+    <div id="typy-status" style="margin-top:8px"></div>
+  </div>
+
+  <div id="typy-zalogowany" style="display:none">
+    <div class="card" style="padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-weight:500">👤 <span id="typy-logged-name"></span></span>
+      <button class="btn" style="padding:4px 12px;font-size:13px" onclick="wylogujTypera()">Wyloguj</button>
+    </div>
+    <div id="typy-kolejki">
+      <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+        <button class="btn" id="kbtn-1" onclick="pokazKolejke(1)">Kolejka 1</button>
+        <button class="btn" id="kbtn-2" onclick="pokazKolejke(2)">Kolejka 2</button>
+        <button class="btn" id="kbtn-3" onclick="pokazKolejke(3)">Kolejka 3</button>
+        <button class="btn" id="kbtn-4" onclick="pokazKolejke(4)">⚡ Faza pucharna</button>
+        <button class="btn" id="kbtn-5" onclick="pokazKolejke(5)">🏆 1/8 finału</button>
+        <button class="btn" id="kbtn-6" onclick="pokazKolejke(6)">🏆 1/4 finału</button>
+      </div>
+      <div id="kolejka-content"></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-puchar" class="section">
+  <div class="card">
+    <div class="card-title">🏆 Faza pucharowa</div>
+    <div id="puchar-body"><div class="info">Zestawienie par generuje się automatycznie na podstawie wpisanych wyników.</div></div>
+  </div>
+</div>
+
+<div id="tab-regulamin" class="section">
+  <div class="card">
+    <div class="card-title">⚽ Regulamin aplikacji</div>
+    <p>1. Wszystkie mecze typujemy na regulaminowy czas gry (90 minut wraz z doliczonym czasem).</p>
+    <p style="margin-top:6px">2. Dokładny wynik = 3 pkt. Trafiony rezultat (zwycięstwo/remis) = 1 pkt.</p>
+    <p style="margin-top:6px">3. Typy są <strong>całkowicie ukryte</strong> dla innych graczy do momentu rozpoczęcia konkretnego meczu.</p>
+  </div>
+</div>
+
+<div id="tab-admin" class="section">
+  <div class="card">
+    <div class="card-title">Panel administratora</div>
+    <div class="row">
+      <input type="password" id="admin-pass" placeholder="Hasło admina..." />
+      <button class="btn primary" onclick="verifyAdmin()">Zaloguj</button>
+    </div>
+    <p id="admin-login-msg" class="err"></p>
+  </div>
+
+  <div id="admin-panel" style="display:none">
+    <div class="card">
+      <div class="card-title">Dodaj uczestnika</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div><label class="fl">Imię / nick</label><input type="text" id="nowy-ucz" /></div>
+        <div><label class="fl">Hasło</label><input type="text" id="nowy-ucz-haslo" /></div>
+      </div>
+      <button class="btn primary" onclick="dodajUczestnika()">Dodaj</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Wpisz wynik meczu</div>
+      <div style="margin-bottom:8px"><select id="wynik-mecz"></select></div>
+      <div style="display:flex;gap:10px;margin-bottom:8px">
+        <div style="flex:1"><input type="number" id="wynik-home" placeholder="Gospodarze" /></div>
+        <div style="flex:1"><input type="number" id="wynik-away" placeholder="Goście" /></div>
+      </div>
+      <button class="btn primary" onclick="zapiszWynik()">Zapisz wynik</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Uczestnicy systemowi</div>
+      <div id="admin-uczestnicy"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxWoKqY23evFiFgIzuLpwwadvssW_Z41IrxxbmWEKQ7TWhxdWOJo2Dro7GGb6e_4rcm/exec';
+
+let allMecze = [], allUczestnicy = [], allWyniki = {}, allTypy = {};
+let adminVerified = false;
+let typNick = '';
+let cfg = null;
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+function loadConfig() {
+  try { 
+    const r = localStorage.getItem('strzalka_cfg2'); 
+    if(r) {
+      cfg = JSON.parse(r);
+      if(cfg && cfg.adminPass && cfg.adminPass.trim() !== "") return true; 
+    }
+  } catch(e){}
+  localStorage.removeItem('strzalka_cfg2');
+  return false;
+}
+
+function saveConfig() {
+  const pass = document.getElementById('cfg-pass').value.trim();
+  if (!pass) { document.getElementById('cfg-msg').textContent = 'Wpisz hasło.'; return; }
+  cfg = { adminPass: pass };
+  localStorage.setItem('strzalka_cfg2', JSON.stringify(cfg));
+  document.getElementById('cfg-overlay').style.display = 'none';
+  initApp();
+}
+
+// ─── API CALLS (POPRAWIONE ZAPISYWANIE Z PODZIAŁEM PACZEK I LOCKIEM) ──────────
+function apicall(params) {
+  return new Promise((resolve, reject) => {
+    const id = 'gs' + Date.now() + (Math.random()*1e6|0);
+    let done = false;
+    window[id] = (data) => {
+      if (done) return; done = true; delete window[id];
+      const s = document.getElementById(id); if (s) s.parentNode.removeChild(s);
+      resolve(data);
+    };
+    const url = API + '?' + new URLSearchParams({...params, callback: id});
+    const s = document.createElement('script');
+    s.id = id; s.async = true; s.src = url;
+    s.onerror = () => { done = true; reject(new Error('Błąd API')); };
+    document.head.appendChild(s);
+  });
+}
+
+async function apiGet(action) { return apicall({action}); }
+
+async function apiPost(data) {
+  if (data.action === 'setTypy') {
+    const typy = data.typy;
+    const mecze = Object.keys(typy);
+    try {
+      const check = await apicall({action: 'checkTypy', payload: JSON.stringify({
+        action: 'checkTypy', nick: data.nick, kolejka: data.kolejka
+      })});
+      if (check && check.exists) return {ok: false, error: 'Typy tej kolejki zostały już wcześniej zapisane!'};
+    } catch(e) {}
+    
+    for (let i = 0; i < mecze.length; i += 6) {
+      const partial = {};
+      mecze.slice(i, i+6).forEach(k => partial[k] = typy[k]);
+      try {
+        await apicall({action: 'setTypy', payload: JSON.stringify({
+          action: 'setTypy', nick: data.nick, typy: partial,
+          kolejka: data.kolejka, partial: i > 0
+        })});
+      } catch(e) { return {ok: false, error: e.message}; }
+    }
+    return {ok: true};
+  }
+  return apicall({action: data.action, payload: JSON.stringify(data)});
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+async function initApp() {
+  await apiGet('init');
+  await loadAll();
+  renderAll();
+  setInterval(async () => { await loadAll(); renderAll(); }, 30000);
+}
+
+async function loadAll() {
+  try {
+    const [mecze, uczestnicy, wyniki, typy] = await Promise.all([
+      apiGet('getMecze'),
+      apiGet('getUczestnicy'),
+      apiGet('getWyniki'),
+      apiGet('getTypy'),
+    ]);
+    allMecze = mecze || [];
+    allUczestnicy = (uczestnicy || []).map(u => ({...u, haslo: u.haslo||''}));
+    allWyniki = {};
+    (wyniki||[]).forEach(w => { allWyniki[w.mecz_id] = { home: Number(w.home), away: Number(w.away) }; });
+    allTypy = {};
+    (typy||[]).forEach(t => {
+      if (!allTypy[t.nick]) allTypy[t.nick] = {};
+      allTypy[t.nick][t.mecz_id] = { home: Number(t.home), away: Number(t.away), date: t.date || null };
+    });
+    document.getElementById('hdr-sub').textContent = allUczestnicy.length + ' graczy';
+  } catch(e) { console.error(e); }
+}
+
+function renderAll() {
+  renderRanking();
+  renderMecze();
+  renderWynikSelect();
+  if (adminVerified) { renderAdminUczestnicy(); }
+}
+
+function showTab(name) {
+  const names = ['ranking','mecze','typy','puchar','regulamin','admin'];
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', names[i]===name));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ─── KOLEJKI (MECZE 93-96 W 1/8 FINAŁU) ────────────────────────────────────────
+function meczeDlaKolejki(k) {
+  const zakresy = { 1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,96], 6: [97,999] };
+  const [od, do_] = zakresy[k] || [1,24];
+  return allMecze.filter(m => {
+    const nr = parseInt(m.id.replace('m',''));
+    return nr >= od && nr <= do_;
+  });
+}
+
+function maTypyDlaKolejki(nick, k) {
+  const typy = allTypy[nick] || {};
+  const mecze = meczeDlaKolejki(k);
+  return mecze.some(m => typy[m.id] !== undefined);
+}
+
+// WYMUSZENIE UKRYWANIA TYPÓW PRZED MECZEM
+function meczRozpoczety(dstr) {
+  if(!dstr) return false;
+  return Date.now() > new Date(dstr.replace(/-/g,'/')).getTime();
+}
+
+function labelKolejki(k) {
+  if (k===4) return '⚡ Faza pucharna'; if (k===5) return '🏆 1/8 finału'; if (k===6) return '🏆 1/4 finału';
+  return 'Kolejka '+k;
+}
+
+let aktywnaKolejka = 1;
+
+function pokazKolejke(k) {
+  aktywnaKolejka = k;
+  for (let i=1; i<=6; i++) {
+    const btn = document.getElementById('kbtn-'+i); if (btn) btn.className = (i===k) ? 'btn primary' : 'btn';
+  }
+  const content = document.getElementById('kolejka-content');
+  const mecze = meczeDlaKolejki(k);
+  if (!mecze.length) { content.innerHTML = '<div class="loading">Brak meczów.</div>'; return; }
+  
+  const zapisane = maTypyDlaKolejki(typNick, k);
+  const typy = allTypy[typNick] || {};
+  
+  let html = `<div class="card"><div class="card-title">${labelKolejki(k)}</div>`;
+  
+  // Brak możliwości edycji po zapisie
+  if (zapisane) {
+    html += '<p class="ok" style="font-weight:600">✓ Twoje typy dla tej kolejki zostały pomyślnie zapisane (Edycja zablokowana).</p><table style="margin-top:10px">';
+    mecze.forEach(m => {
+      const t = typy[m.id] || {home:'-', away:'-'};
+      html += `<tr><td>${esc(m.home)} - ${esc(m.away)}</td><td class="mono" style="text-align:right;font-weight:600">${t.home}:${t.away}</td></tr>`;
+    });
+    html += '</table></div>';
+    content.innerHTML = html;
+    return;
+  }
+  
+  html += '<form id="form-typy" onsubmit="zapiszTypyUczestnika(event)">';
+  mecze.forEach(m => {
+    html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:14px;font-weight:500">${esc(m.home)} - ${esc(m.away)}</span>
+      <div style="display:flex;align-items:center;gap:4px">
+        <input type="number" name="m_${m.id}_home" min="0" max="20" required style="width:45px;text-align:center;padding:4px" />
+        <span>:</span>
+        <input type="number" name="m_${m.id}_away" min="0" max="20" required style="width:45px;text-align:center;padding:4px" />
+      </div>
+    </div>`;
+  });
+  html += '<button type="submit" class="btn primary" style="width:100%;margin-top:15px">Zapisz moje typy na stałe</button></form><p id="typy-save-msg" style="margin-top:8px"></p></div>';
+  content.innerHTML = html;
+}
+
+async function zapiszTypyUczestnika(e) {
+  e.preventDefault();
+  const msg = document.getElementById('typy-save-msg');
+  msg.innerHTML = '<span class="spinner"></span> Wysyłanie i zapisywanie do bazy danych...';
+  
+  const formData = new FormData(e.target);
+  const typy = {};
+  for (let [key, val] of formData.entries()) {
+    if (key.startsWith('m_')) {
+      const parts = key.split('_');
+      if (!typy[parts[1]]) typy[parts[1]] = {};
+      typy[parts[1]][parts[2]] = Number(val);
+    }
+  }
+  
+  const res = await apiPost({ action: 'setTypy', nick: typNick, kolejka: aktywnaKolejka, typy: typy });
+  if (res.ok) {
+    msg.className = 'ok'; msg.textContent = 'Zapisano pomyślnie!';
+    await loadAll(); renderAll(); pokazKolejke(aktywnaKolejka);
+  } else {
+    msg.className = 'err'; msg.textContent = 'Błąd: ' + res.error;
+  }
+}
+
+// ─── RANKING I MODAL Z UKRYWANIEM TYPÓW ───────────────────────────────────────
+function obliczPktMecz(t, w) {
+  if (!t || !w) return {pkt:0};
+  if (t.home===w.home && t.away===w.away) return {pkt:3};
+  if ((t.home>t.away && w.home>w.away) || (t.home<t.away && w.home<w.away) || (t.home===t.away && w.home===w.away)) return {pkt:1};
+  return {pkt:0};
+}
+
+function obliczPkt(nick) {
+  const typy = allTypy[nick] || {}; let pkt=0;
+  for (const [mid, w] of Object.entries(allWyniki)) {
+    const t = typy[mid]; if (t) pkt += obliczPktMecz(t, w).pkt;
+  }
+  return pkt;
+}
+
+function renderRanking() {
+  const c = document.getElementById('ranking-body'); if (!allUczestnicy.length) return;
+  const rows = allUczestnicy.map(u => ({name:u.name, pkt:obliczPkt(u.name)})).sort((a,b)=>b.pkt-a.pkt);
+  let html = '<table><thead><tr><th>#</th><th>Uczestnik</th><th style="text-align:center">Pkt</th></tr></thead><tbody>';
+  rows.forEach((r,i) => {
+    html += `<tr style="cursor:pointer" onclick="pokazTypyModal('${r.name.replace(/'/g,"\'")}')"><td>${i+1}.</td><td style="font-weight:500">${esc(r.name)} 📋</td><td class="pts p3">${r.pkt}</td></tr>`;
+  });
+  html += '</tbody></table>'; c.innerHTML = html;
+}
+
+function pokazTypyModal(nick) {
+  const typy = allTypy[nick] || {};
+  document.getElementById('modal-title').textContent = 'Typy użytkownika: ' + nick;
+  let html = '<table><thead><tr><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th></tr></thead><tbody>';
+  
+  allMecze.forEach(m => {
+    const t = typy[m.id], w = allWyniki[m.id];
+    if (!t) return;
+    
+    // Blokada podglądu – jeśli mecz się nie zaczął, wyświetla kłódkę
+    const started = meczRozpoczety(m.date);
+    const czyToJa = (nick === typNick);
+    const typCell = (started || czyToJa) ? `${t.home}:${t.away}` : '<span style="color:var(--text2);font-size:12px">🔒 ukryty do meczu</span>';
+    
+    html += `<tr>
+      <td>${esc(m.home)} – ${esc(m.away)}<br><span style="font-size:11px;color:var(--text2)">${m.date||''}</span></td>
+      <td class="mono" style="text-align:center;font-weight:600">${typCell}</td>
+      <td class="mono" style="text-align:center">${w?w.home+':'+w.away:'—'}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').style.display = 'block';
+}
+
+function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+function renderMecze() {
+  const c = document.getElementById('mecze-body'); if (!allMecze.length) return;
+  let html = '';
+  allMecze.forEach(m => {
+    const w = allWyniki[m.id];
+    html += `<div class="match-row"><div class="match-teams">${esc(m.home)} – ${esc(m.away)} <span style="font-size:11px;color:var(--text2)">(${m.date||''})</span></div><div class="match-score">${w?w.home+':'+w.away:'—:—'}</div></div>`;
+  });
+  c.innerHTML = html;
+}
+
+async function zalogujTypera() {
+  const nick = document.getElementById('typ-nick').value.trim();
+  const haslo = document.getElementById('typ-haslo').value.trim();
+  if (!nick || !haslo) return;
+  const ucz = allUczestnicy.find(u => u.name === nick);
+  if (!ucz || String(ucz.haslo) !== haslo) { document.getElementById('typy-status').className='err'; document.getElementById('typy-status').textContent='Błędne hasło lub nick!'; return; }
+  typNick = nick;
+  document.getElementById('typy-login-card').style.display = 'none';
+  document.getElementById('typy-zalogowany').style.display = 'block';
+  document.getElementById('typy-logged-name').textContent = nick;
+  pokazKolejke(1);
+}
+
+function wylogujTypera() {
+  typNick = ''; document.getElementById('typy-login-card').style.display = 'block'; document.getElementById('typy-zalogowany').style.display = 'none';
+}
+
+function renderWynikSelect() {
+  const sel = document.getElementById('wynik-mecz'); if(!sel) return;
+  let html = ''; allMecze.forEach(m => { html += `<option value="${m.id}">${m.home} - ${m.away}</option>`; });
+  sel.innerHTML = html;
+}
+
+function verifyAdmin() {
+  const pass = document.getElementById('admin-pass').value.trim();
+  if(cfg && cfg.adminPass === pass) { document.getElementById('admin-panel').style.display = 'block'; }
+}
+
+function renderAdminUczestnicy() {
+  const c = document.getElementById('admin-uczestnicy'); if(!c) return;
+  let html = '<ul>'; allUczestnicy.forEach(u => { html += `<li>${esc(u.name)} (hasło: ${u.haslo})</li>`; }); html += '</ul>';
+  c.innerHTML = html;
+}
+
+async function dodajUczestnika() {
+  const name = document.getElementById('nowy-ucz').value.trim();
+  const haslo = document.getElementById('nowy-ucz-haslo').value.trim();
+  if(!name || !haslo) return; await apiPost({action:'addUczestnik', name, haslo}); await loadAll(); renderAll();
+}
+
+async function zapiszWynik() {
+  const mid = document.getElementById('wynik-mecz').value;
+  const home = document.getElementById('wynik-home').value;
+  const away = document.getElementById('wynik-away').value;
+  await apiPost({action:'setWynik', mecz_id:mid, home:Number(home), away:Number(away)}); await loadAll(); renderAll();
+}
+
+function esc(str) { return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+window.onload = function() {
+  if (loadConfig()) { document.getElementById('cfg-overlay').style.display = 'none'; initApp(); } 
+  else { document.getElementById('cfg-overlay').style.display = 'flex'; }
+};
+</script>
+</body>
+</html>
