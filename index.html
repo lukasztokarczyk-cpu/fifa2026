@@ -162,6 +162,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
         <button class="btn" id="kbtn-4" onclick="pokazKolejke(4)">⚡ Faza pucharna</button>
         <button class="btn" id="kbtn-5" onclick="pokazKolejke(5)">🏆 1/8 finału</button>
         <button class="btn" id="kbtn-6" onclick="pokazKolejke(6)">🏆 1/4 finału</button>
+        <button class="btn" id="kbtn-7" onclick="pokazKolejke(7)">🥇 Finał</button>
       </div>
       <div id="kolejka-content"></div>
     </div>
@@ -642,7 +643,7 @@ function wylogujTypera() {
 
 // Kolejka 1: m01-m24, Kolejka 2: m25-m48, Kolejka 3: m49-m72
 function meczeDlaKolejki(k) {
-  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,96], 6: [97,999]};
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,96], 6: [97,100], 7: [101,999]};
   const [od, do_] = zakresy[k] || [1,24];
   return allMecze.filter(m => {
     const nr = parseInt(m.id.replace('m',''));
@@ -660,6 +661,7 @@ function labelKolejki(k) {
   if (k===4) return '⚡ Faza pucharna';
   if (k===5) return '🏆 1/8 finału';
   if (k===6) return '🏆 1/4 finału';
+  if (k===7) return '🥇 Finał';
   return 'Kolejka '+k;
 }
 
@@ -677,7 +679,7 @@ async function zaladujTypy() {
   document.getElementById('typy-kolejki').style.display='block';
   // pokaż kolejkę 1 domyślnie lub pierwszą niezapisaną
   let domyslna = 1;
-  for (let k=1; k<=6; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
+  for (let k=1; k<=7; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
   pokazKolejke(domyslna);
 }
 
@@ -686,7 +688,7 @@ let aktywnaKolejka = 1;
 function pokazKolejke(k) {
   aktywnaKolejka = k;
   // zaktualizuj przyciski
-  for (let i=1; i<=6; i++) {
+  for (let i=1; i<=7; i++) {
     const btn = document.getElementById('kbtn-'+i);
     if (!btn) continue;
     const maTypy = maTypyDlaKolejki(typNick, i);
@@ -845,12 +847,25 @@ function parsujLinie(lines, meczePuli) {
 function meczRozpoczety(dateStr) {
   if (!dateStr) return false;
   try {
-    // format ISO: 2026-06-11T20:00:00.000Z
-    if (String(dateStr).includes('T') || String(dateStr).includes('-202')) {
-      return new Date() >= new Date(dateStr);
+    const s = String(dateStr);
+    // format ISO z T: 2026-06-11T20:00:00.000Z
+    if (s.includes('T')) {
+      // Sprawdź czy miesiąc i dzień nie są zamienione przez Sheets (np. 2026-09-07 zamiast 2026-07-09)
+      // Sheets zapisuje DD.MM jako M/D więc np. 09.07 -> 2026-09-07 (wrzesień!) zamiast 2026-07-09
+      // Jeśli miesiąc > 7 (sierpień+) a jesteśmy w lipcu - data jest przestawiona
+      const iso = new Date(s);
+      const now = new Date();
+      // Jeśli data ISO jest w przyszłości ale wydaje się błędna (miesiąc > 7 w 2026)
+      // próbuj zamienić miesiąc i dzień
+      if (iso.getFullYear() === 2026 && iso.getMonth() > 6) {
+        // zamień dzień i miesiąc
+        const swapped = new Date(2026, iso.getDate()-1, iso.getMonth()+1, iso.getHours(), iso.getMinutes());
+        return now >= swapped;
+      }
+      return now >= iso;
     }
     // format DD.MM HH:MM
-    const parts = String(dateStr).match(/(\d+)\.(\d+)\s+(\d+):(\d+)/);
+    const parts = s.match(/(\d+)\.(\d+)\s+(\d+):(\d+)/);
     if (!parts) return false;
     const d = new Date(2026, parseInt(parts[2])-1, parseInt(parts[1]), parseInt(parts[3]), parseInt(parts[4]));
     return new Date() >= d;
