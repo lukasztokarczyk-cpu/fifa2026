@@ -162,7 +162,7 @@ button.btn:disabled{opacity:.4;cursor:not-allowed;}
         <button class="btn" id="kbtn-4" onclick="pokazKolejke(4)">⚡ Faza pucharna</button>
         <button class="btn" id="kbtn-5" onclick="pokazKolejke(5)">🏆 1/8 finału</button>
         <button class="btn" id="kbtn-6" onclick="pokazKolejke(6)">🏆 1/4 finału</button>
-        <button class="btn" id="kbtn-7" onclick="pokazKolejke(7)">🥇 1/2 Finału</button>
+        <button class="btn" id="kbtn-7" onclick="pokazKolejke(7)">🥇 Finał</button>
       </div>
       <div id="kolejka-content"></div>
     </div>
@@ -461,9 +461,9 @@ function czyMeczPucharowy(mid) {
 }
 
 function czyFinał(mid) {
-  // m101=mecz o 3. miejsce, m102=finał (przykładowe ID – admin doda)
+  // Tylko mecz o 3. miejsce i finał (m103+)
   const nr = parseInt(String(mid).replace('m',''));
-  return nr >= 101;
+  return nr >= 104;  // m103=mecz o 3.miejsce, m104=finał
 }
 
 function sprawdzAwans(awansTyp, homeTeam, awayTeam, awansReal) {
@@ -481,31 +481,12 @@ function sprawdzAwans(awansTyp, homeTeam, awayTeam, awansReal) {
 
 function obliczPktMecz(t, w, mid, mecz) {
   if (!t || !w) return {pkt:0, typ:'—'};
-  const puchar = czyMeczPucharowy(mid);
-  const final_ = czyFinał(mid);
-  const pkt3 = final_ ? 5 : 3;
-  const pkt1 = final_ ? 2 : 1;
-
   const dokladny = t.home===w.home && t.away===w.away;
   const tw = t.home>t.away?1:t.home<t.away?-1:0;
   const ww = w.home>w.away?1:w.home<w.away?-1:0;
   const trafionyWynik = tw===ww;
-  const remis = ww===0;
-
-  if (dokladny) {
-    let bonus = 0;
-    if (puchar && remis && t.awans && w.awans) {
-      bonus = sprawdzAwans(t.awans, mecz?.home||'', mecz?.away||'', w.awans) ? 1 : 0;
-    }
-    return {pkt: pkt3+bonus, typ: dokladny?'+'+pkt3+(bonus?'+1':''):'+'+(pkt3+bonus)};
-  }
-  if (trafionyWynik) {
-    let bonus = 0;
-    if (puchar && remis && t.awans && w.awans) {
-      bonus = sprawdzAwans(t.awans, mecz?.home||'', mecz?.away||'', w.awans) ? 1 : 0;
-    }
-    return {pkt: pkt1+bonus, typ: '+'+(pkt1+bonus)};
-  }
+  if (dokladny) return {pkt:3, typ:'+3'};
+  if (trafionyWynik) return {pkt:1, typ:'+1'};
   return {pkt:0, typ:'0'};
 }
 
@@ -679,7 +660,7 @@ async function zaladujTypy() {
   document.getElementById('typy-kolejki').style.display='block';
   // pokaż kolejkę 1 domyślnie lub pierwszą niezapisaną
   let domyslna = 1;
-  for (let k=1; k<=7; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
+  for (let k=1; k<=8; k++) { if (!maTypyDlaKolejki(typNick, k)) { domyslna=k; break; } }
   pokazKolejke(domyslna);
 }
 
@@ -688,7 +669,7 @@ let aktywnaKolejka = 1;
 function pokazKolejke(k) {
   aktywnaKolejka = k;
   // zaktualizuj przyciski
-  for (let i=1; i<=7; i++) {
+  for (let i=1; i<=8; i++) {
     const btn = document.getElementById('kbtn-'+i);
     if (!btn) continue;
     const maTypy = maTypyDlaKolejki(typNick, i);
