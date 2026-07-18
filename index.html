@@ -625,7 +625,7 @@ function wylogujTypera() {
 
 // Kolejka 1: m01-m24, Kolejka 2: m25-m48, Kolejka 3: m49-m72
 function meczeDlaKolejki(k) {
-  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,96], 6: [97,100], 7: [101,102], 8: [104,999]};
+  const zakresy = {1: [1,24], 2: [25,48], 3: [49,72], 4: [73,88], 5: [89,96], 6: [97,100], 7: [101,102], 8: [103,999]};
   const [od, do_] = zakresy[k] || [1,24];
   return allMecze.filter(m => {
     const nr = parseInt(m.id.replace('m',''));
